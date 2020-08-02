@@ -1,18 +1,28 @@
 ---
 layout: page
-title: Welcome to Lagrange!
+
 ---
 
-Lagrange is a minimalist Jekyll theme. The purpose of this theme is to provide a simple, clean, content-focused blogging platform for your personal site or blog. Below you can find everything you need to get started.
+### About the blog
 
-### Getting Started
+Welcome to my site! This site is mostly meant to be a collection of personal notes on things related to coding and math.
+The main motivation is elucidation of concepts that I've spent time developing into equations or code. Over time, I've
+experienced several reasons to capture my thoughts into writing:
+ 
+1. Writing forces a synthesis of concepts that is difficult for me to achieve when watching videos or even
+reading. 
 
-[Getting Started]({{ site.github.url }}{% post_url 2015-10-10-getting-started %}): getting started with installing Lagrange, whether you are completely new to using Jekyll, or simply just migrating to a new Jekyll theme.
+2. When encountering a concept for the second or the third time, I often wish that I had written my conclusions
+ or code from the last time.
+ 
+3. Written notes prove to be a fertile ground for finding new ideas, which often come in the form of extensions of
+ previous ideas.
 
-### Example Content
+    
+### About me
 
-[Text and Formatting]({{ site.github.url }}{% post_url 2014-01-01-text-formatting-examples %})
+* [Linkedin](https://www.linkedin.com/in/rohankekatpure)
 
-### Questions?
+* [Github](https://github.com/rohan-kekatpure)
 
-This theme is completely free and open source software. You may use it however you want, as it is distributed under the [MIT License](http://choosealicense.com/licenses/mit/). If you are having any problems, any questions or suggestions, feel free to [tweet at me](https://twitter.com/intent/tweet?text=My%question%about%Lagrange%is:%&amp;via=paululele), or [file a GitHub issue](https://github.com/lenpaul/lagrange/issues/new).
+* [Google scholar](https://scholar.google.com/citations?user=G4kWwCkAAAAJ&hl=en)
