@@ -4,13 +4,14 @@ title: "Fun with optimization"
 author: "Rohan"
 categories: journal
 tags: [documentation,sample]
-image: cutting.jpg
+image:
 ---
 ### Solving old problems with new tricks
 
-In this post we're going to look at a some common optimization algorithms. One great way to build intuition for a new
-algorithm is to pick a problem whose solution we can easily guess and then test if our algorithm find the right
-solution. Additionally, watching an optimization algorithm arrive to its solution makes for a satisfying visualization.
+One great way to build intuition for a new algorithm is to pick a problem whose solution we can easily guess and then
+test if and how the algorithm find the right solution. In this post we will dive into a couple of simple but common
+numerical optimization algorithms with the help of a simple problem. As a side benefit, we get to watch some
+satisfying visualizations of an optimization algorithm arrive to its solution.
 
 There is a large pool of problems to choose from for testing a optimization algorithms. This is because mathematical
 optimization is an old field and also because optimization problems are all around us. Various natural entities are
