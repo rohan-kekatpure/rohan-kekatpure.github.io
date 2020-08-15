@@ -441,7 +441,7 @@ $$
 \end{align}
 $$
 
-Dividing equation \eqref{eq:ely} by equation \eqref{eq:elx} we get
+and then dividing equation \eqref{eq:ely} by equation \eqref{eq:elx} to get
 
 $$
 \begin{align*}
@@ -449,7 +449,7 @@ $$
 \end{align*}
 $$
 
-whose solution is
+which is a single first-order equation, whose solution
 
 $$
 \begin{equation*}
@@ -457,7 +457,7 @@ $$
 \end{equation*}
 $$
 
-which is once again the equation of a circle.
+is once again the standard equation of a circle.
 
 
 
