@@ -82,7 +82,7 @@ certain quantities (e.g. regularized loss functions). In addition to vanilla opt
 specifically inspired by energy minimization principles. Energy minimization for image segmentation or
 stereo depth estimation can be cited an examples.
 
-### First principles solution of elementary variational problems
+### Standard form of the calculus of variations problem
 
 Hopefully the above examples have provided a broad sense of why COV and the variational techniques what it begets are
 fundamental to a lot of fields. In the remainder of this post, we will get gently introduced to COV. First we will
@@ -93,8 +93,6 @@ to understand the material.
 The two problems we will solve are the isoperimetric problem and the minimum entropy problem. You'll find these problems
 solved in most textbooks on the subject. Yet it is extremely helpful to internalize the concepts by going over them by
 ourselves.
-
-#### Standard form of calculus of variations problems
 
 As said earlier, the standard minimization problems is to find the _point_ $x_0$ which minimizes a given scalar function
 $f (x)$. The input variable $x$ can be scalar or a vector, but the function value must be scalar. In standard
