@@ -1,71 +1,120 @@
 ---
 layout: post
-title: "Classic optimization problems"
+title: "Introduction to Calculus of Variations"
 author: "Rohan"
 categories: journal
 tags: [documentation,sample]
 image:
 ---
-### Variational techniques
 
-I've been fascinated with the isoperimetric problem ever since hearing about it my 12th grade. Despite the name, the
-statement of the isoperimetric problem is simple. One from [Wikipedia](https://en
-.wikipedia.org/wiki/Isoperimetric_inequality#The_isoperimetric_problem_in_the_plane){:target="_blank"} reads
+Calculus of variations (COV) sits in the gap between calculus and optimization. In regular calculus, we learn to find
+max or min of functions. COV is about finding not function values but functions themselves that achieve certain
+objectives. This higher-level goal makes the subject of COV both challenging and useful.
 
->Among all closed curves in the plane of fixed perimeter, which curve maximizes the area of its enclosed region?
+Let illustrate with a simple example. A typical problem in regular calculus asks us to find a _point_ $x$ where the
+function $f(x) = x^2 e^{-2x}$ achieves its maximum value. To solve this, we calculate $f'(x)$ using rules of
+differential calculus and solve $f'(x) = 0$ to find the desired $x$. Some will correctly insist that we also show $f''
+(x)< 0$ at the maximum (these people generally tend to ruin the fun in any situation).
 
-Most folks will intuitively and correctly think that the answer is a circle.
+A typical problem in COV will ask us to find a _function_ $y = f(x)$ that minimizes the area bounded by $f(x)$ while
+holding its perimeter constant. After a bit of pondering you'll find that this problem _cannot_ readily be solved
+by regular calculus. However, there _is_ a branch of regular calculus that helps us calculate whole
+functions--Differential Equations. If we could somehow get a differential equation for this problem, we
+could find the function that satisfies our requirements. COV provides this missing piece.
 
-There are many problems of this flavor. We include a few more examples below.
+Loosely speaking, COV is a final piece in a progression of widgets. Functions accept values and output values; the
+parameters of the functions are hardcoded. Differential equations accept boundary conditions and output functions;
+parameters of the differential equation are hardcoded. Equations of COV accept an objective function (plus any
+constraints) and output differential equations; parameters of the objective function are hardcoded. The picture below
+helps visualize the hierarchy.
 
-1. [Fermat's principle](https://en.wikipedia.org/wiki/Fermat%27s_principle)
-    path taken by a ray between two given points is the path that can be traversed in the least time
+<figure>
+    <img src="{{site.url}}/assets/img/cov_hierarchy.png" alt='hierarchy' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
 
-2. Path of shortest distance connecting a two points is a straight line
+Once we note that most of our fundamental physical laws are expressed as (partial) differential equations, we
+can immediately recognize that COV is essentially a machine for crunching laws. Of course, the law will ever be only
+as good as the objctive function we feed to the machine.
 
-3. Among all probability distributions of known mean and variance, the normal distributions has the least entropy
+In many fields, however, the objective functions turn out to be easier to guess than the new laws. This probably has to
+do with the fact that our laws are expressed in terms of partial differential equations describing vector fields. We as
+humans, on the other hand, inherently lack ability to imagine vector fields and multidimensional spaces. COV provides
+tools to derive _vector_ laws from _scalar_ objective functions. The importance of this aspect is hard to overstate. In
+addition, there is more uniformity in the structure of objective functions than there is in the laws they generate.
 
-In addition to being fun mathematical problems, these minimization principles play a crucial role in Physics. Expressing
-laws of Physics as minimization principles leads to a uniform treatment of many different areas and has potential to
-provide new insights. Classical mechanics can be reformulated as Lagrangian mechanics based on a suitable
-minization principle. Field equations of gravitation can be derived from a minimization principle. The pattern is to
-identify a suitable quantity whose minimization leads to a desired physical law.
+It is worth seeing briefly how COV game is played in different fields before moving to the examples.
 
-Minimization principles also play an important role computationally. If a suitable minimization principle is known
-for a problem, it can open up ways to compute solutions to otherwise difficult-to-handle problems. Such
-techniques are known as variational techniques. Calculation of orbitals of Helium molecule are a fine example of
-application of variational techniques.
+### Connections to other fields
 
-Hopefully the above examples have provided a (admittedly vague) sense of why the calculus of variations (COV) and the
-variational techniques what it begets are important. In addition to being important, the solution to variational
-and optimization problems have a certain magic about them **explain why**
+<figure>
+    <img src="{{site.url}}/assets/img/cov_map.png" alt='map' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
+
+
+In physics, there is an important toolbox called the minimization principles (also known as [Variational
+Principles](https://en.wikipedia.org/wiki/Variational_principle)). A popular (and successful) technique in theoretical
+Physics can be described as follows. We start by expressing a known law of physics (e.g. Newtonian mechanics) in terms
+of a minimization principle. While this reformulation by itself does not produce new laws, it leads us to a new
+mathematical structure for the old theory that is more 'higher level' or abstract. Then there is a leap of faith. It is
+hypothesized that this mathematical structure is obeyed not only in the known-and-old field (e.g Newtonian mechanics)
+but also in new-and-unknown fields (e.g. Quantum Field Theory). Once this is accepted, the game is then to guess the
+right quantity to minimize and use the techniques of COV to find a new law of Physics. Considerable insight is required
+to guess the right minimization objective and a coming up with these often represents [life's work for some theoretical
+physicists](https://en.wikipedia.org/wiki/Higgs_boson#History). Experiment, of
+course, is the final judge of whether the guess was right or wrong. A good [summary](https://en.wikipedia
+.org/wiki/Lagrangian_field_theory) of well-known minimization principles in Physics can be found on Wikipedia.
+
+Minimization principles also play an important role in computational physics. If a suitable minimization principle is
+known for a problem, it enables computational solutions to otherwise difficult-to-handle problems. Calculation of the
+[energy levels of Helium atoms](https://en.wikipedia.org/wiki/Helium_atom#The_variational_method) is an elementary
+example of a variational technique applied to a theoretically difficult computation. Taken to its logical extreme by
+including more particles and interactions, this leads to a powerful framework of [Density Functional
+Theory](https://en.wikipedia.org/wiki/Density_functional_theory) for calculating crystal structure of solids. Such
+calculations are the starting point for creating materials with desired thermal, mechanical, chemical and electronic
+properties. These engineered materials form the backbone of the technology needed for addressing pressing
+challenges such as climate change and space-exploration.
+
+Motivation for use of variational techniques (and by extension COV) is more straightforward to understand in Artificial
+Intelligence and Machine Learning. Many algorithms in these fields directly depend on finding functions that minimize
+certain quantities (e.g. regularized loss functions). In addition to vanilla optimization, there are techniques that are
+specifically inspired by energy minimization principles. Energy minimization for image segmentation or
+stereo depth estimation can be cited an examples.
 
 ### First principles solution of elementary variational problems
 
-In the remainder of this post, we will solve two classic variational problems in closed form from first principles. The
-two problems of choice are the isoperimetric problem and the minimum entropy problem. The presentation below is part of
-standard treatment of this subject. Yet going over it in our own way is beneficial for internalizing the subject.
+Hopefully the above examples have provided a broad sense of why COV and the variational techniques what it begets are
+fundamental to a lot of fields. In the remainder of this post, we will get gently introduced to COV. First we will
+overview the fundamental equation of COV--the Euler-Lagrange equation. We will then see how to apply this equation by
+solving two classic problems step-by-step. Nothing more than a knowledge of regular college calculus will be needed
+to understand the material.
+
+The two problems we will solve are the isoperimetric problem and the minimum entropy problem. You'll find these problems
+solved in most textbooks on the subject. Yet it is extremely helpful to internalize the concepts by going over them by
+ourselves.
 
 #### Standard form of calculus of variations problems
 
-The standard minimization problems is to find the _point_ $x_0$ which minimizes a given scalar function $f(x)$. The
-input variable $x$ can be scalar or a vector, but the function value must be scalar. The way to solve this problem in
-standard calculus is to solve the equation $f'(x) = 0$ for $x$.
+As said earlier, the standard minimization problems is to find the _point_ $x_0$ which minimizes a given scalar function
+$f (x)$. The input variable $x$ can be scalar or a vector, but the function value must be scalar. In standard
+calculus, $x_0$ is the solution to the equation $f'(x) = 0$.
 
-The minimization problem in calculus of variations is to find the _function_ $f(x)$ which minimizes a scalar
-_functional_ $J[f]$. A functional is a function of functions. A standard function $f$ takes an input $x$ and outputs
-a number. A functional, on the other hand, takes an entire function $f$ and outputs a single number.
-
-A functional may seem like a new concept, but it is not. Any subroutine which calculates the mean, median, variance, or
-area, of an input function between two values is a functional. We have all seen examples of such subroutines in
-scientific libraries. For calculus of variations, we just abstract the concept for a mathematical treatment. We can
-write the action of a functional $J$ on a function $f$ as
+The minimization problem in COV is to find the _function_ $f(x)$ which minimizes a scalar _functional_ $J[f]$. A
+functional is a function of functions. A regular function $f$ takes an input $x$ and outputs a scalar $y$ . A
+functional, on the other hand, takes the whole function $f$ and outputs a single number. We can write this in
+symbols as:
 
 $$
 \begin{equation*}
 J[f] = \text{a scalar value}
 \end{equation*}
 $$
+
+A functional may seem like a new concept, but it is not. Any subroutine which calculates the mean, median, variance, or
+area, of an input function is a functional. Objective functions used in machine learning algorithms are functionals.
+There are examples of functionals in scientific libraries (e.g. [numerical integration using Simpson's
+rule](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps.html)).
 
 Finding an $f(x)$ that minimizes $J[f(x)]$ is a harder problem than finding an $x$ that minimizes $f(x)$. For
 a calculus of variations problem, therefore we cannot write a general recipe like solve $f'(x) = 0$. We have to
@@ -74,21 +123,19 @@ function $L()$ which is itself a function only of $x$, $y =f(x)$ and $y'= f'(x)$
 
 $$
 \begin{equation*}
-J[f] = \int L(x, y, y')dx
+J[y] = \int L(x, y, y')dx
 \end{equation*}
 $$
 
-This may seem like a hopelessly specific case whose analysis will not be worth the effort. But it turns out that a
-variety of practically useful optimization problems can be expressed in the above form or its minor variations.
-Both isoperimetric problem as well as a max entropy problem (and many others) are of the above form. An important
-point to note is that the function $L$ can encore our optimization objective as well as the constraints. This point
-will become clear when we look at the examples.
+This may seem like a oddly specific case without general utility. But it turns out that a variety of optimization
+problems can be expressed in the above form and its minor variations. An important point to note is that the function
+$L$ can encode our optimization objective as well as the constraints.
 
-### Recipe for solving standard COV problem
+### The Euler-Lagrange equation
 
-Once the optimization problem is expressed in the above form, the recipe for solving it to form a differential equation
-for $y = f(x)$ and solve that differential equation. The differential equation for $y$ is obtained from the standard
-form via the famous [Euler-Lagrange equations](https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation):
+Once the optimization problem is expressed in the above form, the recipe for solving it is to form a differential
+equation for $y = f(x)$ and solve that differential equation. The differential equation for $y$ is obtained from the
+standard form via the famous [Euler-Lagrange equations](https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation):
 
 $$
 \begin{equation}
@@ -99,12 +146,14 @@ $$
 
 In computing the derivatives of $L$, we treat $y$ and $y'$ as independent variables. That is, when computing
 $\partial L/\partial y$ we do not worry about derivative of $y'$ with respect to $y$. Similarly when computing
-$\partial L/\partial y'$ we do not worry about derivative of $y$ with respect to $y'$. Equation \eqref{eq:el} yields
-a differential in terms of $x$, $y$ and $y'$ whose solution gives us a $y(x)$.
+$\partial L/\partial y'$ we do not worry about derivative of $y$ with respect to $y'$. If we perform the
+manipulations in equation \eqref{eq:el}, it yields a differential in terms of $x$, $y$ and $y'$ whose solution gives
+us a $y(x)$. This is the part about COV being a machine for generating differential equations that, when solved,
+produce functions which satisfy our original objective.
 
-To add constraints, we use a the method of [Lagrange multipliers](https://en.wikipedia org/wiki/Lagrange_multiplier).
+To add constraints, we use a the method of [Lagrange multipliers](https://en.wikipedia.org/wiki/Lagrange_multiplier).
 This method modifies the $L(x, y, y')$ function using the constraints and allows us to still use the Euler-Lagrange
-equations. Once again, the method of Lagrange multipliers will become clear when we work with examples.
+equations. The method of Lagrange multipliers will become clear when we work with examples.
 
 ### Isoperimetric problem
 
@@ -136,7 +185,8 @@ $$
 \end{equation*}
 $$
 
-where we have ignored the constant term $\lambda P$ since it wont survive the various differentiations.
+where we have ignored the constant term $\lambda P$ since it wont survive the derivatives in the Euler-Lagrange
+equations.
 
 This is the standard form if we identify
 
@@ -157,7 +207,7 @@ $$
 \end{align*}
 $$
 
-This is a simple differential equation whose solution is
+This is a simple differential equation, whose solution
 
 $$
 \begin{equation*}
@@ -165,7 +215,7 @@ $$
 \end{equation*}
 $$
 
-which is the standard equation of a circle centered at $(-h, -k)$ and radius $\lambda$.
+is the standard equation of a circle centered at $(-h, -k)$ and radius $\lambda$.
 
 ### Max entropy problem
 
@@ -223,8 +273,8 @@ $$
 \end{align*}
 $$
 
-In the last equation we have somewhat simplified the last expression by identifying $A \leftarrow e^{-(1+\lambda_1)}$,
-$a \leftarrow \lambda_2$ and $b \leftarrow \lambda_3$. We have the standard integrals (e.g. from Wolfram Alpha)
+where $A \leftarrow e^{-(1+\lambda_1)}$, $a \leftarrow \lambda_2$ and $b \leftarrow \lambda_3$. We have the standard
+integrals (e.g. from Wolfram Alpha)
 
 $$
 \begin{align*}
@@ -241,7 +291,7 @@ and $\sigma$ as
 $$
 \begin{equation}
     \label{eq:coeffs}
-    A = \sqrt{b/\pi}, \qquad \mu = -a/(2b), \qquad \sigma^2 = 1/(2b)
+    A = \sqrt{b/\pi}e^{-a^2/4b}, \qquad \mu = -a/(2b), \qquad \sigma^2 = 1/(2b)
 \end{equation}
 $$
 
@@ -254,7 +304,7 @@ $$
 \end{equation*}
 $$
 
-Finally substituting the coefficients $A$, $a$ and $b$ from equation \eqref{eq:coeffs} we get
+Finally substituting the coefficients $a$ and $b$ from equation \eqref{eq:coeffs} we get
 
 $$
 \begin{equation*}
@@ -372,22 +422,24 @@ As mentioned before, we have two sets of Euler-Lagrange equations, one each for 
 get
 
 $$
-\begin{align}
-    \frac{\partial L}{\partial x} &= \frac{d}{dt} \frac{\partial L}{\partial x'} \notag \\
-    \frac{y'}{2} &= \frac{d}{dt} \left(-\frac{y}{2} + \lambda\frac{x'}{\sqrt{x'^2 + y'^2}}\right) \notag \\
-    y' &= \lambda \frac{d}{dt} \frac{x'}{\sqrt{x'^2 + y'^2}} \notag \\
-    \Rightarrow \frac{y + k}{\lambda} &= \frac{x'}{\sqrt{x'^2 + y'^2}} \label{eq:elx}
-\end{align}
+\begin{align*}
+    \frac{\partial L}{\partial x} = \frac{d}{dt} \frac{\partial L}{\partial x'}
+    & \Rightarrow
+    y' = \lambda \frac{d}{dt} \frac{x'}{\sqrt{x'^2 + y'^2}}
+    \\ \\
+    \frac{\partial L}{\partial y} = \frac{d}{dt} \frac{\partial L}{\partial y'}
+    & \Rightarrow
+    -x' = \lambda \frac{d}{dt} \frac{y'}{\sqrt{x'^2 + y'^2}} \notag \\
+\end{align*}
 $$
 
-Similarly for the $y$ equation we get
+These are two coupled, second-order ordinary differential equations. One easy way to solve these is to first
+integrate the left sides of both equations to obtain:
 
 $$
 \begin{align}
-    \frac{\partial L}{\partial y} &= \frac{d}{dt} \frac{\partial L}{\partial y'} \notag \\
-    \frac{-x'}{2} &= \frac{d}{dt} \left(\frac{y}{2} + \lambda\frac{y'}{\sqrt{x'^2 + y'^2}}\right) \notag \\
-    -x' &= \lambda \frac{d}{dt} \frac{y'}{\sqrt{x'^2 + y'^2}} \notag \\
-    \Rightarrow \frac{-(x + h)}{\lambda} &= \frac{y'}{\sqrt{x'^2 + y'^2}} \label{eq:ely}
+\frac{(y + k)}{\lambda} &= \frac{x'}{\sqrt{x'^2 + y'^2}} \label{eq:elx} \\
+\frac{-(x + h)}{\lambda} &= \frac{y'}{\sqrt{x'^2 + y'^2}} \label{eq:ely}
 \end{align}
 $$
 
@@ -395,9 +447,16 @@ Dividing equation \eqref{eq:ely} by equation \eqref{eq:elx} we get
 
 $$
 \begin{align*}
-    \frac{y'}{x'} &= \frac{dy}{dx} = \frac{-(x + h)}{y + k} \\
-    \Rightarrow (y + k)^2 &= -(x + h)^2 + C
+    \frac{y'}{x'} &= \frac{dy}{dx} = \frac{-(x + h)}{y + k}
 \end{align*}
+$$
+
+whose solution is
+
+$$
+\begin{equation*}
+    \Rightarrow (x + h)^2 + (y + k)^2 = C
+\end{equation*}
 $$
 
 which is once again the equation of a circle.
