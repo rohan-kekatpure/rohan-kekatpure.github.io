@@ -130,7 +130,7 @@ J[y] = \int L(x, y, y')dx
 \end{equation*}
 $$
 
-This may seem like a oddly specific case without general utility. But it turns out that a variety of optimization
+This may seem like a oddly specific form. But it turns out that a variety of optimization
 problems can be expressed in the above form (and its minor variations). An important point to note is that the function
 $L$ can encode our optimization objective as well as the constraints.
 
