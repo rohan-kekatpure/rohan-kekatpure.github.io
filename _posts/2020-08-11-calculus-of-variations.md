@@ -18,8 +18,8 @@ of differential calculus and set $f'(x) = 0$ to find the desired $x$.
 
 A typical problem in COV will ask us to find a _function_ $y = f(x)$ that maximizes the area bounded by $f(x)$ while
 holding its perimeter constant. Or a shape that minimizes the distance between two fixed points. A bit of pondering will
-convince you that this problem _cannot_ be solved by regular calculus. What should we differentiate and set to zero to
-find an entire function? Some piece is missing.
+convince you that such problems _cannot_ be solved by regular calculus alone. What should we differentiate and set to
+zero to find an entire function? Some piece seems missing.
 
 There _is_, however, a branch of regular calculus that concerns itself with calculating whole functions: Differential
 Equations. If we could somehow get differential equations for these optimization problems, we could find the function
