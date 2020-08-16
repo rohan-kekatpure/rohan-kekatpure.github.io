@@ -12,17 +12,16 @@ max or min of functions. COV is not about finding optimal values for given funct
 that optimize certain objectives. This is a higher-level goal and is what makes the subject both challenging and
 useful.
 
-Let illustrate with a simple example. A typical problem in regular calculus asks us to find a _point_ $x$ where the
-function $f(x) = x^2 e^{-2x}$ achieves its maximum value. To solve this, we calculate $f'(x)$ using rules of
-differential calculus and solve $f'(x) = 0$ to find the desired $x$. Some will correctly insist that we also show $f''
-(x)< 0$ at the maximum (these people generally tend to ruin the fun in any situation).
+Let illustrate with a simple example. A maxima/minima problem in regular calculus might ask us to find a _point_ $x$
+where the function $f(x) = x^2 e^{-2x}$ achieves its max or min value. To solve this, we calculate $f'(x)$ using rules
+of differential calculus and set $f'(x) = 0$ to find the desired $x$. 
 
 A typical problem in COV will ask us to find a _function_ $y = f(x)$ that minimizes the area bounded by $f(x)$ while
-holding its perimeter constant. After a bit of pondering you'll find that this problem _cannot_ readily be solved by
-regular calculus. What should we differentiate and set to zero to find an entire function? There _is_, however, a branch
-of regular calculus that can calculate whole functions: Differential Equations. If we could somehow get a
-differential equation for this problem, we could find the function that satisfies our requirements. COV provides this
-missing piece.
+holding its perimeter constant. A bit of pondering will convince you that this problem _cannot_ be solved by regular
+calculus. Some piece is missing. What should we differentiate and set to zero to find an entire function? There _is_,
+however, a branch of regular calculus that can calculate whole functions: Differential Equations. If we could somehow
+get a differential equation for this problem, we could find the function that satisfies our requirements. COV provides
+this missing piece.
 
 Loosely speaking, COV is a final piece in a progression of widgets. **Functions** accept values and output values; the
 parameters of the functions are hardcoded. **Differential equations** accept boundary conditions and output functions;
