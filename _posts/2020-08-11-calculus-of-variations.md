@@ -117,11 +117,10 @@ rule](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps
 Fourier transform, on the other hand, is _not_ a functional by our definition since it takes in a function and outputs
 another function, not a scalar.
 
-For a COV problems we cannot write a general recipe like solve $f'(x) = 0$ because finding an $f(x)$
-that minimizes $J[f(x)]$ is a harder problem than finding an $x$ that minimizes $f(x)$. We therefore have to proceed by
-identifying special cases of $J[f]$ and tailoring equations for them. The most common special case is one where
-$J$ depends on the _integral_ of a function $L()$ which is itself a function only of $x$, $y =f(x)$ and $y'= f'(x)$.
-That is
+For COV problems we cannot write a general recipe like solve $f'(x) = 0$ since finding an $f(x)$ that minimizes
+$J[f(x)]$ is a harder problem than finding an $x$ that minimizes $f(x)$. We therefore have to proceed by identifying
+special cases of $J[f]$ and tailoring equations for them. The most common special case is one where $J$ depends on the
+_integral_ of a function $L()$ which is itself a function only of $x$, $y =f(x)$ and $y'= f'(x)$. That is
 
 $$
 \begin{equation*}
