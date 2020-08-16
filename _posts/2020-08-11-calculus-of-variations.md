@@ -66,7 +66,7 @@ Field Theory). Once this is accepted, the game is then to guess the right quanti
 COV to find a new law of Physics. Considerable insight is required to guess the right minimization objective and a
 coming up with these often represents [life's work for some theoretical
 physicists](https://en.wikipedia.org/wiki/Higgs_boson#History). Experiment, of course, is the final judge of whether the
-guess was right or wrong. A good [summary](https://en.wikipedia org/wiki/Lagrangian_field_theory) of well-known
+guess was right or wrong. A good [summary](https://en.wikipedia.org/wiki/Lagrangian_field_theory) of well-known
 minimization principles in Physics can be found on Wikipedia.
 
 Minimization principles also play an important role in computational Physics. If a suitable minimization principle is
