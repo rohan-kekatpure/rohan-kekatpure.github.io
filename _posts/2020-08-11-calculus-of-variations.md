@@ -162,12 +162,12 @@ an optimization objective and constraints do the following:
 
 1. Construction an $L$ function in terms of $x$, $y$ and $y'$ (assuming this is possible)
 
-2. Use the Euler-Lagrange equation to get a differential equation for $y(x)$ and
+2. Use the Euler-Lagrange equation to get a differential equation for $y$ and
 
-3. solve the differential equation for $y$ to get the actual curve.
+3. Solve the differential equation for $y$ to get the actual curve.
 
-Once this process is familiar and trusted, it becomes easier to appreciate the derivation. Now lets test how the recipe
-works on a couple of classic problems.
+Once this process is familiar and trusted, it becomes easier to appreciate the theory behind the Euler-Lagrange
+equations. Now lets test how the recipe works on a couple of classic problems.
 
 ### Isoperimetric problem
 
