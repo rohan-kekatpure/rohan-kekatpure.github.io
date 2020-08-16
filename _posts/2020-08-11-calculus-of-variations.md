@@ -53,9 +53,9 @@ It is worth seeing briefly how COV game is played in different fields before mov
 </figure>
 
 
-In physics, there is an important toolbox called the minimization principles (also known as [Variational
+In Physics, there is an important toolbox called the minimization principles (also known as [Variational
 Principles](https://en.wikipedia.org/wiki/Variational_principle)). A popular (and successful) technique in theoretical
-Physics can be described as follows. We start by expressing a known law of physics (e.g. Newtonian mechanics) in terms
+Physics can be described as follows. We start by expressing a known law of Physics (e.g. Newtonian mechanics) in terms
 of a minimization principle. While this reformulation by itself does not produce new laws, it leads us to a new
 mathematical structure for the old theory that is more 'higher level' or abstract. Then there is a leap of faith. It is
 hypothesized that this mathematical structure is obeyed not only in the known-and-old field (e.g Newtonian mechanics)
@@ -66,7 +66,7 @@ physicists](https://en.wikipedia.org/wiki/Higgs_boson#History). Experiment, of
 course, is the final judge of whether the guess was right or wrong. A good [summary](https://en.wikipedia
 .org/wiki/Lagrangian_field_theory) of well-known minimization principles in Physics can be found on Wikipedia.
 
-Minimization principles also play an important role in computational physics. If a suitable minimization principle is
+Minimization principles also play an important role in computational Physics. If a suitable minimization principle is
 known for a problem, it enables computational solutions to otherwise difficult-to-handle problems. Calculation of the
 [energy levels of Helium atoms](https://en.wikipedia.org/wiki/Helium_atom#The_variational_method) is an elementary
 example of a variational technique applied to a theoretically difficult computation. Taken to its logical extreme by
@@ -94,14 +94,13 @@ The two problems we will solve are the isoperimetric problem and the minimum ent
 solved in most textbooks on the subject. Yet it is extremely helpful to internalize the concepts by going over them by
 ourselves.
 
-As said earlier, the standard minimization problems is to find the _point_ $x_0$ which minimizes a given scalar function
-$f (x)$. The input variable $x$ can be scalar or a vector, but the function value must be scalar. In standard
-calculus, $x_0$ is the solution to the equation $f'(x) = 0$.
-
-The minimization problem in COV is to find the _function_ $f(x)$ which minimizes a scalar _functional_ $J[f]$. A
-functional is a function of functions. A regular function $f$ takes an input $x$ and outputs a scalar $y$ . A
-functional, on the other hand, takes the whole function $f$ and outputs a single number. We can write this in
-symbols as:
+As said earlier, the standard minimization problems is to find the $x_0$ which minimizes a given scalar function $f
+(x)$. By a scalar function we mean a function that returns a scalar value. In input variable $x$ can be a scalar or a
+vector. The minimization problem in COV is to find the $f(x)$ which minimizes the objective function $J[f]$. An
+objective function is also known as a _functional_ which simply means a 'function that takes other functions as
+input'--something like higher-order functions in some programming languages. To reiterate, a regular function $f$ takes
+an input $x$ and outputs a scalar $y$. A functional takes the whole function $f$ and outputs a scalar. We can write
+the action of a functional in symbols as follows:
 
 $$
 \begin{equation*}
@@ -109,15 +108,18 @@ J[f] = \text{a scalar value}
 \end{equation*}
 $$
 
-A functional may seem like a new concept, but it is not. Any subroutine which calculates the mean, median, variance, or
-area, of an input function is a functional. Objective functions used in machine learning algorithms are functionals.
-There are examples of functionals in scientific libraries (e.g. [numerical integration using Simpson's
-rule](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps.html)).
+Any subroutine which calculates the mean, median, variance, or area, of an input function is a functional. Objective
+functions used in machine learning algorithms are functionals. There are examples of functionals in scientific libraries
+(e.g. [numerical integration using Simpson's
+rule](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps.html)). Fourier transform, on the
+other hand, is _not_ a functional by our definition. A Fourier transform calculator takes in a function and outputs
+another function, not a scalar.
 
-Finding an $f(x)$ that minimizes $J[f(x)]$ is a harder problem than finding an $x$ that minimizes $f(x)$. For
-a calculus of variations problem, therefore we cannot write a general recipe like solve $f'(x) = 0$. We have to
-proceed by identifying special cases. The most common special case is one where $J$ depends on the _integral_ of a
-function $L()$ which is itself a function only of $x$, $y =f(x)$ and $y'= f'(x)$. That is
+For a calculus of variations problem we cannot write a general recipe like solve $f'(x) = 0$ because finding an $f(x)$
+that minimizes $J[f(x)]$ is a harder problem than finding an $x$ that minimizes $f(x)$. We therefore have to proceed by
+identifying special cases of $J[f]$ and developing special equations for them. The most common special case is one where
+$J$ depends on the _integral_ of a function $L()$ which is itself a function only of $x$, $y =f(x)$ and $y'= f'(x)$.
+That is
 
 $$
 \begin{equation*}
@@ -142,12 +144,12 @@ $$
 \end{equation}
 $$
 
-In computing the derivatives of $L$, we treat $y$ and $y'$ as independent variables. That is, when computing
-$\partial L/\partial y$ we do not worry about derivative of $y'$ with respect to $y$. Similarly when computing
-$\partial L/\partial y'$ we do not worry about derivative of $y$ with respect to $y'$. If we perform the
-manipulations in equation \eqref{eq:el}, it yields a differential in terms of $x$, $y$ and $y'$ whose solution gives
-us a $y(x)$. This is the part about COV being a machine for generating differential equations that, when solved,
-produce functions which satisfy our original objective.
+In computing the derivatives of $L$, we treat $y$ and $y'$ as independent variables. That is, when computing $\partial
+L/\partial y$ we do not worry about derivative of $y'$ with respect to $y$. Similarly when computing $\partial
+L/\partial y'$ we do not worry about derivative of $y$ with respect to $y'$. If we perform the manipulations in equation
+\eqref{eq:el}, it yields a differential equation in terms of $x$, $y$ and $y'$ whose solution gives us a $y(x)$. This is
+the part about COV being a machine for generating differential equations that, when solved, produce functions which
+satisfy our original objective.
 
 To add constraints, we use a the method of [Lagrange multipliers](https://en.wikipedia.org/wiki/Lagrange_multiplier).
 This method modifies the $L(x, y, y')$ function using the constraints and allows us to still use the Euler-Lagrange
@@ -155,9 +157,17 @@ equations. The method of Lagrange multipliers will become clear when we work wit
 
 ### Isoperimetric problem
 
-To solve the isoperimetric problem we're given a loop of an inelastic wire of perimeter $S$ and asked for a shape
-$y = f(x)$ that will maximize the area $A$ of the shape. To be able to use the Euler-Lagrange equation, we need to
-derive the $L$ function for the problem. There are standard formulas for the area and perimeter of any curve.
+The
+[isoperimetric problem](https://en.wikipedia.org/wiki/Isoperimetric_inequality#The_isoperimetric_problem_in_the_plane)
+can be stated as follows:
+
+>determine a plane figure of the largest possible area whose boundary has a specified length.
+
+In other words, we're given a loop of an inelastic wire of perimeter $S$ and asked for a shape $y = f(x)$ that will
+maximize the area $A$ of the shape. As stated above, the recipe is to derive an appropriate $L$ function for the problem
+and then use the Euler-Lagrange equation to get a differential equation for the curve.
+
+We can use well-known formulas for the area $A$ and the perimeter $S$ of a planar curve:
 
 $$
 \begin{align*}
@@ -184,9 +194,7 @@ $$
 $$
 
 where we have ignored the constant term $\lambda P$ since it wont survive the derivatives in the Euler-Lagrange
-equations.
-
-This is the standard form if we identify
+equations. This is the standard form if we identify
 
 $$
 \begin{equation*}
@@ -194,7 +202,7 @@ $$
 \end{equation*}
 $$
 
-This form is ready be plugged into the Euler-Lagrange equation. We obtain
+which gives us the $L$ function we were after. Plugging into the Euler-Lagrange equation we obtain
 
 $$
 \begin{align*}
@@ -218,7 +226,7 @@ is the standard equation of a circle centered at $(-h, -k)$ and radius $\lambda$
 ### Max entropy problem
 
 The max entropy problem is simpler calculus-wise but involves multiple constraints in a single problem. One version
-of the max entropy read as follows:
+of the max entropy reads:
 
 > Among all probability distributions $p(x)$ of known mean $\mu$ and known variance $\sigma^2$ find the one with
 largest entropy.
@@ -271,8 +279,9 @@ $$
 \end{align*}
 $$
 
-where $A \leftarrow e^{-(1+\lambda_1)}$, $a \leftarrow \lambda_2$ and $b \leftarrow \lambda_3$. We have the standard
-integrals (e.g. from Wolfram Alpha)
+where $A = e^{-(1+\lambda_1)}$, $a = \lambda_2$ and $b = \lambda_3$. Notice that in this case the differential equation
+we obtained reduced to a simple algebraic one. To proceed further we use the standard integrals for a Gaussian function
+(e.g. from Wolfram Alpha)
 
 $$
 \begin{align*}
@@ -368,7 +377,7 @@ We will explore generalization #2 in more detail using the isoperimetric problem
 seeking the function $y(x)$ we will parametrize the $x$ and the $y$ coordinates using a single dependent variable $t$
 and using _two_ functions: $x = x(t)$ and $y = y(t)$. To derive the new $L$ function, we need the formulas for the
 area and the perimeter of this parametrized curve. To that end we will consider two successive points along this
-curve separated by an infinitesimal distance $\delta t$. The situation is depicted in the figure below.
+curve separated by an infinitesimal distance $\Delta t$. The situation is depicted in the figure below.
 
 <figure>
     <img src="{{site.url}}/assets/img/triangle.png" alt='hello' width='500' heigh='500' style='margin: 10px;'>
@@ -379,15 +388,15 @@ The area of this infinitesimal triangle is
 
 $$
 \begin{align*}
-    \delta A &= \frac{1}{2}
+    \Delta A &= \frac{1}{2}
     \begin{vmatrix}
         0 & 0 & 1 \\
         x(t) & y(t) & 1 \\
-        x(t + \delta t) & y(t + \delta t) & 1
+        x(t + \Delta t) & y(t + \Delta t) & 1
     \end{vmatrix} \\
-    &= \frac{1}{2}\left[ x(t) y(t + \delta t) - y(t) x(t + \delta t)\right] \\
-    &= \frac{1}{2}[x(t) y'(t) - y(t) x'(t)]\delta t
-        \qquad\ldots \text{using } f(t + \delta t) \approx f(t) + f'(t)\delta t  \\
+    &= \frac{1}{2}\left[ x(t) y(t + \Delta t) - y(t) x(t + \Delta t)\right] \\
+    &= \frac{1}{2}[x(t) y'(t) - y(t) x'(t)]\Delta t
+        \qquad\ldots \text{using } f(t + \Delta t) \approx f(t) + f'(t)\Delta t  \\
     dA &= \frac{1}{2}(x y' - x'y)dt \qquad \ldots \text{differential notation}
 \end{align*}
 $$
@@ -395,12 +404,12 @@ $$
 The total area $A$ enclosed by the curve is the sum over areas of all infinitesimal triangles as the parameter $t$ is
 varied over its range: $A = \int \frac{1}{2}(x y' - x' y) dt$.
 
-The perimeter $\delta s$ of the exterior segment of the infinitesimal triangle is
+The perimeter $\Delta s$ of the exterior segment of the infinitesimal triangle is
 
 $$
 \begin{align*}
-    \delta s^2 &= (x(t+\delta t) - x(t))^2 + (y(t+\delta t) - y(t))^2 \\
-         &= (x'(t)^2 + y'(t)^2)\delta t^2\\
+    \Delta s^2 &= (x(t+\Delta t) - x(t))^2 + (y(t+\Delta t) - y(t))^2 \\
+         &= (x'(t)^2 + y'(t)^2)\Delta t^2\\
     ds &= \sqrt{x'^2 + y'^2} dt \qquad \ldots \text{differential notation}
 \end{align*}
 $$
@@ -459,7 +468,15 @@ $$
 
 is once again the standard equation of a circle.
 
+### Summary
+We dipped our toes in the fascinating world of calculus of variations. We stated the fundamental equation of COV, the
+Euler-Lagrange equation, and saw a few of its generalizations. Though we didnt delve into it, the form of the
+Euler-Lagrange equations has deeper significance and it appears over and over in study of Physics and Optimization.
 
+We next saw how to construct the $L$ function and solve the Euler-Lagrange equations for a couple of standard examples.
+As a result, we can now prove how circle is the shape that maximizes the area of a loop of given perimeter. Hopefully
+this modest exercise has provided you some appreciation for COV and left you with a sense of curiosity for further
+exploration.
 
 
 
