@@ -93,17 +93,17 @@ overview the fundamental equation of COV--the Euler-Lagrange equation. We will t
 solving two classic problems step-by-step. Nothing more than a knowledge of regular college calculus will be needed
 to understand the material.
 
-The two problems we will solve are the isoperimetric problem and the minimum entropy problem. You'll find these problems
-solved in most textbooks on the subject. Yet it is extremely helpful to internalize the concepts by going over them by
+The two problems we will solve are the isoperimetric problem and the max-entropy problem. While these problems are
+solved in most textbooks on the subject, it is extremely helpful to internalize the concepts by going over them by
 ourselves.
 
 As said earlier, the standard minimization problems is to find the $x_0$ which minimizes a given scalar function $f
-(x)$. By a scalar function we mean a function that returns a scalar value. In input variable $x$ can be a scalar or a
+(x)$. By a scalar function we mean a function that returns a scalar value. The input variable $x$ can be a scalar or a
 vector. The minimization problem in COV is to find the $f(x)$ which minimizes the objective function $J[f]$. An
-objective function is also known as a _functional_ which simply means a 'function that takes other functions as
-input'--something like higher-order functions in some programming languages. To reiterate, a regular function $f$ takes
-an input $x$ and outputs a scalar $y$. A functional takes the whole function $f$ and outputs a scalar. We can write
-the action of a functional in symbols as follows:
+objective function is also known as a _functional_, or simply a 'widget that consumes functions'. A functional is not
+unlike higher-order functions in some programming languages. To reiterate, a regular function $f$ takes an input $x$ and
+outputs a scalar $y$. A functional takes the whole function $f$ and outputs a scalar. We can write the action of a
+functional in symbols as follows:
 
 $$
 \begin{equation*}
