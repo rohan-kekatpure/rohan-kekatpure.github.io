@@ -130,9 +130,9 @@ J[y] = \int L(x, y, y')dx
 \end{equation*}
 $$
 
-This may seem like a oddly specific form. But it turns out that a variety of optimization
-problems can be expressed in the above form (and its minor variations). An important point to note is that the function
-$L$ can encode our optimization objective as well as the constraints.
+While this may seem like a oddly specific form, it turns out that a variety of optimization problems can be expressed in
+the above form or its extensions. An important point to note is that the function $L$ can encode our
+optimization objective as well as the constraints.
 
 ### The Euler-Lagrange equation
 
@@ -160,9 +160,9 @@ equations. The method of Lagrange multipliers will become clear when we work wit
 
 What we just did was gloss over a huge subject in three short paragraphs. Yes it makes me uncomfortable too. However,
 instead of worrying about the details left out, our approach for now is to focus on using the above as a recipe: Given
-an optimization objective and constraints do the following:
+an optimization objective and constraints:
 
-1. Construction an $L$ function in terms of $x$, $y$ and $y'$ (assuming this is possible)
+1. Construct an $L$ function in terms of $x$, $y$ and $y'$ (assuming its possible)
 
 2. Use the Euler-Lagrange equation to get a differential equation for $y$ and
 
@@ -492,7 +492,7 @@ is once again the standard equation of a circle.
 ### Summary
 We dipped our toes in the fascinating world of calculus of variations. We stated the fundamental equation of COV, the
 Euler-Lagrange equation, and saw a few of its generalizations. Though we didnt delve into it, the form of the
-Euler-Lagrange equations has deeper significance and it appears over and over in study of Physics and Optimization.
+Euler-Lagrange equations has deeper significance and it makes recurring appearances in Physics and Optimization.
 
 We next saw how to construct the $L$ function and solve the Euler-Lagrange equations for a couple of standard examples.
 As a result, we can now prove how circle is the shape that maximizes the area of a loop of given perimeter. Hopefully
