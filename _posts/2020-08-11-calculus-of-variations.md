@@ -23,9 +23,9 @@ of regular calculus that can calculate whole functions: Differential Equations. 
 differential equation for this problem, we could find the function that satisfies our requirements. COV provides this
 missing piece.
 
-Loosely speaking, COV is a final piece in a progression of widgets. Functions accept values and output values; the
-parameters of the functions are hardcoded. Differential equations accept boundary conditions and output functions;
-parameters of the differential equation are hardcoded. Equations of COV accept an objective function (plus any
+Loosely speaking, COV is a final piece in a progression of widgets. **Functions** accept values and output values; the
+parameters of the functions are hardcoded. **Differential equations** accept boundary conditions and output functions;
+parameters of the differential equation are hardcoded. **Equations of COV** accept an objective function (plus any
 constraints) and output differential equations; parameters of the objective function are hardcoded. The picture below
 helps visualize the hierarchy.
 
