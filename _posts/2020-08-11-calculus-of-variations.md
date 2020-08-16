@@ -8,8 +8,9 @@ image:
 ---
 
 Calculus of variations (COV) sits in the gap between calculus and optimization. In regular calculus, we learn to find
-max or min of functions. COV is about finding not function values but functions themselves that achieve certain
-objectives. This higher-level goal makes the subject of COV both challenging and useful.
+max or min of functions. COV is not about finding optimal values for given functions but about finding whole functions
+that optimize certain objectives. This is a higher-level goal and is what makes the subject both challenging and
+useful.
 
 Let illustrate with a simple example. A typical problem in regular calculus asks us to find a _point_ $x$ where the
 function $f(x) = x^2 e^{-2x}$ achieves its maximum value. To solve this, we calculate $f'(x)$ using rules of
