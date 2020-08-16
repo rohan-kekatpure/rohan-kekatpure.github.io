@@ -112,11 +112,11 @@ $$
 Any subroutine which calculates the mean, median, variance, or area, of an input function is a functional. Objective
 functions used in machine learning algorithms are functionals. There are examples of functionals in scientific libraries
 (e.g. [numerical integration using Simpson's
-rule](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps.html)). Fourier transform, on the
-other hand, is _not_ a functional by our definition. A Fourier transform calculator takes in a function and outputs
+rule](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps.html)).
+Fourier transform, on the other hand, is _not_ a functional by our definition since it takes in a function and outputs
 another function, not a scalar.
 
-For a calculus of variations problem we cannot write a general recipe like solve $f'(x) = 0$ because finding an $f(x)$
+For a COV problems we cannot write a general recipe like solve $f'(x) = 0$ because finding an $f(x)$
 that minimizes $J[f(x)]$ is a harder problem than finding an $x$ that minimizes $f(x)$. We therefore have to proceed by
 identifying special cases of $J[f]$ and developing special equations for them. The most common special case is one where
 $J$ depends on the _integral_ of a function $L()$ which is itself a function only of $x$, $y =f(x)$ and $y'= f'(x)$.
@@ -156,6 +156,14 @@ To add constraints, we use a the method of [Lagrange multipliers](https://en.wik
 This method modifies the $L(x, y, y')$ function using the constraints and allows us to still use the Euler-Lagrange
 equations. The method of Lagrange multipliers will become clear when we work with examples.
 
+What we just did was gloss over a huge subject in three short paragraphs. Yes it makes me uncomfortable too. However,
+instead of worrying about the details left out, our approach for now is to focus on using the above as a recipe: Given
+an optimization problem expressed in terms of and objective function and constraints involving $x$, $y$ and $y'$, use
+the Euler-Lagrange equation to get a differential equation and solve it for $y$. Once this process is familiar and
+trusted, it becomes easier to appreciate the derivation.
+
+Now lets test how the recipe works on a couple of classic problems.
+
 ### Isoperimetric problem
 
 The
@@ -165,8 +173,13 @@ can be stated as follows:
 >determine a plane figure of the largest possible area whose boundary has a specified length.
 
 In other words, we're given a loop of an inelastic wire of perimeter $S$ and asked for a shape $y = f(x)$ that will
-maximize the area $A$ of the shape. As stated above, the recipe is to derive an appropriate $L$ function for the problem
-and then use the Euler-Lagrange equation to get a differential equation for the curve.
+maximize the area $A$ of the shape. I've asked this question to dozens of people between the ages of 10 and 80 and
+almost everyone has given a correct answer (circle). Yet it is a nontrivial matter to actually prove that the
+intuitive answer is indeed the right one.
+
+As stated above, out three-step recipe is to (1) derive an appropriate $L$ function for the problem, (2) use the
+Euler-Lagrange equation to get a differential equation for the curve and (3) solve the differential equation to get
+the actual shape.
 
 We can use well-known formulas for the area $A$ and the perimeter $S$ of a planar curve:
 
