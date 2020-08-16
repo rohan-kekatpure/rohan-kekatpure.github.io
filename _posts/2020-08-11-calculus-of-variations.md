@@ -183,7 +183,7 @@ maximize the area $A$ of the shape. I've asked this question to dozens of people
 almost everyone has given a correct answer (circle). Yet it is a nontrivial matter to actually prove that the
 intuitive answer is indeed the right one.
 
-As stated above, out three-step recipe is to (1) derive an appropriate $L$ function for the problem, (2) use the
+As stated above, our three-step recipe is to (1) derive an appropriate $L$ function for the problem, (2) use the
 Euler-Lagrange equation to get a differential equation for the curve and (3) solve the differential equation to get
 the actual shape.
 
