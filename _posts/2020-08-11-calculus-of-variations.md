@@ -11,7 +11,7 @@ Calculus of variations (COV) sits in the gap between calculus and optimization. 
 max or min of functions. COV is not about finding optimal values for a given function but about finding a whole function
 that optimize a given objective. This is a higher-level goal and is what makes the subject both challenging and useful.
 
-Let illustrate with a simple example. A maxima/minima problem in regular calculus might ask us to find a _point_ $x$
+Let us illustrate with a simple example. A maxima/minima problem in regular calculus might ask us to find a _point_ $x$
 where the function $f(x) = x^2 e^{-2x}$ achieves its max or min value. To solve this, we calculate $f'(x)$ using rules
 of differential calculus and set $f'(x) = 0$ to find the desired $x$.
 
