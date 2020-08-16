@@ -58,15 +58,16 @@ It is worth seeing briefly how COV game is played in different fields before mov
 In Physics, there is an important toolbox called the minimization principles (also known as [Variational
 Principles](https://en.wikipedia.org/wiki/Variational_principle)). A popular (and successful) technique in theoretical
 Physics can be described as follows. We start by expressing a known law of Physics (e.g. Newtonian mechanics) in terms
-of a minimization principle. While this reformulation by itself does not produce new laws, it leads us to a new
-mathematical structure for the old theory that is more 'higher level' or abstract. Then there is a leap of faith. It is
-hypothesized that this mathematical structure is obeyed not only in the known-and-old field (e.g Newtonian mechanics)
-but also in new-and-unknown fields (e.g. Quantum Field Theory). Once this is accepted, the game is then to guess the
-right quantity to minimize and use the techniques of COV to find a new law of Physics. Considerable insight is required
-to guess the right minimization objective and a coming up with these often represents [life's work for some theoretical
-physicists](https://en.wikipedia.org/wiki/Higgs_boson#History). Experiment, of
-course, is the final judge of whether the guess was right or wrong. A good [summary](https://en.wikipedia
-.org/wiki/Lagrangian_field_theory) of well-known minimization principles in Physics can be found on Wikipedia.
+of a minimization principle (Lagrangian mechanics). This reformulation has the same physical content as the old theory
+and by itself it does not produce new laws. However, it leads us to new mathematical structures for the old theory that
+is more 'higher level' or abstract. Then there is a leap of faith. It is hypothesized that this mathematical structure
+is obeyed not only in the known-and-old field (e.g Newtonian mechanics) but also in new-and-unknown fields (e.g. Quantum
+Field Theory). Once this is accepted, the game is then to guess the right quantity to minimize and use the techniques of
+COV to find a new law of Physics. Considerable insight is required to guess the right minimization objective and a
+coming up with these often represents [life's work for some theoretical
+physicists](https://en.wikipedia.org/wiki/Higgs_boson#History). Experiment, of course, is the final judge of whether the
+guess was right or wrong. A good [summary](https://en.wikipedia org/wiki/Lagrangian_field_theory) of well-known
+minimization principles in Physics can be found on Wikipedia.
 
 Minimization principles also play an important role in computational Physics. If a suitable minimization principle is
 known for a problem, it enables computational solutions to otherwise difficult-to-handle problems. Calculation of the
