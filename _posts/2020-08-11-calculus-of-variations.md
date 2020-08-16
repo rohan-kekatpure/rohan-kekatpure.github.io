@@ -158,11 +158,16 @@ equations. The method of Lagrange multipliers will become clear when we work wit
 
 What we just did was gloss over a huge subject in three short paragraphs. Yes it makes me uncomfortable too. However,
 instead of worrying about the details left out, our approach for now is to focus on using the above as a recipe: Given
-an optimization problem expressed in terms of and objective function and constraints involving $x$, $y$ and $y'$, use
-the Euler-Lagrange equation to get a differential equation and solve it for $y$. Once this process is familiar and
-trusted, it becomes easier to appreciate the derivation.
+an optimization objective and constraints do the following:
 
-Now lets test how the recipe works on a couple of classic problems.
+1. Construction an $L$ function in terms of $x$, $y$ and $y'$ (assuming this is possible)
+
+2. Use the Euler-Lagrange equation to get a differential equation for $y(x)$ and
+
+3. solve the differential equation for $y$ to get the actual curve.
+
+Once this process is familiar and trusted, it becomes easier to appreciate the derivation. Now lets test how the recipe
+works on a couple of classic problems.
 
 ### Isoperimetric problem
 
