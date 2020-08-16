@@ -19,7 +19,7 @@ differential calculus and solve $f'(x) = 0$ to find the desired $x$. Some will c
 A typical problem in COV will ask us to find a _function_ $y = f(x)$ that minimizes the area bounded by $f(x)$ while
 holding its perimeter constant. After a bit of pondering you'll find that this problem _cannot_ readily be solved by
 regular calculus. What should we differentiate and set to zero to find an entire function? There _is_, however, a branch
-of regular calculus that helps us calculate whole functions--Differential Equations. If we could somehow get a
+of regular calculus that can calculate whole functions: Differential Equations. If we could somehow get a
 differential equation for this problem, we could find the function that satisfies our requirements. COV provides this
 missing piece.
 
