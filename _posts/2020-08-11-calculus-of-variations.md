@@ -135,9 +135,9 @@ optimization objective as well as the constraints.
 
 ### The Euler-Lagrange equation
 
-Once the optimization problem is expressed in the above form, the recipe for solving it is to form a differential
-equation for $y = f(x)$ and solve that differential equation. The differential equation for $y$ is obtained from the
-standard form via the famous [Euler-Lagrange equations](https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation):
+Once the optimization problem is expressed in the above form, and the $L$ function is derived, the next step is to form
+a differential equation for $y = f(x)$. The differential equation for $y$ is obtained from $L$ function via the
+famous [Euler-Lagrange equation](https://en.wikipedia.org/wiki/Euler%E2%80%93Lagrange_equation):
 
 $$
 \begin{equation}
@@ -149,9 +149,10 @@ $$
 In computing the derivatives of $L$, we treat $y$ and $y'$ as independent variables. That is, when computing $\partial
 L/\partial y$ we do not worry about derivative of $y'$ with respect to $y$. Similarly when computing $\partial
 L/\partial y'$ we do not worry about derivative of $y$ with respect to $y'$. If we perform the manipulations in equation
-\eqref{eq:el}, it yields a differential equation in terms of $x$, $y$ and $y'$ whose solution gives us a $y(x)$. This is
-the part about COV being a machine for generating differential equations that, when solved, produce functions which
-satisfy our original objective.
+\eqref{eq:el}, it yields a differential equation in terms of $x$, $y$ and $y'$. In the final step we solve the
+differential equation to obtain $y(x)$, the shape (or function) that was originally sought. This is the part about COV
+being a machine for generating differential equations that, when solved, produce functions which satisfy our original
+objective.
 
 To add constraints, we use a the method of [Lagrange multipliers](https://en.wikipedia.org/wiki/Lagrange_multiplier).
 This method modifies the $L(x, y, y')$ function using the constraints and allows us to still use the Euler-Lagrange
