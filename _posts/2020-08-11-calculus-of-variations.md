@@ -120,7 +120,7 @@ another function, not a scalar.
 
 For a COV problems we cannot write a general recipe like solve $f'(x) = 0$ because finding an $f(x)$
 that minimizes $J[f(x)]$ is a harder problem than finding an $x$ that minimizes $f(x)$. We therefore have to proceed by
-identifying special cases of $J[f]$ and developing special equations for them. The most common special case is one where
+identifying special cases of $J[f]$ and tailoring equations for them. The most common special case is one where
 $J$ depends on the _integral_ of a function $L()$ which is itself a function only of $x$, $y =f(x)$ and $y'= f'(x)$.
 That is
 
@@ -131,7 +131,7 @@ J[y] = \int L(x, y, y')dx
 $$
 
 This may seem like a oddly specific case without general utility. But it turns out that a variety of optimization
-problems can be expressed in the above form and its minor variations. An important point to note is that the function
+problems can be expressed in the above form (and its minor variations). An important point to note is that the function
 $L$ can encode our optimization objective as well as the constraints.
 
 ### The Euler-Lagrange equation
