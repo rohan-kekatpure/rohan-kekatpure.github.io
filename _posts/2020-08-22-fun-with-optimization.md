@@ -163,10 +163,10 @@ def greedy(r, theta, n_iterations=1000):
     x0, y0 = pol2cart(r, theta)
     for i in range(n_iterations):
         old_r = r.copy()
-        j = np.random.randint(0, n_points)
-        r[j] += np.random.uniform(-.01, .01)
+        j = np.random.randint(0, n_points)  # index of selected point
+        r[j] += np.random.uniform(-.01, .01) # small perturbation to r_j
         new_perim = perimeter(r, theta)
-        r *= constraint_val / new_perim
+        r *= constraint_val / new_perim  # ensuring perimeter is unchanged
         new_area = area(r, theta)
         if new_area > best_area:
             best_area = new_area
@@ -178,15 +178,106 @@ def greedy(r, theta, n_iterations=1000):
 ```
 
 The implementation closely follows the description. One only needs to remember that the perturbed list of points
-needs to be scaled to make sure the perimeter remains unchanged. The Python implementation isn't too different from
+needs to be scaled to make sure the perimeter remains unchanged. Other than that the logic is straightforward.
+Following animation shows how the greedy algorithm evolves to its optimum shape.
 
 <figure>
     <img src="{{site.url}}/assets/img/greedy.gif" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
+After 25000 iterations, the shape is pretty close to a circle (but not exactly). Letting it run for a while longer
+will gets it closer to a circle. With the constraint value $\approx 2\pi$ the final area is $\approx \pi$.
 
 ## Solution using hand-coded gradient descent
-## Solution using deep learning in Pytorch
+
+## Neural network
+
+Finally we will attempt to solve the isoperimetric problem using a neural network. We will use Pytorch as to code
+our neural network, though we will only be needing a simple 1 hidden-layer-network, not a deep architecture. To begin
+we create our 1-layer network architecture:
+
+```python
+class Inet(nn.Module):
+    def __init__(self, n_in, n_hidden, n_out):
+        super(Inet, self).__init__()
+        self.main = nn.Sequential(
+            nn.Linear(n_in, n_hidden, bias=False),
+            nn.Tanh(),
+            nn.Linear(n_hidden, n_out, bias=False)
+        )
+
+    def forward(self, input_):
+        return self.main(input_)
+```
+
+Usually neural networks are used to solve supervised learning problems. We have a list of input-output pairs:
+Image/labels, audio/words, or sentence/sentiment and we seek to minimize the prediction error. The isoperimetric
+problem, on the other hand, is a pure constrained optimization problem. There are no inputs; we simply seek to arrange
+$N$ ordered points to maximize the area formed by their loop while keeping the perimeter fixed. Therefore our input will
+be a constant scalar of value `x = 1.0` and output will be `n_points` radius values (one for each value of $\theta$
+between $0^\circ$ and $360^\circ$).
+
+The loss function will be defined on output values only. Since Pytorch functions are differentiable, we can construct
+very sophisticated loss functions. For instance, we can directly construct a constrained loss function **without** the
+need to explicitly ensure that the perimeter constrained is satisfied at every iteration. In other words, in Pytorch we
+can construct a loss function with Lagrange multipliers directly (We will look at how to translate this into code
+shortly):
+
+$$
+\begin{align*}
+J(r) = -A(r, \theta) + \lambda_1 \Big[S(r, \theta) - C\Big]^2
+\end{align*}
+$$
+
+The loss function above says that we have an optimization objective $J$ (also called as the loss function) which depends
+on the list of radius values $r = [r_1, r_2, \ldots, r_N]$. It is the sum of the (negative) area $-A$ and the deviation
+between the computed perimeter $S$ and its constraint value $C$. Remember that we already have code for $A$ and $S$.
+
+Before moving to code, lets convince ourselves why solving that formula is equivalent to solving our problem. The
+function $J$ will be minimized when $-A$ is minimized (i.e. $A$ is maximized) and the deviation between computed and
+constrained perimeters is $0$. A list $r$ of radius values that maximizes $A$ and minimizes deviation between $A$ and
+$C$ is exactly what we're after. So if we get such a list, then it means we've solved the problem.
+
+Once we understand this, the coding part is straightforward:
+
+```python
+def loss(r, theta, lambda1):
+    C = torch.tensor(2 * np.pi)
+    x, y = pol2cart(r, theta)
+    area = 0.5 * torch.trapz(r * r, theta)
+    perim = perimeter(x, y)
+    J = -area + lambda1 * (perim - C) ** 2
+    return J
+```
+
+With the loss function in hand, we can put everything together: we instantiate our neural net, fix our learning rate
+and iterate till the loss is not minimized (or it stops changing). The following code accomplishes this.
+
+```python
+def nnet_optimizer(r, theta, learning_rate, lambda1):
+    num_points = r.shape[0]
+    theta = torch.tensor(theta)
+    r = torch.tensor(r)
+    model = Inet(1, 100, num_points)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    input = torch.tensor([1.])
+    for i in range(n_iterations):
+        r = model(input)
+        loss = iso_loss(r, theta, lambda1, lambda2)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    return r, theta
+```
+
+Following animation shows how the greedy algorithm evolves to its optimum shape.
+
+<figure>
+    <img src="{{site.url}}/assets/img/deepnet.gif" alt='hello' width='800' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
+
 
 
