@@ -18,14 +18,9 @@ arrive to its solution.
 
 Optimization is all around us. Various physical entities are constantly solving some form of optimization problem: water
 running downhill (finding state of least energy), light rays trying traveling on fastest routes between two points,
-electric currents finding paths of least resistance. The optimizing propensity of entities is so ingrained is us that it
-causes us sometimes to flip the direction of causality (e.g. in forensics). Instead of analysing the behavior to
-guess the objective, we theorize the objective and try to predict the behavior. This strategy is well summarized in the
-cultural aphorism "follow the money".
-
-Given the omnipresence of optimization problems, there is a large pool of simple and intuitive problem candidates for
-our exploration. We're want a known problem that is conceptually rich. Once such problem is the [isoperimetric
-problem](https://bit.ly/2ErbGK2) whose statement reads:
+electric currents finding paths of least resistance. Given the omnipresence of optimization problems, there is a large
+pool of simple and intuitive problem candidates for our exploration. We're want a known problem that is conceptually
+rich. Once such problem is the [isoperimetric problem](https://bit.ly/2ErbGK2) whose statement reads:
 
 >Among all closed curves in the plane of fixed perimeter, which curve maximizes the area of its enclosed region?
 
