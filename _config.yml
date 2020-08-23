@@ -14,8 +14,12 @@
 paginate:            5
 
 # Build settings
-markdown:            kramdown
-highlighter:         rouge
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter_opts:
+    default_lang: python
+    line_numbers: false
 permalink:           none
 plugins:             [jekyll-paginate, jekyll-sitemap, jekyll-feed, jekyll-seo-tag]
 

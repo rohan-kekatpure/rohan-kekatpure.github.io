@@ -47,7 +47,7 @@ addition, there is more uniformity in the structure of objective functions than 
 
 It is worth seeing briefly how COV game is played in different fields before moving to the examples.
 
-### Connections to other fields
+## Connections to other fields
 
 <figure>
     <img src="{{site.url}}/assets/img/cov_map.png" alt='map' style='margin: 10px;'>
@@ -85,7 +85,7 @@ certain quantities (e.g. regularized loss functions). In addition to vanilla opt
 specifically inspired by energy minimization principles. Energy minimization for image segmentation or
 stereo depth estimation can be cited an examples.
 
-### Standard form of the calculus of variations problem
+## Standard form of the COV problem
 
 Hopefully the above examples have provided a broad sense of why COV and the variational techniques what it begets are
 fundamental to a lot of fields. In the remainder of this post, we will get gently introduced to COV. First we will
@@ -133,7 +133,7 @@ While this may seem like a oddly specific form, it turns out that a variety of o
 the above form or its extensions. An important point to note is that the function $L$ can encode our
 optimization objective as well as the constraints.
 
-### The Euler-Lagrange equation
+## The Euler-Lagrange equation
 
 Once the optimization problem is expressed in the above form, and the $L$ function is derived, the next step is to form
 a differential equation for $y = f(x)$. The differential equation for $y$ is obtained from $L$ function via the
@@ -171,7 +171,7 @@ an optimization objective and constraints:
 Once this process is familiar and trusted, it becomes easier to appreciate the theory behind the Euler-Lagrange
 equations. Now lets test how the recipe works on a couple of classic problems.
 
-### Isoperimetric problem
+## Isoperimetric problem
 
 The
 [isoperimetric problem](https://en.wikipedia.org/wiki/Isoperimetric_inequality#The_isoperimetric_problem_in_the_plane)
@@ -244,7 +244,7 @@ $$
 
 is the standard equation of a circle centered at $(-h, -k)$ and radius $\lambda$.
 
-### Max entropy problem
+## Max entropy problem
 
 The max entropy problem is simpler calculus-wise but involves multiple constraints in a single problem. One version
 of the max entropy reads:
@@ -342,7 +342,7 @@ $$
 
 which is a normal distribution with mean $\mu$ and variance $\sigma^2$.
 
-### Generalizations of Euler-Lagrange equations
+## Generalizations of Euler-Lagrange equations
 
 The two problems we solved so far used the $L$ function that depended on $x$, $y$ and $y'$. There are many
 generalizations of $L$ functions. Three practically important generalizations that immediately follow the one we've
@@ -392,7 +392,7 @@ considered are the following.
 Further generalization are possible and the reader is referred to [Wikipedia](https://en.wikipedia
 .org/wiki/Euler%E2%80%93Lagrange_equation#Generalizations) for more.
 
-### Isoperimetric problem in parametrized coordinates
+## Isoperimetric problem revisited
 
 We will explore generalization #2 in more detail using the isoperimetric problem again. Instead of directly
 seeking the function $y(x)$ we will parametrize the $x$ and the $y$ coordinates using a single dependent variable $t$
@@ -489,7 +489,7 @@ $$
 
 is once again the standard equation of a circle.
 
-### Summary
+## Summary
 We dipped our toes in the fascinating world of calculus of variations. We stated the fundamental equation of COV, the
 Euler-Lagrange equation, and saw a few of its generalizations. Though we didnt delve into it, the form of the
 Euler-Lagrange equations has deeper significance and it makes recurring appearances in Physics and Optimization.
