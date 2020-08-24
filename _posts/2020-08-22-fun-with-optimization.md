@@ -28,21 +28,35 @@ In other words, given a closed loop of an inelastic thread the problem asks us t
 will maximize the given area. In an [earlier post]({% post_url 2020-08-11-calculus-of-variations %}) we saw a
 theoretical solution to this problem. In the present post we will solve it using code.
 
-## Constructing the cost function
+## Translating abstract problem into code
 
-To solve with code, a problem needs to be specified precisely. In particular, we need to carefully specify the inputs,
-the objective function and the constraints.
+To solve any problem with code, it needs to be specified precisely. For the isoperimetric problem, we need to carefully
+specify the inputs, the objective function, the constraints and the minimization procedure.
 
-Our input is a list of  points on an arbitrary loop of a given perimeter. We can easily generate a random list of
-points by generating pairs of random real numbers $(x, y)$ drawn from some distribution. How can we ensure they form
-a closed loop?
+Viewed abstractly, our input is merely the perimeter $C$ of the loop and the output is the shape which maximizes its
+enclosed area while keeping its perimeter equal to $C$. To proceed with coding, we need to a way to represent concepts
+like 'loop' and 'shape'. We can do that as follows.
 
-Points on a loop one characteristic. Vaguely, for (a list of  discrete) points on a loop, we can always tell if given two
-points are next to each other. I.e. points on a loop have a notion of _ordering_. The way to make sure our random point
-set belongs to a loop is to _order_ them. A simple way to get an ordered list of  random points on a plane is to loop
-through angles between $0$ through $360^\circ$ and assign a random radius to each point. Another way is to
-generate random $(x, y)$ tuples and sort them by their angle $\theta = \tan^{-1}\frac{y}{x}$. The following
-code shows our point-generation.
+### Representing a closed shape
+
+A shape can be represented by a list of two dimensional points. Each point in the list can be specified either as a
+tuple of its $x$ and $y$ coordinates or as a tuple of its distance from origin $r$ and the angle $\theta$ of the line
+connecting the point to the origin. It will turn out later that the area is simpler to compute in the $(r, \theta)$
+version and perimeter is simpler in the $(x, y)$ version. For now just note that it is simple to translate an $(r,
+\theta)$ point to an $(x, y)$ point.
+
+<figure>
+    <img src="{{site.url}}/assets/img/xyrtheta.png" alt='hello' width='400' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
+
+We can easily generate a random list of points by generating pairs of random real numbers $(x, y)$. How can we ensure
+they form a closed loop? Loosely speaking, for points to lie on a loop, we have to be able tell if given two points are
+next to each other. Without the ability to tell adjoining points, we cant compute the perimeter. After all perimeter
+is simply the sum of distances between adjacent points.
+
+A simple way to get an ordered list of  random points on a plane is to loop through angles between $0$ through
+$360^\circ$ and assign a random radius to each point. The listing below shows our point-generation.
 
 ```python
 def generate_points(n_points):
@@ -51,8 +65,8 @@ def generate_points(n_points):
     return radius, theta
 ```
 
-The above function returns the list of  points in the polar $(r, \theta)$ coordinates. We can convert them into cartesian
-$(x, y)$ coordinates using a convenience function as follows:
+The above function returns the list of  points in the polar $(r, \theta)$ coordinates. We can convert them into
+cartesian $(x, y)$ coordinates using a convenience function:
 
 ```python
 def pol2cart(r, theta):
@@ -62,20 +76,48 @@ def pol2cart(r, theta):
 ```
 
 The $(x, y)$ representation is easier to plot and when plotted our initialized loop looks like this:
+
 <figure>
     <img src="{{site.url}}/assets/img/loop.png" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
-Next we need to define the computation of the perimeter and the area. Mathematically the perimeter $S$ and the area $A$
-of a curve $y = f(x)$ are given by $S = \int \sqrt{1 + y'^2}dx$ and $A = \int y dx$. Next we will show how to code
-these formulas
+Next we need to specify how we can compute the perimeter and the area of this loop represented as a list of points.
 
-### Computation of perimeter
+### Computing the area
 
-The mathematical formula for perimeter is complicated because it involves a derivative. Fortunately, if we have a
-table of $(x, y)$ values we can avoid the use of derivative and directly obtain the perimeter. We will first state
-the formula and then deconstruct it to write the code.
+The area turns out to be easier to compute with $(r, \theta)$. In this representation, the
+formula for area is $A = \int \frac{1}{2}r^2d\theta$. This formula is simply a mathematical way of writing a
+`for` loop. A direct (but naive) conversion of this formula into code is:
+
+```python
+# r = list of radii, theta = list of theta values
+def area(r, theta):
+    dtheta = theta[1] - theta[0]
+    A = 0.0
+    N = len(r)
+    for i in range(N):
+        A += 0.5 * r[i] * r[i] * dtheta
+    return A
+```
+
+We can do significantly better by using established numerical integration routines such as the
+[Simpsons rule](https://en.wikipedia.org/wiki/Simpson%27s_rule) whose [Python implementation](https://docs.scipy
+.org/doc/scipy/reference/generated/scipy.integrate.simps.html) is available in the
+popular Scipy library. With the use of this ready-made function, our area computation code is particularly simple:
+
+```python
+from scipy.integrate import simps
+def area(r, theta):
+    return 0.5 * simps(r * r, theta)
+```
+
+### Computing the perimeter
+
+The $(x, y)$ representation is better for computing the perimeter. The formula for perimeter of a curve $y = f(x)$ is $S
+= \int \sqrt{1 + y'^2} dx$. This formula is complicated because it involves a derivative. Fortunately, we have a table
+of ordered $(x, y)$ values which allows to avoid derivatives and directly obtain the perimeter by looping over
+consecutive points:
 
 $$
 \begin{equation*}
@@ -83,66 +125,76 @@ S = \sum_{0}^{N}\sqrt{(x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2}
 \end{equation*}
 $$
 
-The above equation states that if we have $N$ points in the set, then we loop over the index and add up the Pythagorean
-distance between consecutive points. Translated into code:
+The above equation says that the total perimeter is simply the sum of distances between consecutive points of the curve.
+We can simply loop over the list index and add up the Pythagorean distance between consecutive points. Again, the
+direct but naive translation into code is:
 
 ```python
-def perimeter(x_list, y_list):
-    N = len(points)
+# x = list of x-coordinates
+# y = list of y-coordinates
+def perimeter(x, y):
+    N = len(x)
     S = 0.0
     for i in range(N - 1):
-        x1 = x_list[i]  # current x
-        y1 = y_list[i]  # current y
-        x2 = x_list[i+1]  # next x
-        y2 = y_list[i+1]  # next y
-        S += sqrt((x2 - x1) ** 2  + (y2 - y1) ** 2)
-
+        S += sqrt((x[i+1] - x[i]) ** 2  + (y[i+1] - y[i]) ** 2)
     return S
 ```
 
-Of course, since `for` loops in Python are slow, a more efficient implementation uses vectorized operations in Numpy.
-The version actually used (but functionally equivalent to the above code) is:
+A more efficient (but equivalent) implementation uses Numpy:
 
 ```python
-def perimeter(x_list, y_list):
-    dx = np.diff(x_list)
-    dy = np.diff(y_list)
-    perim = np.sqrt((dx * dx + dy * dy)).sum()
-    return perim
+def perimeter(x, y):
+    dx = np.diff(x)
+    dy = np.diff(y)
+    return np.sqrt((dx * dx + dy * dy)).sum()
 ```
 
-### Computation of area
+### The optimization objective
 
-Remember that we have _two_ equivalent version of our list of points. One is as a list of $(x, y)$ tuples and the other
-is as a set of $(r, \theta)$ tuples. The function `pol2cart()` listed above can overt the $(r, \theta)$ list to the $(x,
-y)$ list. Because our points are generated to be uniformly spaced spaced in $\theta$ (by the `generate_points()`
-function), it turns out that the $(r, \theta)$ version is easier for area computation than the $(x, y)$ version. In
-the $(r, \theta)$ representation the formula for area is $A = \int \frac{1}{2}r^2d\theta$. Numerical integration
-functions can easily integrate this function if given a list of $(r, \theta)$ points. A popular numerical
-integration technique is [Simpsons rule](https://en.wikipedia.org/wiki/Simpson%27s_rule) whose
-[Python implementation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps.html) is available
-in the popular Scipy library. With the use of this ready-made function, our area computation code is particularly
-simple:
+With the implementation of area and perimeter in hand, we're ready to take the final step in the problem
+specification. The initial shape given to us has the perimeter $C$ but does not enclose maximum area yet. We somehow
+need to modify each point in the list so that it occupies more and more area, while maintaining its perimeter equal
+to $C$. When it is no longer possible to modify the shape to increase the enclosed area, it means we have found the
+solution to our problem. We show next how to translate this operation into code. We will define a mathematical
+function whose minimum value will give us a set of points that maximise the area while maintaining the code. First we
+will write this function down and then deconstruct its meaning. The function is the following:
+
+$$
+\begin{align*}
+L(r) = -A(r) + \lambda \Big[S(r) - C\Big]^2
+\end{align*}
+$$
+
+The function $L$ is called variously as the loss function, cost function, or the objective function. The claim is
+that if we find a list of points $(r, \theta)$ that minimizes the function $L$, then it is the same as having solved
+our problem of maximizing the area at a fixed perimeter $C$.
+
+Lets convince ourselves why. The function $L$ will be minimized when $-A$ is minimized (i.e. $A$ is maximized) _and_ the
+difference between computed perimeters and $C$ is $0$. A list $r$ of radius values that maximizes $A$ and minimizes
+deviation between $A$ and $C$ is exactly what we're after. So if we get such a list, then it means we've solved the
+problem.
+
+Once we understand this, the coding part is straightforward:
 
 ```python
-from scipy.integrate import simps
-def area(r, theta):
-    return simps(r * r, theta) / 2.0
+def loss(r, theta, C, lambda1):
+    A = area(r, theta)
+    S = perimeter(r, theta)
+    L = -A + lambda1 * (S - C) ** 2
+    return L
 ```
 
-### Enforcing the perimeter constraint
+Notice that `loss()` uses the `area()` and the `perimeter()` functions that we just implemented.
 
-The constraint of our problem is that the perimeter of the loops is constant to a given value. For sake of
-concreteness lets assume this constant value is $C = 2\pi \approx 6.28$. A simple way to enforce this constraint is
-to compute the perimeter $S$ at each iteration and scale all points in the list by the ratio of computed perimeter to
-the desired value. For the $(x, y)$ representation, both $x$ and $y$ need this scaling. For the $(r, \theta)$ version
-only $r$ needs to be scaled, since $\theta$ is the angle and doesnt change with scaling of length.
+The implementation of the `loss()` function completes the specification of the problem. Next step is to find the list
+of $r$ values that yields the minimum value of loss. We will do this minimization using multiple algorithms:
 
-We have now specified how to compute the objective function (i.e the area) the constraint (i.e. the perimeter) and
-shown how to enforce the constraint. We're now ready to apply different algorithms to see how each algorithm
-evolves to the area-maximizing shape.
+1. Greedy algorithm, coded from scratch
+2. Gradient descent, coded from scratch
+3. Adam optimizer in Pytorch
+4. Stochastic gradient descent in Pytorch
 
-## Solution using greedy algorithm
+## Greedy algorithm
 
 The greedy algorithm is simple iterative algorithm. In each iteration, we modify the shape slightly by adding small
 random values to coordinate of a randomly selected point in the loop and recompute the area. If the new area is larger
@@ -150,26 +202,25 @@ than the previous area, we replace the old set of points with the new (perturbed
 old set of points.
 
 ```python
-def greedy(r, theta, n_iterations=1000):
+def greedy(r, theta, C, lambda1, n_iterations):
     n_points = r.shape[0]
-    constraint_val = 2 * np.pi
     best_r = r.copy()
-    best_area = area(best_r, theta)
-    x0, y0 = pol2cart(r, theta)
+    best_loss = loss(best_r, theta, C, lambda1)
+
     for i in range(n_iterations):
         old_r = r.copy()
-        j = np.random.randint(0, n_points)  # index of selected point
-        r[j] += np.random.uniform(-.01, .01) # small perturbation to r_j
-        new_perim = perimeter(r, theta)
-        r *= constraint_val / new_perim  # ensuring perimeter is unchanged
-        new_area = area(r, theta)
-        if new_area > best_area:
-            best_area = new_area
+        j = np.random.randint(0, n_points)
+        r[j] += np.random.uniform(-0.01, 0.01)
+        new_loss = loss(r, theta, C, lambda1)
+
+        if new_loss < best_loss:
+            best_loss = new_loss
             best_r = r
         else:
             r = old_r
 
     return best_r, theta
+
 ```
 
 The implementation closely follows the description. One only needs to remember that the perturbed list of points
@@ -184,7 +235,12 @@ Following animation shows how the greedy algorithm evolves to its optimum shape.
 After 25000 iterations, the shape is pretty close to a circle (but not exactly). Letting it run for a while longer
 will gets it closer to a circle. With the constraint value $\approx 2\pi$ the final area is $\approx \pi$.
 
-## Solution using hand-coded gradient descent
+## Hand-coded gradient descent
+
+<figure>
+    <img src="{{site.url}}/assets/img/gradient_descent.gif" alt='hello' width='800' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
 
 ## Neural network
 
@@ -219,32 +275,9 @@ need to explicitly ensure that the perimeter constrained is satisfied at every i
 can construct a loss function with Lagrange multipliers directly (We will look at how to translate this into code
 shortly):
 
-$$
-\begin{align*}
-J(r) = -A(r, \theta) + \lambda_1 \Big[S(r, \theta) - C\Big]^2
-\end{align*}
-$$
-
 The loss function above says that we have an optimization objective $J$ (also called as the loss function) which depends
 on the list of radius values $r = [r_1, r_2, \ldots, r_N]$. It is the sum of the (negative) area $-A$ and the deviation
 between the computed perimeter $S$ and its constraint value $C$. Remember that we already have code for $A$ and $S$.
-
-Before moving to code, lets convince ourselves why solving that formula is equivalent to solving our problem. The
-function $J$ will be minimized when $-A$ is minimized (i.e. $A$ is maximized) and the deviation between computed and
-constrained perimeters is $0$. A list $r$ of radius values that maximizes $A$ and minimizes deviation between $A$ and
-$C$ is exactly what we're after. So if we get such a list, then it means we've solved the problem.
-
-Once we understand this, the coding part is straightforward:
-
-```python
-def loss(r, theta, lambda1):
-    C = torch.tensor(2 * np.pi)
-    x, y = pol2cart(r, theta)
-    area = 0.5 * torch.trapz(r * r, theta)
-    perim = perimeter(x, y)
-    J = -area + lambda1 * (perim - C) ** 2
-    return J
-```
 
 With the loss function in hand, we can put everything together: we instantiate our neural net, fix our learning rate
 and iterate till the loss is not minimized (or it stops changing). The following code accomplishes this.

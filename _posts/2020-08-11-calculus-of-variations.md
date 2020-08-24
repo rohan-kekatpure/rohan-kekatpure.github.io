@@ -401,7 +401,7 @@ area and the perimeter of this parametrized curve. To that end we will consider 
 curve separated by an infinitesimal distance $\Delta t$. The situation is depicted in the figure below.
 
 <figure>
-    <img src="{{site.url}}/assets/img/triangle.png" alt='hello' width='500' heigh='500' style='margin: 10px;'>
+    <img src="{{site.url}}/assets/img/triangle.png" alt='hello' width='500' height='500' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
