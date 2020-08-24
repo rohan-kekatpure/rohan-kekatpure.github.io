@@ -199,7 +199,7 @@ of $r$ values that yields the minimum value of loss. We will do this minimizatio
 The greedy algorithm is simple iterative algorithm. In each iteration, we modify the shape slightly by adding small
 random values to coordinate of a randomly selected point in the loop and recompute the area. If the new area is larger
 than the previous area, we replace the old set of points with the new (perturbed) set of points. If not, we retain the
-old set of points.
+old set of points. The code is more or less a direct translation of the description:
 
 ```python
 def greedy(r, theta, C, lambda1, n_iterations):
@@ -222,23 +222,11 @@ def greedy(r, theta, C, lambda1, n_iterations):
     return best_r, theta
 
 ```
-
-The implementation closely follows the description. One only needs to remember that the perturbed list of points
-needs to be scaled to make sure the perimeter remains unchanged. Other than that the logic is straightforward.
-Following animation shows how the greedy algorithm evolves to its optimum shape.
+Following animation shows the convergence behavior of the first $10^5$ iterations of the greedy algorithm. The greedy
+algorithm recovers the circular shape to a reasonable accuracy.
 
 <figure>
     <img src="{{site.url}}/assets/img/greedy.gif" alt='hello' width='800' style='margin: 10px;'>
-    <figcaption></figcaption>
-</figure>
-
-After 25000 iterations, the shape is pretty close to a circle (but not exactly). Letting it run for a while longer
-will gets it closer to a circle. With the constraint value $\approx 2\pi$ the final area is $\approx \pi$.
-
-## Hand-coded gradient descent
-
-<figure>
-    <img src="{{site.url}}/assets/img/gradient_descent.gif" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
@@ -300,12 +288,101 @@ def nnet_optimizer(r, theta, learning_rate, lambda1):
     return r, theta
 ```
 
-Following animation shows how the greedy algorithm evolves to its optimum shape.
+Following animation shows how the neural net evolves to its optimum shape.
 
 <figure>
     <img src="{{site.url}}/assets/img/deepnet.gif" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
+## Hand-coded gradient descent
+
+Our next optimization algorithm is going going to be a hand-coded implementation of gradient descent. Recall that
+the main goal of any iterative optimization algorithm is to tell what the next input should be to get a better value
+for $L$ function. The greedy algorithm didn't use any information about the problem. So for the next iteration, it
+simply added a small random value to one of the elements of the $r$ list. This randomness is why it took $10^5$
+iterations. Gradient descent will tell us _how much_ adjustment to make, and this will make it faster.
+
+$$
+\begin{equation*}
+    r_i \leftarrow r_i + \alpha \frac{\partial L}{\partial r_i}
+\end{equation*}
+$$
+
+In words, the above rule tells us the amount of update to the $i$th element of the $r$ list is equal to a small number
+$\alpha$ times the derivative of $L$ with respect to that $i$th element. Lets unpack the meaning of this equation
+further.
+
+We saw before that the objective function $L$ is a function of $r$ list: i.e a function of each element $r_i$ (or, if
+you prefer, `r[i]`) of the list. We can express this explicitly as $L(r) = L(r_1, r_2, \ldots, r_N)$. The update rule
+instructs us to compute the update to the $i$th element in the following way: (1) differentiate the $L$ function with
+respect to _each_ $r_i$, (2) evaluate the numerical value of the derivative, and lastly (3) multiply that value by a
+small number. This is the amount by which we should update the $i$th element. When we carry out the procedure for all
+$N$ elements, we have a better list.
+
+To compute the derivatives by hand, we need a a modified version of our cost function that is equivalent to
+the previous one but expresses the perimeter in terms of $r$:
+
+$$
+\begin{align*}
+    L(r) &= -\frac{\Delta \theta}{2}\sum_{i=1}^N r_i^2
+        + \lambda_1\bigg[\sum_{i=1}^N \sqrt{r_i^2 \Delta\theta^2 + \Delta r_i^2} - C\bigg]^2 \\ \\
+
+     &= -\frac{\Delta \theta}{2}\sum_{i=1}^N r_i^2
+        + \lambda_1\bigg[S(r) - C\bigg]^2
+\end{align*}
+$$
+
+This directly gives us the required derivatives.
+
+$$
+\begin{equation*}
+    \frac{\partial L}{\partial r_i} = -\Delta\theta r_i
+        + 2\lambda_1\Delta\theta  \frac{S(r) - C}{\sqrt{1 + \frac{\Delta r_i^2}{r_i^2 \Delta\theta^2} } }
+\end{equation*}
+$$
+
+We have one such equation for each $i = 1,\ldots,N$. We could try to code this complicated looking expression and it
+is possible that we may get a correct answer. But lets observe the two terms more carefully. The first term is
+strongly dependent on $r_i$. The second term is not only weakly dependent, but its influence on the update
+rule diminishes the closer we get to the correct answer. This is because when we're in the vicinity of the answer,
+the computed perimeter is close to the constraint value, so $S(r) - C \approx 0$. Because of the different relative
+strengths of the two terms we make a small (mathematically unjustified) adjustment to the derivative; we ignore the
+square root term and get the following simplified expression:
+
+$$
+\begin{equation*}
+    \frac{\partial L}{\partial r_i} \approx -\Delta\theta r_i
+        + 2\lambda_1\Delta\theta  \big(S(r) - C\big)
+\end{equation*}
+$$
+
+With this simplification we can write our gradient descent update rule explicitly as
+
+$$
+\begin{equation*}
+    r_i \leftarrow r_i + \alpha\Delta\theta \bigg[- r_i
+        + 2\lambda_1\big(S(r) - C\big)\bigg]
+\end{equation*}
+$$
+
+The code translation for this equation looks is straightforward:
+
+```python
+def gradient_descent(r, theta, C, learning_rate, lambda1):
+    d_theta = theta[1] - theta[0]
+    for i in range(n_iterations):
+        S = perimeter(r, theta)
+        dL_dr = -d_theta * r + 2.0 * lambda1 * d_theta * (S - C)
+        r += learning_rate * dL_dr
+    return r, theta
+```
+
+The following animation shows how our hand-coded gradient descent algorithm converges to its optimal shape.
+
+<figure>
+    <img src="{{site.url}}/assets/img/gradient_descent.gif" alt='hello' width='800' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
 
 
