@@ -109,9 +109,9 @@ def area(r, theta):
 ```
 
 We can do significantly better by using numerical integration routines such as the [Simpsons
-rule](https://en.wikipedia.org/wiki/Simpson%27s_rule) whose [Python implementation](https://docs.scipy
-org/doc/scipy/reference/generated/scipy.integrate.simps.html) is available in Scipy. With the use of this ready-made
-function, our area computation code is particularly simple:
+rule](https://en.wikipedia.org/wiki/Simpson%27s_rule) whose [Python
+implementation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps.html) is available in Scipy.
+With the use of this ready-made function, our area computation code is particularly simple:
 
 ```python
 from scipy.integrate import simps
@@ -243,7 +243,7 @@ Following animation shows the convergence behavior of the first $10^5$ iteration
 algorithm recovers the circular shape to a reasonable accuracy.
 
 <figure>
-    <img src="{{site.url}}/assets/img/greedy.gif" alt='hello' width='800' style='margin: 10px;'>
+    <img src="{{site.url}}/assets/img/isoperimetric_greedy.gif" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
@@ -329,14 +329,14 @@ def nnet_optimizer(r, theta, learning_rate, lambda1, algorithm):
 Here are the results. The first animation shows successful convergence of the Adam optimizer to the right solution.
 
 <figure>
-    <img src="{{site.url}}/assets/img/nnet_adam.gif" alt='hello' width='800' style='margin: 10px;'>
+    <img src="{{site.url}}/assets/img/isoperimetric_nnet_adam.gif" alt='hello' width='800' style='margin: 10px;'>
 </figure>
 
 However Adam often gets stuck in local minimums it cant get out of. A 'local minimum' is kind of a bad quality
 solution to the problem.
 
 <figure>
-    <img src="{{site.url}}/assets/img/nnet_stuck.gif" alt='hello' width='800' style='margin: 10px;'>
+    <img src="{{site.url}}/assets/img/isoperimetric_nnet_stuck.gif" alt='hello' width='800' style='margin: 10px;'>
 </figure>
 
 Below is the result of SGD optimizer with a momentum term. The convergence behavior of SGD is definitely less
@@ -344,14 +344,14 @@ dramatic than Adam. We needed to provide a momentum term (`momentum = 0.5`) to o
 converge.
 
 <figure>
-    <img src="{{site.url}}/assets/img/nnet_sgd_1.gif" alt='hello' width='800' style='margin: 10px;'>
+    <img src="{{site.url}}/assets/img/isoperimetric_nnet_sgd_1.gif" alt='hello' width='800' style='margin: 10px;'>
 </figure>
 
 Here is another run of SGD with a stronger momentum term (`momentum = 0.9`). The convergence is faster but feels less
 stable than the previous version.
 
 <figure>
-    <img src="{{site.url}}/assets/img/nnet_sgd_2.gif" alt='hello' width='800' style='margin: 10px;'>
+    <img src="{{site.url}}/assets/img/isoperimetric_nnet_sgd_2.gif" alt='hello' width='800' style='margin: 10px;'>
 </figure>
 
 
@@ -362,6 +362,9 @@ of any iterative optimization algorithm is to tell what the next input should be
 The greedy algorithm didn't use any information about the problem. So for the next iteration, it simply added a small
 random value to one of the elements of the $r$ list. This randomness is why it took $10^5$ iterations. Gradient descent
 will tell us _how much_ adjustment to make, and this will make it faster.
+
+In this section we will be deriving gradient descent equations from scratch. As such we will encounter more math than
+in the previous sections.
 
 $$
 \begin{equation*}
@@ -441,8 +444,94 @@ def gradient_descent(r, theta, C, learning_rate, lambda1):
 The following animation shows how our hand-coded gradient descent algorithm converges to its optimal shape.
 
 <figure>
-    <img src="{{site.url}}/assets/img/gradient_descent.gif" alt='hello' width='800' style='margin: 10px;'>
+    <img src="{{site.url}}/assets/img/isoperimetric_gradient_descent.gif" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
+### Bonus: The Max Entropy Problem
 
+To consolidate our understanding of the steps, we will solve another cool problem, the max entropy problem. This
+problem originates from probability theory and one of its statement reads:
+
+> Among all probability distributions $p(x)$ of known mean $\mu$ and known variance $\sigma^2$ find the one with
+largest entropy.
+
+Entropy of a probability distribution is a measure of information provided by the samples of random variables drawn from
+it. So the max entropy problem can be specified as follows. We're given values of mean $\mu$ and a variance $\sigma^2$
+and asked for the shape of the most informative probability distribution.
+
+Mathematically, the entropy $H$ of a probability distribution $p(x)$ is defined as $H = \int -p(x)\log p(x) dx$. The
+mean and variance also have expressions in terms of $p(x)$. Mean is given by $\mu = \int x p(x) dx$ and the variance
+is defined as $\sigma^2 = -\mu^2 + \int x^2p(x) dx$. So max entropy problem can be expressed as
+
+$$
+\begin{align*}
+ \text{maximize}&\qquad \int -p(x)\, \log p(x)\, dx \\
+ \text{subject to}&\qquad \int p(x)\, dx = 1 \qquad \ldots \text{normalization}\\
+                  &\qquad \int x\, p(x)\, dx = \mu \qquad \ldots \text{known mean}\\
+                  &\qquad \int x^2\, p(x)\, dx = \sigma^2 + \mu^2 \qquad \ldots \text{known variance}
+\end{align*}
+$$
+
+We have seen a [theoretical solution]({% post_url 2020-08-11-calculus-of-variations %}) solution to the max entropy
+problem. Here we will see an optimization algorithm numerically converge to a normal distribution. This problem is a bit
+more complex than the isoperimetric problem because of more constraints. The procedure, however, remains the same. We
+use the method of Lagrange multipliers to write a single objective function with constraints.
+
+$$
+\begin{equation*}
+    L(x, p) = -H(x, p) + \lambda_1\big[M(x, p) - \mu_0\big]^2
+                       + \lambda_2\big[S(x, p) - \sigma_0\big]^2
+                       + \lambda_3\big[N(x, p) - 1 \big]^2
+
+\end{equation*}
+$$
+
+As before, the interpretation of this equation is simple. We're seeking a list of probability values $p_i$ for each
+$x_i$ such that the entropy $H(x, p)$ is maximized while keeping the mean and the standard deviation fixed and
+respecting the normalization condition. This will be achieved when the first term ($-H(x, p)$) is minimized and each of
+the square terms are close to $0$. Therefore a list of $p_i$ values that minimizes $L(x, p)$ will solve our problem.
+
+Similar to the isoperimetric problem we need to provide implementations of the entropy, mean, the standard deviation,
+the normalization and the loss functions. We provide the code below.
+
+```python
+def entropy(x, y):
+    return simps(-y * np.log(y), x)
+
+def mean(x, y):
+    return simps(x * y, x)
+
+def stddev(x, y):
+    mu = mean(x, y)
+    var = simps(x * x * y, x) - mu * mu
+    return np.sqrt(var)
+
+def norm(x, y):
+    return simps(y, x)
+
+def loss(x, y, mu0, sigma0, lambda1, lambda2, lambda3):
+    H = entropy(x, y)
+    M = mean(x, y)
+    S = stddev(x, y)
+    N = norm(x, y)
+    L = -H + lambda1 * (M - mu0) ** 2 \
+           + lambda2 * (S - sigma0) ** 2 \
+           + lambda3 * (N - 1.0) ** 2
+    return L
+```
+
+The next step is to minimize the loss using greedy and the various gradient descent algorithms. The implementation of
+the greedy and the Pytorch methods is similar to the way we did it for the isoperimetric problem. The implementation
+can be found in our Github repository. The results are below. First we can see that the greedy algorithm converges to
+a Gaussian.
+
+<figure>
+    <img src="{{site.url}}/assets/img/maxentropy_greedy.gif" alt='hello' width='800' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
+
+<figure>
+    <img src="{{site.url}}/assets/img/maxentropy_gradient_descent.gif" alt='hello' width='800' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>

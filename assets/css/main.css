@@ -22,6 +22,7 @@ body {
   font-size: 18px;
   color: #212121;
   line-height: 1.75rem;
+  /*background-color: #d0d0d0;*/
 }
 
 @media (max-width: 30em) {
