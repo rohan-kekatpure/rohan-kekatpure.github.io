@@ -457,43 +457,56 @@ problem originates from probability theory and one of its statement reads:
 largest entropy.
 
 Entropy of a probability distribution is a measure of information provided by the samples of random variables drawn from
-it. So the max entropy problem can be specified as follows. We're given values of mean $\mu$ and a variance $\sigma^2$
-and asked for the shape of the most informative probability distribution.
+it. So the max entropy problem can also be specified as: among all possible probability distributions having mean $\mu$
+and variance $\sigma^2$, find the shape of the one with maximum information. In an [earlier post]({% post_url
+2020-08-11-calculus-of-variations %}) we saw that this shape is the normal (Gaussian) distribution.
 
-Mathematically, the entropy $H$ of a probability distribution $p(x)$ is defined as $H = \int -p(x)\log p(x) dx$. The
-mean and variance also have expressions in terms of $p(x)$. Mean is given by $\mu = \int x p(x) dx$ and the variance
-is defined as $\sigma^2 = -\mu^2 + \int x^2p(x) dx$. So max entropy problem can be expressed as
+Mathematical expressions for the various quantities in the problem are as follows. As before, we will provide
+code for each of the expressions.
 
 $$
 \begin{align*}
- \text{maximize}&\qquad \int -p(x)\, \log p(x)\, dx \\
- \text{subject to}&\qquad \int p(x)\, dx = 1 \qquad \ldots \text{normalization}\\
-                  &\qquad \int x\, p(x)\, dx = \mu \qquad \ldots \text{known mean}\\
-                  &\qquad \int x^2\, p(x)\, dx = \sigma^2 + \mu^2 \qquad \ldots \text{known variance}
+H(p) &= \int -p(x) \log p(x) dx  &\qquad \ldots \text{entropy}\\
+M(p) &= \int x p(x) dx  &\qquad \ldots \text{mean}\\
+S(p) &= \left[\int x^2 p(x) dx -\mu^2\right]^{1/2}  &\qquad \ldots \text{standard deviation} \\
+N(p) &= \int p(x) dx  &\qquad \ldots \text{normalization}
 \end{align*}
 $$
 
-We have seen a [theoretical solution]({% post_url 2020-08-11-calculus-of-variations %}) solution to the max entropy
-problem. Here we will see an optimization algorithm numerically converge to a normal distribution. This problem is a bit
-more complex than the isoperimetric problem because of more constraints. The procedure, however, remains the same. We
-use the method of Lagrange multipliers to write a single objective function with constraints.
+With these definitions, the max entropy problem can be expressed as
 
 $$
-\begin{equation*}
-    L(x, p) = -H(x, p) + \lambda_1\big[M(x, p) - \mu_0\big]^2
-                       + \lambda_2\big[S(x, p) - \sigma_0\big]^2
-                       + \lambda_3\big[N(x, p) - 1 \big]^2
-
-\end{equation*}
+\begin{align*}
+ \text{maximize}&\qquad H(p) &\qquad \ldots \text{entropy}\\
+ \text{subject to}&\qquad M(p) = \mu &\qquad \ldots \text{known mean}\\
+                  &\qquad S(p) = \sigma &\qquad \ldots \text{known standard deviation}\\
+                  &\qquad N(p) = 1 &\qquad \ldots \text{normalization}
+\end{align*}
 $$
 
-As before, the interpretation of this equation is simple. We're seeking a list of probability values $p_i$ for each
-$x_i$ such that the entropy $H(x, p)$ is maximized while keeping the mean and the standard deviation fixed and
-respecting the normalization condition. This will be achieved when the first term ($-H(x, p)$) is minimized and each of
-the square terms are close to $0$. Therefore a list of $p_i$ values that minimizes $L(x, p)$ will solve our problem.
+[Previously]({% post_url 2020-08-11-calculus-of-variations %}) we showed theoretically that the solution to the max
+entropy problem is a normal distribution centered at $\mu$ with a standard deviation $\sigma$. Here we will see an
+optimization algorithm numerically converge to the normal distribution. This problem is a bit more complex than the
+isoperimetric problem because of more constraints. The procedure, however, remains the same: we express the problem in a
+single $L$ function using use the method of Lagrange multipliers:
 
-Similar to the isoperimetric problem we need to provide implementations of the entropy, mean, the standard deviation,
-the normalization and the loss functions. We provide the code below.
+$$
+\begin{align*}
+    L(p) = -H(p) &+ \lambda_1\big[M(p) - \mu\big]^2 \\
+                       &+ \lambda_2\big[S(p) - \sigma\big]^2 \\
+                       &+ \lambda_3\big[N(p) - 1 \big]^2
+
+\end{align*}
+$$
+
+The interpretation of this equation is simple: we seek a list of probability values $p_i$ for each $x_i$ such that the
+entropy $H(p)$ is maximized while keeping the mean, the standard deviation, the normalization values fixed. This will
+be achieved when we find a list of $p$ values which minimize $-H(p)$ and each of the square terms are close to $0$.
+Therefore a list of $p_i$ values that minimizes $L(p)$ will solve our problem.
+
+To code this, we need implementation of the loss function, which in turn requires code for the entropy, mean, the
+standard deviation, and the normalization functions. We have already seen how to use numerical integration (Simpsons
+rule) to implement functions involving integrals:
 
 ```python
 def entropy(x, y):
@@ -510,27 +523,92 @@ def stddev(x, y):
 def norm(x, y):
     return simps(y, x)
 
-def loss(x, y, mu0, sigma0, lambda1, lambda2, lambda3):
+def loss(x, y, mu, sigma, lambda1, lambda2, lambda3):
     H = entropy(x, y)
     M = mean(x, y)
     S = stddev(x, y)
     N = norm(x, y)
-    L = -H + lambda1 * (M - mu0) ** 2 \
-           + lambda2 * (S - sigma0) ** 2 \
+    L = -H + lambda1 * (M - mu) ** 2 \
+           + lambda2 * (S - sigma) ** 2 \
            + lambda3 * (N - 1.0) ** 2
     return L
 ```
 
-The next step is to minimize the loss using greedy and the various gradient descent algorithms. The implementation of
-the greedy and the Pytorch methods is similar to the way we did it for the isoperimetric problem. The implementation
-can be found in our Github repository. The results are below. First we can see that the greedy algorithm converges to
-a Gaussian.
+The next step is to minimize the loss function using the optimization algorithms we have used earlier in the article:
+greedy, Adam, SGD and hand-coded gradient descent. The implementation of the greedy and the Pytorch methods is similar
+to the way we did it for the isoperimetric problem. We wont reproduce the code below, but it can be found in our
+Github repository. We will, however, derive the expressions for the hand-coded gradient descent since it provides
+useful intuition for the descent methods.
+
+We start by initializing $128$ equally-spaced $x$ values in $(-5, 5)$. For each $x_i$ we pick a $p_i$ from a uniform
+random distribution. To make things interesting let us fix the mean and the standard deviation to $\mu =
+1$ and $\sigma = 0.5$. We then demand list of $p_i$ values that will maximize the entropy and whose mean is $\mu$,
+standard deviation is $\sigma$ and whose normalization is $1$.
+
+### Greedy algorithm
+
+The animation below shows $100$ equally spaced frames from the first $10^5$ iterations of the greedy algorithm run on a
+list of $128$ points. We can see that the greedy algorithm converges to a Gaussian with mean $1$ and standard deviation
+$0.52$.
 
 <figure>
     <img src="{{site.url}}/assets/img/maxentropy_greedy.gif" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
+
+### Hand-coded gradient descent
+
+To implement gradient descent from scratch, we will need as before to dig through the math. We start with with
+discretizing the equations (i.e. replacing the integrals with summations) and obtain an expression for
+$\frac{\partial L}{\partial p_i}$ and plug that into the gradient descent update rule. We have done this process
+before.
+
+The discrete version of the $L$ is obtained by discretizing the entropy, mean, standard deviation, and the
+normalization.
+
+$$
+\begin{align*}
+    H(p) &= \sum_{i=0}^N p_i \log p_i \, \Delta x \\
+    M(p) &= \sum_{i=0}^N x_i p_i \, \Delta x \\
+    S(p) &= \bigg[-\mu^2 + \sum_{i=0}^N x_i^2 p_i \, \Delta x\bigg]^{1/2} \\
+    N(p) &= \sum_{i=0}^N p_i \, \Delta x
+\end{align*}
+$$
+
+From these equations we can derive the gradient term
+
+$$
+\begin{align*}
+\frac{\partial L}{\partial p_i} &= (1 + \log p_i) + 2\lambda_1 x_i \Delta x \big[M(p) - \mu\big] \\
+&+ \lambda_2 x_i^2 \Delta x \left[1-\frac{\sigma}{S(p)}\right] + 2\lambda_3\Delta x \big[N(p) - 1\big]
+\end{align*}
+$$
+
+and input into the gradient descent optimizer:
+
+```python
+
+def gradient_descent(x, y, mu0, sigma0, lambda1, lambda2, lambda3,
+                    learning_rate,  n_iterations):
+    dx = x[1] - x[0]
+    epsy = 1e-12
+    for i in range(n_iterations):
+        N = norm(x, y)
+        M = mean(x, y)
+        S = stddev(x, y)
+        dL_dp = (1 + np.log(y)) \
+                 + 2. * lambda1 * x * (M - mu0) \
+                 + lambda2 * x * x * (1 - sigma0 / S) \
+                 + 2. * lambda3 * (N - 1.)
+
+        y -= learning_rate * dx * grad_L
+        y = np.clip(y, epsy, None)
+    return x, y
+```
+
+The animation below shows our hand-coded gradient descent optimization routine converging nicely to the expected
+normal distribution.
 <figure>
     <img src="{{site.url}}/assets/img/maxentropy_gradient_descent.gif" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
