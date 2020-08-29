@@ -6,31 +6,40 @@ categories: journal
 tags: [documentation,sample]
 image:
 ---
+
 Optimization is all around us. Various physical entities are constantly solving some form of optimization problem: water
 running downhill (finding state of least energy), light rays trying traveling between two points (finding route of
-shortest time), or electric currents finding paths of least resistance.
+shortest time), or electric currents finding paths of least resistance. Optimization is also used extensively
+in industry. In explicit forms, it is used to maximize or minimize quantities of interest (portfolio returns,
+supply chains). In implicit forms, optimization algorithms are the backbone of machine learning and curve-fitting
+algorithms.
 
-One great way to build intuition for common optimization algorithms is to pick a known problem and solve it numerically
-using the algorithm of choice. A 'known problem' can be any problem whose solution is known or can be readily guessed.
-If the solution is known it is easier to build intuition for the steps that the algorithm takes in its solution process.
+One great way to build intuition for optimization algorithms is to pick a simple problem and solve it numerically using
+the algorithm of choice. A 'simple problem' can be any problem whose solution is known or can be readily guessed.
+Since we don't have to think about the answer, we can use such problems to understand how the algorithm arrives at
+the answer, building valuable intuition in the process.
 
-In this post we will apply three simple but common numerical optimization algorithms to an intuitively simple problem.
-As a side benefit, we get to watch some visually satisfying animations of an optimization algorithm arrive to its
-solution.
+Given their omnipresence, there is a large pool of simple optimization problems for us to choose for our exploration. We
+want a problem whose answer we can guess but which also includes all essential elements of a real optimization problem.
+One such simple-but-rich problem for exploring constrained optimization is the [isoperimetric
+problem](https://bit.ly/2ErbGK2):
 
-Given the omnipresence of optimization problems, there is a large pool of simple and intuitive problem candidates for
-our exploration. We're want a known problem that is conceptually rich. Once such problem is the [isoperimetric
-problem](https://bit.ly/2ErbGK2) whose statement reads:
+>Among all closed curves of fixed perimeter, which curve maximizes the area of its enclosed region?
 
->Among all closed curves in the plane of fixed perimeter, which curve maximizes the area of its enclosed region?
+In other words, given a closed loop of an inelastic thread, the problem asks us to find the shape that maximizes the
+enclosed area. In an [earlier post]({% post_url 2020-08-11-calculus-of-variations %}) we showed that the answer is a
+circle. Here we will demonstrate this answer numerically.
 
-In other words, given a closed loop of an inelastic thread the problem asks us to find the the shape of that loop that
-will maximize the given area. In an [earlier post]({% post_url 2020-08-11-calculus-of-variations %}) we showed that
-circular shape solves this optimization problem. In the present post we will solve it using code.
+Here is our plan for this post. We will start by stating the optimization problem in an abstract mathematical form. We
+will then show step-by-step how the math translates to code. For some algorithms, we will use existing libraries,
+others we will code from scratch. For brevity, we will show only the important snippets of code, the full code
+can be found in our Github.
 
-Let us start by stating the problem in abstract terms before translating it to code. Assume that the desired curve is
-mathematically represented as a function $y = f(x)$. Let $A(y)$ be the area of this curve and $S(y)$ be its perimeter
-The isoperimetric problem can now be stated abstractly as:
+## Abstract problem statement
+Let us start by stating the problem mathematically. Assume that the desired shape is planar and is represented as a
+function $y = f(x)$. Let $A(y)$ be the area of this shape and $S(y)$ be its perimeter. In a sense, $y$ is our shorthand
+for writing 'any shape' and $A(y)$ and $S(y)$ denote area and perimeter of '_that_ shape'. In this notation, the problem
+statement is:
 
 $$
 \begin{align*}
@@ -40,33 +49,27 @@ $$
 $$
 
 ## Translating abstract problem into code
-
-To solve any problem with code, it needs to be specified precisely. In natural sciences, the precision in a problem
-statement is achieved through the use of mathematical notation. The translation of the problem statement to code
-therefore involves switching multiple times between math formulas and the code. This math-to-code translation is an
-essential skill in mathematical modeling.
-
-Now to proceed with our solution, we need to a way to represent concepts like 'shape' in code and provide a way to
-compute their areas and perimeters.
+For a numerical solution, we need to a way to represent concepts like 'any shape' in code and provide a way to compute
+its area and perimeter.
 
 ### Representing a shape
-One way to represent a shape is as a list of two dimensional points. Each point in the list is either a tuple of its $x$
-and $y$ coordinates or a tuple of its distance from origin $r$ and the angle $\theta$ of the line connecting the point
-to the origin. This representation is called the polar or the $(r,\theta)$ representation. We'll need both
-representations for our solution. It is a simple matter to translate an $(r, \theta)$ point to an $(x, y)$ point and
-back.
+One way to represent a shape is as a list of two dimensional points. Each point in the list is either a pair of its $x$
+and $y$ coordinates or a tuple of $r$ and $\theta$ coordinates. Both representations are equivalent and are shown in the
+figure below. We'll need both representations for our solution. It is simple to translate an $(r, \theta)$ point to an
+$(x, y)$ point and below we will include a utility function `pol2cart()` to do just that.
 
 <figure>
     <img src="{{site.url}}/assets/img/xyrtheta.png" alt='hello' width='400' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
-How can we ensure that a list of points form a closed loop? Loosely speaking, for points to lie on a loop, we have to be
-able tell if given two points are next to each other. This property is called _ordering_. Without the ability to tell
-adjoining points, we cant compute the perimeter. After all, perimeter is the sum of distances between adjacent points.
+Ok so we have a list of points, but how can we ensure that this list represents a shape and not just a random cloud of
+points? For points to be on a shape, we need to be able to go to the next or the previous point from the current one.
+This property is called _ordering_. Without the ability to tell adjacent points, we cant compute the perimeter. After
+all, perimeter is precisely the sum of distances between adjacent points.
 
-A simple way to get an ordered list of  random points on a plane is to loop through angles between $0$ through
-$360^\circ$ and assign a random radius to each point. The listing below shows our point-generation.
+A simple way to get an ordered list of random points on a plane is to loop through angles between $0$ through
+$360^\circ$ and assign a random radius to each point, as shown in the code below.
 
 ```python
 def generate_points(n_points):
@@ -85,43 +88,43 @@ def pol2cart(r, theta):
     return x, y
 ```
 
-The $(x, y)$ representation is easier to plot and when plotted our initialized loop looks like this:
+When plotted, our starting shape looks like this:
 
 <figure>
     <img src="{{site.url}}/assets/img/loop.png" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
 
-So now we can represent and generate a shape. Next we need to specify how we can compute the perimeter and the area of
-this loop represented as a list of points.
+Now we can represent and generate an arbitrary planar shape. Next we need to compute its perimeter
+and the area.
 
 ### Computing the area and the perimeter
 
-The code to compute the area $A(y)$ and the perimeter $S(y)$ of any curve $y = f(x)$ starts from calculus formulas.
-In $(x, y)$ coordinates:
+The get the area and perimeter computing code, our starting point is the formulas from introductory calculus:
 
 $$
-\begin{align*}
-    A(y) &= \int y dx\\
-    S(y) &= \int \sqrt{1+\left(\frac{dy}{dx}\right)^2} dx
-\end{align*}
+\begin{equation*}
+\left.
+    \begin{aligned}
+        A(y) &= \int y dx\\
+        S(y) &= \int \sqrt{1+\left(\frac{dy}{dx}\right)^2} dx
+    \end{aligned}
+\right\rbrace \qquad\ldots (x, y) \text{ coordinates} \\[50pt]
+\left.
+    \begin{aligned}
+        A(r) &= \int \frac{1}{2} r^2d\theta\\
+        S(r) &= \int \sqrt{r^2 + \left(\frac{dr}{d\theta}\right)^2}d\theta
+    \end{aligned}
+\right\rbrace \qquad\ldots (r, \theta) \text{ coordinates}
+\end{equation*}
 $$
 
-The same quantities can be represented in $(r,\theta)$ coordinates:
-
-$$
-\begin{align*}
-    A(r) &= \int \frac{1}{2} r^2d\theta\\
-    S(r) &= \int \sqrt{r^2 + \left(\frac{dr}{d\theta}\right)^2}d\theta
-\end{align*}
-$$
-
-We're giving both versions because, as it turns out, the area turns out to be easier to compute with $(r, \theta)$ and
-the perimeter with $(x, y)$.
+We're giving both versions because the area turns out to be easier to compute in $(r, \theta)$ and the perimeter in
+$(x, y)$.
 
 #### Computing the area
-This formula involving the integral sign is simply a mathematical way of writing a `for` loop. Therefore a direct (but
-naive) conversion of this formula into code is:
+Roughly, the integral sign is simply a shorthand for a `for` loop. Therefore an implementation for the area formula in
+$(r, \theta)$ coordinates is:
 
 ```python
 # r = list of radii, theta = list of theta values
@@ -133,10 +136,10 @@ def area(r, theta):
     return A
 ```
 
-We can do significantly better by using numerical integration routines such as the [Simpsons
-rule](https://en.wikipedia.org/wiki/Simpson%27s_rule) whose [Python
-implementation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps.html) is available in Scipy.
-With the use of this ready-made function, our area computation code is particularly simple:
+We can get a faster implementation using numerical integration routines such as the [Simpsons
+rule](https://en.wikipedia.org/wiki/Simpson%27s_rule). With the use of ready-made [Scipy
+function](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simps.html), our area computation code is
+particularly simple:
 
 ```python
 from scipy.integrate import simps
@@ -146,9 +149,9 @@ def area(r, theta):
 
 #### Computing the perimeter
 
-The $(x, y)$ representation is better for computing the perimeter. This perimeter expression is complicated because it
-involves a derivative. Fortunately, since we have a table of ordered $(x, y)$ values, we can avoid derivatives and
-directly obtain the perimeter by summing distances between consecutive points:
+This perimeter expression is more complicated because it involves derivative. Fortunately, since we have a table of
+ordered $(x, y)$ values, we can avoid derivatives and directly obtain the perimeter by summing distances between
+consecutive points:
 
 $$
 \begin{equation*}
@@ -156,8 +159,7 @@ S = \sum_{0}^{N}\sqrt{(x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2}
 \end{equation*}
 $$
 
-The above equation says to loop over the list index and add up the Pythagorean distance between consecutive points.
-Again, the direct but naive translation into code is:
+The above equation says to loop over the list index and add up the Pythagorean distance between consecutive points:
 
 ```python
 def perimeter(x, y):
@@ -184,12 +186,12 @@ def perimeter(x, y):
 
 With the implementation of area and perimeter in hand, we're ready to take the final step in the problem specification.
 To modify our initial loop to enclose maximum area, we need to modify each point in the list so that the loop occupies
-more and more area, while maintaining its perimeter equal to $C$. When it is no longer possible to increase the enclosed
-area, it means we have found the solution to our problem.
+more and more area, while maintaining its perimeter equal to $C$. When we can no longer increase the enclosed area, we
+have found a solution to our problem.
 
-We will define a mathematical function whose minimum value will give us a set of points that maximise the area while
-maintaining the perimeter. First we will write this function down and then deconstruct its meaning. The function is the
-following:
+However, we want to increase the area _while_ keeping the perimeter fixed. To build in this constraint, we will
+construct a function that depends on both the area and the perimeter. The minimum value of this function will give us a
+list of points that simultaneously maximise the area pin the perimeter. That function is the following:
 
 $$
 \begin{align*}
@@ -198,15 +200,13 @@ L(r) = -A(r) + \lambda \Big[S(r) - C\Big]^2
 $$
 
 The function $L$ is called variously as the loss function, cost function, objective function or the Lagrangian. The
-claim is that if we find a list of points $(r, \theta)$ that minimizes the function $L$, then it is the same as having
-solved our problem of maximizing the area at a fixed perimeter $C$.
+claim is that if we find a list of points $(r, \theta)$ that minimizes the function $L$ _without constraints_, then it
+is the same as having solved our problem of maximizing the area _with_ the perimeter constraint.
 
 Lets convince ourselves why. The function $L$ will be minimized when $-A$ is minimized (i.e. $A$ is maximized) _and_ the
 difference between computed perimeters and $C$ is $0$. A list $r$ of radius values that maximizes $A$ and minimizes
 deviation between $A$ and $C$ is exactly what we're after. So if we get such a list, then it means we've solved the
 problem.
-
-Once we understand this, the coding part is straightforward:
 
 ```python
 def loss(r, theta, C, lambda1):
@@ -226,21 +226,19 @@ of $r$ values that yields the minimum value of loss. We will do this minimizatio
 * Stochastic gradient descent in Pytorch
 * Gradient descent, coded from scratch
 
-Each of these is an iterative algorithm. This means that the algorithm starts from an initial guess and in each step
-modifies the current solution to come up with a slightly improved solution. Once this improvement stops happening, we
-have found our solution and the algorithms is said to have converged. This much is commong to all iterative algorithms.
-The difference in the above algorithms is _how_ they improve the current solution.
+The algorithms listed above belong to a class called _iterative algorithms_. Each starts from an initial guess and, in
+each step, modifies the solution to come up with a improved solution. This part is common to all. The difference is in
+_how_ each improves the current solution.
 
-It is important to note that the solution found by an iterative algorithm may be right or wrong. When a wrong solution
-is found, we usually tweak the parameters of an algorithm anr rerun. In one of the algorithms below, we'll see an
+Lastly, it is important to note that the solution found by an algorithm may be right or wrong. When a wrong
+solution is found, we usually tweak the parameters and rerun. In one examples below, we'll see an
 example of an algorithm converging but to a wrong solution.
 
 ## Greedy algorithm
 
-In each iteration of the greedy algorithm, we modify the shape slightly by adding small random values to coordinate of a
-randomly selected point in the loop and recompute the area. If the new area is larger than the previous area, we replace
-the old set of points with the new (perturbed) set of points. If not, we retain the old set of points. The code is more
-or less a direct translation of the description:
+In each iteration, the greedy algorithm modifies the shape slightly by adding a small random value to the coordinates of
+a randomly selected point. This modification can make the $L$ function better or worse. If the $L$ function is better,
+we accept the change. Otherwise we dont. The code is more or less a direct translation of the description:
 
 ```python
 def greedy(r, theta, C, lambda1, n_iterations):
@@ -273,20 +271,23 @@ algorithm recovers the circular shape to a reasonable accuracy.
 
 ## Adam and SGD (Pytorch)
 
-Next we will use Adam and SGD (stochastic gradient descent) optimizers in Pytorch to solve our problem. The details of
-Adam and SGD are out of scope for this post. However, we will go through the process of casting our problem in the
-language of neural network, so that way may plug any available optimizer in a library like Pytorch to solve.
+Next we will use Adam and SGD (stochastic gradient descent) optimizers in Pytorch. Instead of randomly modifying the
+shape, these optimizers inspect the function to look for the downward slope and change the list of points according to
+that. Moreover many (or all) elements of the $r$ list are changed at once, instead of just one. Both these modifications
+speed up the convergence significantly. Further details of Adam and SGD are out of scope for this post. However, we will
+go through the process of casting our problem in the language of neural network, which allows us to use any available
+optimizer in a library like Pytorch.
 
-In a typical neural network learning problem, we have a list of input-output pairs: Image/labels, audio/words, or
-sentence/sentiment and we seek to minimize the prediction error. The isoperimetric problem, on the other hand, is a pure
-optimization problem. We aren't provided any input/output pairs. Our problem is to arrange $N$ ordered points into a
-shape that maximizes the area formed by their loop while keeping the perimeter fixed. Therefore our input will be a
-constant scalar of value `x = 1.0` and output will be `n_points` radius values (one for each value of $\theta$ between
-$0^\circ$ and $360^\circ$).
+A typical problem solved with neural nets is supervised: we have a list of input-output pairs: Image/labels,
+audio/words, or sentence/sentiment and we seek to minimize the prediction error. The isoperimetric problem, on the other
+hand, is a pure optimization problem. We aren't provided any input/output pairs. Our problem is to arrange $N$ ordered
+points into a shape that maximizes the area formed by their loop while keeping the perimeter fixed. Therefore our input
+will be a constant and output will be a list of radius values (one for each value of
+$\theta$ between $0^\circ$ and $360^\circ$).
 
-Though we have no inputs, we still need parameters whose adjustments will give us the list of points. (Such adjustable
-parameters are called 'weights' in neural network language.) To begin, we create our fully-connected 1-layer network
-architecture with 1 input, 100 hidden weights and $N$ outputs ($N$ is the length of the list of points).
+Though we have no inputs, we still need parameters whose adjustments will give us the list of points. These adjustable
+parameters are called 'weights' in neural network language. To begin, we create our fully-connected 1-layer network
+architecture with 1 input, 100 hidden weights and $N$ outputs.
 
 <figure>
     <img src="{{site.url}}/assets/img/neuralnet.png" alt='neural net' width='300' style='margin: 10px;'>
@@ -324,8 +325,8 @@ def area(r, theta):
 ```
 
 The work up to here is common for all optimizer algorithms. To choose a particular optimization algorithms we simply
-create an instance of the appropriate optimizer as shown below. To put everything together, we instantiate our neural
-net, fix our learning rate and iterate till convergence:
+create an instance of the appropriate optimizer as shown below. Finally, we instantiate our neural net, and iterate till
+convergence:
 
 ```python
 def nnet_optimizer(r, theta, learning_rate, lambda1, algorithm):
@@ -349,29 +350,28 @@ def nnet_optimizer(r, theta, learning_rate, lambda1, algorithm):
     return r, theta
 ```
 
-Here are the results. The first animation shows successful convergence of the Adam optimizer to the right solution.
+The animation below shows successful convergence of the Adam optimizer to the right solution.
 
 <figure>
     <img src="{{site.url}}/assets/img/isoperimetric_nnet_adam.gif" alt='hello' width='800' style='margin: 10px;'>
 </figure>
 
-However Adam often gets stuck in local minimums it cant get out of. A 'local minimum' is kind of a bad quality
-solution to the problem.
+However, Adam often finds wrong solution as seen below. These wrong solutions are called 'local minimums', which means
+kind of a bad quality solution to the problem.
 
 <figure>
     <img src="{{site.url}}/assets/img/isoperimetric_nnet_stuck.gif" alt='hello' width='800' style='margin: 10px;'>
 </figure>
 
-Below is the result of SGD optimizer with a momentum term. The convergence behavior of SGD is definitely less
-dramatic than Adam. We needed to provide a momentum term (`momentum = 0.5`) to our SGD. Without it SGD failed to
-converge.
+Below is the result of SGD optimizer with learning rate of $10^{-4}$ and momentum of $0.5$. Without momentum, the SGD
+failed to converge in our implementation.
 
 <figure>
     <img src="{{site.url}}/assets/img/isoperimetric_nnet_sgd_1.gif" alt='hello' width='800' style='margin: 10px;'>
 </figure>
 
-Here is another run of SGD with a stronger momentum term (`momentum = 0.9`). The convergence is faster but feels less
-stable than the previous version.
+Here is another run of SGD with a stronger momentum term of $0.9$. The convergence is faster but less stable than the
+previous version.
 
 <figure>
     <img src="{{site.url}}/assets/img/isoperimetric_nnet_sgd_2.gif" alt='hello' width='800' style='margin: 10px;'>
@@ -380,18 +380,17 @@ stable than the previous version.
 
 ## Hand-coded gradient descent
 
-Our final algorithm is an implementation of gradient descent derived and coded from scratch. Recall that the main goal
-of any iterative optimization algorithm is to tell what the next input should be to get a better value for $L$ function.
-The greedy algorithm didn't use any information about the problem. So for the next iteration, it simply added a small
-random value to one of the elements of the $r$ list. This randomness is why it took $10^5$ iterations. Gradient descent
-will tell us _how much_ adjustment to make, and this will make it faster.
+The final algorithm we'll use is gradient descent, derived and coded from scratch. Recall that any iterative algorithm
+needs to update the inputs in order to get a better value for $L$ function. The greedy algorithm didn't use any
+information about the problem; it modified the input randomly. This randomness is why it took $10^5$ steps to converge.
+Gradient descent will tell us _how much_ adjustment to make, and it will converge in $5000$ steps.
 
-In this section we will be deriving gradient descent equations from scratch. As such we will encounter more math than
-in the previous sections.
+Since we will be deriving the gradient descent equations, there will be more math here than in the previous sections.
+The basic gradient descent update rule is
 
 $$
 \begin{equation*}
-    r_i \leftarrow r_i + \alpha \frac{\partial L}{\partial r_i}
+    r_i \leftarrow r_i - \alpha \frac{\partial L}{\partial r_i}
 \end{equation*}
 $$
 
@@ -447,7 +446,7 @@ With this simplification we can write our gradient descent update rule explicitl
 
 $$
 \begin{equation*}
-    r_i \leftarrow r_i + \alpha\Delta\theta \bigg[- r_i
+    r_i \leftarrow r_i - \alpha\Delta\theta \bigg[- r_i
         + 2\lambda_1\big(S(r) - C\big)\bigg]
 \end{equation*}
 $$
@@ -460,11 +459,12 @@ def gradient_descent(r, theta, C, learning_rate, lambda1):
     for i in range(n_iterations):
         S = perimeter(r, theta)
         dL_dr = -d_theta * r + 2.0 * lambda1 * d_theta * (S - C)
-        r += learning_rate * dL_dr
+        r -= learning_rate * dL_dr
     return r, theta
 ```
 
-The following animation shows how our hand-coded gradient descent algorithm converges to its optimal shape.
+The following animation shows how our hand-coded gradient descent algorithm converges to its optimal shape. The
+convergence is more uniform compared to the greedy algorithm. It is also faster ($\sim 5000$ steps).
 
 <figure>
     <img src="{{site.url}}/assets/img/isoperimetric_gradient_descent.gif" alt='hello' width='800' style='margin: 10px;'>
@@ -483,6 +483,9 @@ Entropy of a probability distribution is a measure of information provided by th
 it. So the max entropy problem can also be specified as: among all possible probability distributions having mean $\mu$
 and variance $\sigma^2$, find the shape of the one with maximum information. In an [earlier post]({% post_url
 2020-08-11-calculus-of-variations %}) we saw that this shape is the normal (Gaussian) distribution.
+
+This time we will go through the steps in more quickly than before. However, each section here parallels the one for the
+isoperimetric problem. You're encouraged to pause and review our description from the isoperimetric problem if needed.
 
 Mathematical expressions for the various quantities in the problem are as follows. As before, we will provide
 code for each of the expressions.
