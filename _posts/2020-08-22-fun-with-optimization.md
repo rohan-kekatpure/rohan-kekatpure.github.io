@@ -25,8 +25,19 @@ problem](https://bit.ly/2ErbGK2) whose statement reads:
 >Among all closed curves in the plane of fixed perimeter, which curve maximizes the area of its enclosed region?
 
 In other words, given a closed loop of an inelastic thread the problem asks us to find the the shape of that loop that
-will maximize the given area. In an [earlier post]({% post_url 2020-08-11-calculus-of-variations %}) we saw a
-theoretical solution to this problem. In the present post we will solve it using code.
+will maximize the given area. In an [earlier post]({% post_url 2020-08-11-calculus-of-variations %}) we showed that
+circular shape solves this optimization problem. In the present post we will solve it using code.
+
+Let us start by stating the problem in abstract terms before translating it to code. Assume that the desired curve is
+mathematically represented as a function $y = f(x)$. Let $A(y)$ be the area of this curve and $S(y)$ be its perimeter
+The isoperimetric problem can now be stated abstractly as:
+
+$$
+\begin{align*}
+ \text{maximize}&\qquad A(y) &\qquad \ldots \text{area}\\
+ \text{subject to}&\qquad S(y) = C &\qquad \ldots \text{known perimeter}
+\end{align*}
+$$
 
 ## Translating abstract problem into code
 
@@ -35,23 +46,15 @@ statement is achieved through the use of mathematical notation. The translation 
 therefore involves switching multiple times between math formulas and the code. This math-to-code translation is an
 essential skill in mathematical modeling.
 
-One way to decipher mathematical notation (at aleast in this post) is to think of it as an abstract (i.e. higher-level)
-way to write and refactor code. To prove this, we will follow every important math equation with its Python
-implementation. Once this translation is done a number of times, it comes naturally and becomes an important
-cognitive tool.
-
-Coming back to the isoperimetric problem, we need to carefully specify the inputs, the objective function, the
-constraints and the minimization procedure. Viewed abstractly, our input is merely the perimeter $C$ of the loop and the
-output is the shape which maximizes its enclosed area while keeping its perimeter equal to $C$. To proceed with coding,
-we need to a way to represent concepts like 'shape' and provide a way to compute their areas and perimeters. We do that
-below.
+Now to proceed with our solution, we need to a way to represent concepts like 'shape' in code and provide a way to
+compute their areas and perimeters.
 
 ### Representing a shape
 One way to represent a shape is as a list of two dimensional points. Each point in the list is either a tuple of its $x$
 and $y$ coordinates or a tuple of its distance from origin $r$ and the angle $\theta$ of the line connecting the point
-to the origin. This representation is called the polar or the $(r,\theta)$ representation. We'll see later that
-the area is simpler to compute in the $(r, \theta)$ version and perimeter is simpler in the $(x, y)$ version. It is a
-simple matter to translate an $(r, \theta)$ point to an $(x, y)$ point and back.
+to the origin. This representation is called the polar or the $(r,\theta)$ representation. We'll need both
+representations for our solution. It is a simple matter to translate an $(r, \theta)$ point to an $(x, y)$ point and
+back.
 
 <figure>
     <img src="{{site.url}}/assets/img/xyrtheta.png" alt='hello' width='400' style='margin: 10px;'>
@@ -92,11 +95,33 @@ The $(x, y)$ representation is easier to plot and when plotted our initialized l
 So now we can represent and generate a shape. Next we need to specify how we can compute the perimeter and the area of
 this loop represented as a list of points.
 
-### Computing the area
+### Computing the area and the perimeter
 
-As mentioned before, the area turns out to be easier to compute with $(r, \theta)$ list. In this representation, the
-formula for area is $A = \int \frac{1}{2}r^2d\theta$. This formula is simply a mathematical way of writing a `for` loop.
-A direct (but naive) conversion of this formula into code is:
+The code to compute the area $A(y)$ and the perimeter $S(y)$ of any curve $y = f(x)$ starts from calculus formulas.
+In $(x, y)$ coordinates:
+
+$$
+\begin{align*}
+    A(y) &= \int y dx\\
+    S(y) &= \int \sqrt{1+\left(\frac{dy}{dx}\right)^2} dx
+\end{align*}
+$$
+
+The same quantities can be represented in $(r,\theta)$ coordinates:
+
+$$
+\begin{align*}
+    A(r) &= \int \frac{1}{2} r^2d\theta\\
+    S(r) &= \int \sqrt{r^2 + \left(\frac{dr}{d\theta}\right)^2}d\theta
+\end{align*}
+$$
+
+We're giving both versions because, as it turns out, the area turns out to be easier to compute with $(r, \theta)$ and
+the perimeter with $(x, y)$.
+
+#### Computing the area
+This formula involving the integral sign is simply a mathematical way of writing a `for` loop. Therefore a direct (but
+naive) conversion of this formula into code is:
 
 ```python
 # r = list of radii, theta = list of theta values
@@ -119,12 +144,11 @@ def area(r, theta):
     return 0.5 * simps(r * r, theta)
 ```
 
-### Computing the perimeter
+#### Computing the perimeter
 
-The $(x, y)$ representation is better for computing the perimeter. The formula for perimeter of a curve $y = f(x)$ is $S
-= \int \sqrt{1 + y'^2} dx$. This formula is complicated because it involves a derivative. Fortunately, we have a table
-of ordered $(x, y)$ values. This allows to avoid derivatives and directly obtain the perimeter by summing distances
-between consecutive points:
+The $(x, y)$ representation is better for computing the perimeter. This perimeter expression is complicated because it
+involves a derivative. Fortunately, since we have a table of ordered $(x, y)$ values, we can avoid derivatives and
+directly obtain the perimeter by summing distances between consecutive points:
 
 $$
 \begin{equation*}
@@ -249,10 +273,9 @@ algorithm recovers the circular shape to a reasonable accuracy.
 
 ## Adam and SGD (Pytorch)
 
-Next we will attempt to solve the isoperimetric problem using Adam and SGD (stochastic gradient descent) optimizers in
-Pytorch. The details of Adam and SGD are out of scope for this post. However, we'll see how to cast our problem into
-the language of neural network, so that way may plug any available optimizer in a library like Pytorch to solve. This
-may then become a vehicle for the interested readers to dive deeper into the optimizers themselves.
+Next we will use Adam and SGD (stochastic gradient descent) optimizers in Pytorch to solve our problem. The details of
+Adam and SGD are out of scope for this post. However, we will go through the process of casting our problem in the
+language of neural network, so that way may plug any available optimizer in a library like Pytorch to solve.
 
 In a typical neural network learning problem, we have a list of input-output pairs: Image/labels, audio/words, or
 sentence/sentiment and we seek to minimize the prediction error. The isoperimetric problem, on the other hand, is a pure
@@ -613,3 +636,36 @@ normal distribution.
     <img src="{{site.url}}/assets/img/maxentropy_gradient_descent.gif" alt='hello' width='800' style='margin: 10px;'>
     <figcaption></figcaption>
 </figure>
+
+### Pytorch SGD
+
+Finally we will use the Adam optimizer in Pytorch to solve this problem. As before we need to translate the code for
+loss computation from Numpy to Pytorch. Because these changes are nominal, we will not reproduce the code here and
+instead refer the reader to our Github.
+
+The animation below shows our best results with the Pytorch SGD optimizer. We user a learning rate of $10^{-4}$ and a
+momentum of $0.5$.
+
+<figure>
+    <img src="{{site.url}}/assets/img/maxentropy_sgd.gif" alt='hello' width='800' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
+
+A few things to note about the SGD optimizer. Even after extensively tuning the learning parameters, we found it
+difficult to get the SGD to converge with a small number of points. We had to use more than $4000$ points to get the
+converged result to resemble a normal distribution. Even then, the standard deviation of the converged result is $0 82$
+instead of the expected $0.5$ (off by over $50\%$). The greedy and the hand-coded gradient descent converged accurately
+to the expected parameters. I'm investigating the convergence issue and will update if a solution is found.
+
+## Summary and exercises
+
+We saw numerical solution of two classic optimization problems using a few different algorithms. We went through the
+exercise of translating an abstract problem into Python code. We then coded the greedy and gradient descent
+algorithms from scratch to solve the problem. Finally we generated the animations of their convergence. Complete code
+for all of the above steps is available on our Github. Below are a couple of suggested exercises if you want to try
+your hand at solving some similar problems.
+
+* Set up an optimization problem to show that the shortest distance between two points is a straight line and solve
+it using greedy algorithm, hand-coded gradient descent and Pytorch.
+
+* Set up and numerically solve the [Brachistochrone problem](https://en.wikipedia org/wiki/Brachistochrone_curve).
