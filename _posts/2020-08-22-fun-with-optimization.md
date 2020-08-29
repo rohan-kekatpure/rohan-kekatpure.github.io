@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Fun with optimization"
+title: "Numerical solution of two classic optimization problems"
 author: "Rohan"
 categories: journal
 tags: [documentation,sample]
