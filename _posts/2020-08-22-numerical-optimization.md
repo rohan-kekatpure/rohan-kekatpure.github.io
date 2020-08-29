@@ -186,12 +186,10 @@ def perimeter(x, y):
 
 With the implementation of area and perimeter in hand, we're ready to take the final step in the problem specification.
 To modify our initial loop to enclose maximum area, we need to modify each point in the list so that the loop occupies
-more and more area, while maintaining its perimeter equal to $C$. When we can no longer increase the enclosed area, we
-have found a solution to our problem.
-
-However, we want to increase the area _while_ keeping the perimeter fixed. To build in this constraint, we will
-construct a function that depends on both the area and the perimeter. The minimum value of this function will give us a
-list of points that simultaneously maximise the area pin the perimeter. That function is the following:
+more and more area. However, we want to increase the area _while_ keeping the perimeter fixed. To build in this
+constraint, we will construct a function that depends on both the area and the perimeter. The minimum value of this
+function will give us a list of points that simultaneously maximise the area pin the perimeter. That function is the
+following:
 
 $$
 \begin{align*}
