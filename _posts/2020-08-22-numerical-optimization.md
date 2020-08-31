@@ -482,7 +482,7 @@ it. So the max entropy problem can also be specified as: among all possible prob
 and variance $\sigma^2$, find the shape of the one with maximum information. In an [earlier post]({% post_url
 2020-08-11-calculus-of-variations %}) we saw that this shape is the normal (Gaussian) distribution.
 
-This time we will go through the steps in more quickly than before. However, each section here parallels the one for the
+This time we will go through the steps quicker than before. However, each section here parallels the one for the
 isoperimetric problem. You're encouraged to pause and review our description from the isoperimetric problem if needed.
 
 Mathematical expressions for the various quantities in the problem are as follows. As before, we will provide
@@ -669,4 +669,4 @@ want to try your hand at solving some similar problems.
 * Set up an optimization problem to show that the shortest distance between two points is a straight line and solve
 it using greedy algorithm, hand-coded gradient descent and Pytorch.
 
-* Set up and numerically solve the [Brachistochrone problem](https://en.wikipedia org/wiki/Brachistochrone_curve).
+* Set up and numerically solve the [Brachistochrone problem](https://en.wikipedia.org/wiki/Brachistochrone_curve).
