@@ -33,7 +33,7 @@ circle. Here we will demonstrate this answer numerically.
 Here is our plan for this post. We will start by stating the optimization problem in an abstract mathematical form. We
 will then show step-by-step how the math translates to code. For some algorithms, we will use existing libraries,
 others we will code from scratch. For brevity, we will show only the important snippets of code, the full code
-can be found in our Github.
+can be found in our [Github](https://bit.ly/31Jqq05).
 
 ## Abstract problem statement
 Let us start by stating the problem mathematically. Assume that the desired shape is planar and is represented as a
@@ -560,9 +560,9 @@ def loss(x, y, mu, sigma, lambda1, lambda2, lambda3):
 
 The next step is to minimize the loss function using the optimization algorithms we have used earlier in the article:
 greedy, Adam, SGD and hand-coded gradient descent. The implementation of the greedy and the Pytorch methods is similar
-to the way we did it for the isoperimetric problem. We wont reproduce the code below, but it can be found in our
-Github repository. We will, however, derive the expressions for the hand-coded gradient descent since it provides
-useful intuition for the descent methods.
+to the way we did it for the isoperimetric problem. We wont reproduce the code below, but it can be found in our [Github
+repository](https://bit.ly/31Jqq05). We will, however, derive the expressions for the hand-coded gradient descent since
+it provides useful intuition for the descent methods.
 
 We start by initializing $128$ equally-spaced $x$ values in $(-5, 5)$. For each $x_i$ we pick a $p_i$ from a uniform
 random distribution. To make things interesting let us fix the mean and the standard deviation to $\mu =
@@ -642,7 +642,7 @@ normal distribution.
 
 Finally we will use the Adam optimizer in Pytorch to solve this problem. As before we need to translate the code for
 loss computation from Numpy to Pytorch. Because these changes are nominal, we will not reproduce the code here and
-instead refer the reader to our Github.
+instead refer the reader to our [Github](https://bit.ly/31Jqq05).
 
 The animation below shows our best results with the Pytorch SGD optimizer. We user a learning rate of $10^{-4}$ and a
 momentum of $0.5$.
@@ -661,10 +661,10 @@ to the expected parameters. I'm investigating the convergence issue and will upd
 ## Summary and exercises
 
 We saw numerical solution of two classic optimization problems using a few different algorithms. We went through the
-exercise of translating an abstract problem into Python code. We then coded the greedy and gradient descent
-algorithms from scratch to solve the problem. Finally we generated the animations of their convergence. Complete code
-for all of the above steps is available on our Github. Below are a couple of suggested exercises if you want to try
-your hand at solving some similar problems.
+exercise of translating an abstract problem into Python code. We then coded the greedy and gradient descent algorithms
+from scratch to solve the problem. Finally we generated the animations of their convergence. Complete code for all of
+the above steps is available on our [Github](https://bit.ly/31Jqq05). Below are a couple of suggested exercises if you
+want to try your hand at solving some similar problems.
 
 * Set up an optimization problem to show that the shortest distance between two points is a straight line and solve
 it using greedy algorithm, hand-coded gradient descent and Pytorch.
