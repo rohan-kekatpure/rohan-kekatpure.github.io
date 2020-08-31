@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Numerical solution of two classic optimization problems"
+title: "Introducing constrained optimization through two simple examples"
 author: "Rohan"
 categories: journal
 tags: [documentation,sample]
