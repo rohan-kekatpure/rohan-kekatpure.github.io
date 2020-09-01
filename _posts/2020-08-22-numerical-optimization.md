@@ -559,7 +559,7 @@ def loss(x, y, mu, sigma, lambda1, lambda2, lambda3):
 ```
 
 The next step is to minimize the loss function using the optimization algorithms we have used earlier in the article:
-greedy, Adam, SGD and hand-coded gradient descent. The implementation of the greedy and the Pytorch methods is similar
+greedy, Pytorch-SGD and hand-coded gradient descent. The implementation of the greedy and the Pytorch methods is similar
 to the way we did it for the isoperimetric problem. We wont reproduce the code below, but it can be found in our [Github
 repository](https://bit.ly/31Jqq05). We will, however, derive the expressions for the hand-coded gradient descent since
 it provides useful intuition for the descent methods.
@@ -640,7 +640,7 @@ normal distribution.
 
 ### Pytorch SGD
 
-Finally we will use the Adam optimizer in Pytorch to solve this problem. As before we need to translate the code for
+Finally we will use the SGD optimizer in Pytorch to solve this problem. As before we need to translate the code for
 loss computation from Numpy to Pytorch. Because these changes are nominal, we will not reproduce the code here and
 instead refer the reader to our [Github](https://bit.ly/31Jqq05).
 
@@ -655,8 +655,9 @@ momentum of $0.5$.
 A few things to note about the SGD optimizer. Even after extensively tuning the learning parameters, we found it
 difficult to get the SGD to converge with a small number of points. We had to use more than $4000$ points to get the
 converged result to resemble a normal distribution. Even then, the standard deviation of the converged result is $0 82$
-instead of the expected $0.5$ (off by over $50\%$). The greedy and the hand-coded gradient descent converged accurately
-to the expected parameters. I'm investigating the convergence issue and will update if a solution is found.
+instead of the expected $0.5$ (off by over $50\%$). Adam optimizer gave us similar experience. The greedy and the
+hand-coded gradient descent converged accurately to the expected parameters. I'm investigating the convergence issue and
+will update if a solution is found.
 
 ## Summary and exercises
 
