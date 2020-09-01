@@ -188,7 +188,7 @@ With the implementation of area and perimeter in hand, we're ready to take the f
 To modify our initial loop to enclose maximum area, we need to modify each point in the list so that the loop occupies
 more and more area. However, we want to increase the area _while_ keeping the perimeter fixed. To build in this
 constraint, we will construct a function that depends on both the area and the perimeter. The minimum value of this
-function will give us a list of points that simultaneously maximise the area pin the perimeter. That function is the
+function will give us a list of points that simultaneously maximise the area and pin the perimeter. That function is the
 following:
 
 $$
