@@ -188,8 +188,8 @@ With the implementation of area and perimeter in hand, we're ready to take the f
 To modify our initial loop to enclose maximum area, we need to modify each point in the list so that the loop occupies
 more and more area. However, we want to increase the area _while_ keeping the perimeter fixed. To build in this
 constraint, we will construct a function that depends on both the area and the perimeter. The minimum value of this
-function will give us a list of points that simultaneously maximise the area and pin the perimeter. That function is the
-following:
+function will give us a list of points that simultaneously maximises the area and pins the perimeter. That function is
+the following:
 
 $$
 \begin{align*}
@@ -654,7 +654,7 @@ momentum of $0.5$.
 
 A few things to note about the SGD optimizer. Even after extensively tuning the learning parameters, we found it
 difficult to get the SGD to converge with a small number of points. We had to use more than $4000$ points to get the
-converged result to resemble a normal distribution. Even then, the standard deviation of the converged result is $0 82$
+converged result to resemble a normal distribution. Even then, the standard deviation of the converged result is $0.82$
 instead of the expected $0.5$ (off by over $50\%$). Adam optimizer gave us similar experience. The greedy and the
 hand-coded gradient descent converged accurately to the expected parameters. I'm investigating the convergence issue and
 will update if a solution is found.
