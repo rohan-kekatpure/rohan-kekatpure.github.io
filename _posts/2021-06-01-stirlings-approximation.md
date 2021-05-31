@@ -110,5 +110,69 @@ $$\mu=z$$ and having variance $$\sigma^2=z$$).
     <figcaption></figcaption>
 </figure>
 
+### Gamma function to Gaussian
+
+Let us now prove informally that the integrand of the gamma function resembles a scaled Gaussian function. To do that
+we first define
+
+$$
+\begin{equation}
+B_z(x) = \log A_z(x) = z \log x - x
+\end{equation}
+$$
+
+We will now obtain a polynomial expansion for $$B_z(x)$$ around $$x = z$$ using Taylor expansion
+
+$$
+\begin{align}
+\begin{split}
+ B_z'(x)\bigg\rvert_{x = z} &= \frac{z}{x} - 1\bigg\rvert_{x = z} = 0 \\
+B_z''(x)\bigg\rvert_{x = z} &= \frac{-z}{x^2}\bigg\rvert_{x = z} =\frac{-1}{z}
+\end{split}
+\label{eq:t2}
+\end{align}
+$$
+
+Thus our Taylor expansion is, up to the quadratic term
+
+$$
+\begin{align}
+\begin{split}
+B_z(x) &\simeq B_z(z) + B_z'(z)(x - z) + \frac{B_z''(z)}{2}(x-z)^2 \\
+&= z \log z - z + 0 - \frac{(x - z)^2}{2z}
+\end{split}
+\end{align}
+$$
+
+This means our integrand of the Gamma function $$A_z(x)$$ is
+
+$$
+\begin{align}
+A_z(x) &= e^{B_z(x)} \notag \\
+&\simeq e^{z\log z - z} \,\, e^{-\frac{(x - z)^2}{2 z}} \notag \\
+&= \left(\frac{z}{e}\right)^z \,\, e^{-\frac{(x - z)^2}{2 z}} \label{eq:gaussian}
+\end{align}
+$$
+
+The second factor in equation $\eqref{eq:gaussian}$ is precisely a scaled Gaussian function with mean and variance
+both equal to $$z$$.
+
+The final step is integrating the integrand $$A_z(x)$$ to obtain an approximation for $$\Gamma(z + 1)$$:
+
+$$
+\begin{align}
+\begin{split}
+\Gamma(z + 1) &= \int_0^\infty A_z(x) dx \\
+&= \left(\frac{z}{e}\right)^z \int_0^\infty e^{-\frac{(x - z)^2}{2 z}} dx \\
+&= \left(\frac{z}{e}\right)^z \int_{-z}^\infty e^{-\frac{h^2}{2 z}} dh \qquad\ldots\text{putting  } h = x - z \\
+&\simeq \left(\frac{z}{e}\right)^z \int_{-\infty}^{\infty} e^{-\frac{h^2}{2 z}} dh \\
+&= \sqrt{2\pi z} \left(\frac{z}{e}\right)^z
+\end{split}
+\end{align}
+$$
+
+This completes our informal proof of the Stirling's approximation.
+
+
 
 
