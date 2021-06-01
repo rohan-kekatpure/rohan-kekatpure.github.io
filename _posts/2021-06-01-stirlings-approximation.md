@@ -186,16 +186,71 @@ $$
 \end{align}
 $$
 
-This completes our informal derivation of the Stirling's approximation. Notice that we haven't actually proved (even
-informally) that Stirling's approximation gets better as $$z$$ increases.
+This completes our informal derivation of the Stirling's approximation. We next move on to examine a couple of
+consequences of this formula.
 
-<details>
-    <summary>Convergence of Stirling's approximation</summary>
+### Accuracy of Stirling's approximation
 
-### Speed of convergence
+In this optional section we examine the accuracy (or equivalently, the speed of convergence) of Stirling's
+formula. Notice that we haven't actually proved that Stirling's approximation gets better
+as $$z$$ increases.This aspect is a bit more difficult to prove. Most sources just state what is called the
+[Stirling's series](https://en.wikipedia.org/wiki/Stirling's_approximation#Speed_of_convergence_and_error_estimates)
+without proof. Stirling's series indicates that the approximation gets better as $\frac{1}{12 z}1$. That is the
+approximation at $z = 40$ is twice as good as at $z = 20$. Mathematically
 
-</details>
+$$
+\begin{equation}
+\Gamma(z + 1) \approx \sqrt{2\pi z} \, \left(\frac{z}{e}\right)^z\left(1 + \frac{1}{12 z} + O\left
+(\frac{1}{z^2}\right)\right)
+\end{equation}
+$$
 
+To derive the leading correction term, we will use two equations:
+
+$$
+\begin{align}
+\begin{split}
+\Gamma(z+1) &\approx \sqrt{2\pi z} \, \left(\frac{z}{e}\right)^z\\
+\Gamma(z+1) &= z\Gamma(z)
+\end{split}
+\end{align}
+$$
+
+Assume that the correction is of the form $$\Gamma(z+1) = \sqrt{2\pi z}(z/e)^z f(z)$$ and write
+
+$$
+\begin{align}
+z\Gamma(z) &= \Gamma(z+1) \notag \\
+z \sqrt{2\pi(z-1)} \frac{(z-1)^{z-1}}{e^z} f(z-1)&= \sqrt{2\pi z}\frac{z^z}{e^z}f(z) \notag \\
+e (z-1)^{z - \frac{1}{2}} f(z-1) &= z^{z-\frac{1}{2}} f(z) \notag  \\
+1 + z\log\left(1-\frac{1}{z}\right) - \frac{1}{2}\log\left(1-\frac{1}{z}\right) &= g(z) - g(z-1)
+\label{eq:corr}
+\end{align}
+$$
+
+where in the last step we have taken the $\log$ of the previous step and put $g(z) \leftarrow \log f(z)$. We expand
+$\log (1-\frac{1}{z}) = -\frac{1}{z} - \frac{1}{2z^2} -\frac{1}{3z^3}-\cdots$, recognize that
+$g(z) - g(z-1) \approx g'(z)$ and simplify equation $\eqref{eq:corr}$ to
+
+$$
+\begin{align}
+\begin{split}
+g'(z) &\approx -\frac{1}{12 z}\\
+\Rightarrow g(z) &= \frac{1}{12z}\\
+\Rightarrow f(z) = e^{g(z)} &\approx 1 + \frac{1}{12z}
+\end{split}
+\end{align}
+$$
+
+Therefore we arrive at Stirling's formula with the first order correction term
+
+<div class="boxed">
+$$
+\begin{equation}
+\Gamma(z+1) \approx \sqrt{2\pi z}\left(\frac{z}{e}\right)^z\left(1 + \frac{1}{12 z}\right)
+\end{equation}
+$$
+</div>
 
 
 
