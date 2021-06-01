@@ -7,6 +7,10 @@ tags: [documentation,sample]
 image:
 ---
 
+<style>
+.boxed { border: 1px solid green;}
+</style>
+
 ## Factorial function
 
 Factorial of a number $$n$$ is the result of multiplication of numbers from $$1$$ through $$n$$. "$$n$$ factorial" is
@@ -107,7 +111,7 @@ $$\mu=z$$ and having variance $$\sigma^2=z$$).
 
 <figure>
     <img src="{{site.url}}/assets/img/gamma_evolution.png" alt='map' style='margin: 10px;' height="300"/>
-    <figcaption></figcaption>
+    <figcaption>Figure 1. Integrand of the Gamma function and its comparison with a scaled Gaussian.</figcaption>
 </figure>
 
 ### Gamma function to Gaussian
@@ -155,21 +159,18 @@ A_z(x) &= e^{B_z(x)} \notag \\
 $$
 
 To recap, we have proved that for large $$z$$'s
-<style>
-.boxed {
-  border: 1px solid green ;
-}
-</style>
 
 <div class="boxed">
 $$
 \begin{equation}
-x^z e^{-x} \approx \left(\frac{z}{e}\right)^z \,\, e^{-\frac{(x - z)^2}{2 z}} \label{eq:gaussian}
+x^z e^{-x} \approx \left(\frac{z}{e}\right)^z \,\, e^{-\frac{(x - z)^2}{2 z}} \qquad \text{as } z\to\infty
+\label{eq:gaussian}
 \end{equation} 
 $$
 </div>
 
-Right hand side of $\eqref{eq:gaussian}$ is precisely the scaled Gaussian function with mean and variance
+The equation above boxed in green is the key simplification which will lead us to the Stirling's formula. Right hand
+side of $\eqref{eq:gaussian}$ is precisely the scaled Gaussian function with mean and variance
 both equal to $$z$$. The final step is integrating the integrand $$A_z(x)$$ to obtain an approximation for
 $$\Gamma(z + 1)$$:
 
@@ -180,12 +181,20 @@ $$
 &= \left(\frac{z}{e}\right)^z \int_0^\infty e^{-\frac{(x - z)^2}{2 z}} dx \\
 &= \left(\frac{z}{e}\right)^z \int_{-z}^\infty e^{-\frac{h^2}{2 z}} dh \qquad\ldots\text{putting  } h = x - z \\
 &\approx \left(\frac{z}{e}\right)^z \int_{-\infty}^{\infty} e^{-\frac{h^2}{2 z}} dh \\
-&= \sqrt{2\pi z} \left(\frac{z}{e}\right)^z
+&= \sqrt{2\pi z} \, \left(\frac{z}{e}\right)^z
 \end{split}
 \end{align}
 $$
 
-This completes our informal proof of the Stirling's approximation.
+This completes our informal derivation of the Stirling's approximation. Notice that we haven't actually proved (even
+informally) that Stirling's approximation gets better as $$z$$ increases.
+
+<details>
+    <summary>Convergence of Stirling's approximation</summary>
+
+### Speed of convergence
+
+</details>
 
 
 
