@@ -138,7 +138,7 @@ Thus our Taylor expansion is, up to the quadratic term
 $$
 \begin{align}
 \begin{split}
-B_z(x) &\simeq B_z(z) + B_z'(z)(x - z) + \frac{B_z''(z)}{2}(x-z)^2 \\
+B_z(x) &\approx B_z(z) + B_z'(z)(x - z) + \frac{B_z''(z)}{2}(x-z)^2 \\
 &= z \log z - z + 0 - \frac{(x - z)^2}{2z}
 \end{split}
 \end{align}
@@ -147,17 +147,31 @@ $$
 This means our integrand of the Gamma function $$A_z(x)$$ is
 
 $$
-\begin{align}
+\begin{align*}
 A_z(x) &= e^{B_z(x)} \notag \\
-&\simeq e^{z\log z - z} \,\, e^{-\frac{(x - z)^2}{2 z}} \notag \\
-&= \left(\frac{z}{e}\right)^z \,\, e^{-\frac{(x - z)^2}{2 z}} \label{eq:gaussian}
-\end{align}
+&\approx e^{z\log z - z} \,\, e^{-\frac{(x - z)^2}{2 z}} \notag \\
+&= \left(\frac{z}{e}\right)^z \,\, e^{-\frac{(x - z)^2}{2 z}}
+\end{align*}
 $$
 
-The second factor in equation $\eqref{eq:gaussian}$ is precisely a scaled Gaussian function with mean and variance
-both equal to $$z$$.
+To recap, we have proved that for large $$z$$'s
+<style>
+.boxed {
+  border: 1px solid green ;
+}
+</style>
 
-The final step is integrating the integrand $$A_z(x)$$ to obtain an approximation for $$\Gamma(z + 1)$$:
+<div class="boxed">
+$$
+\begin{equation}
+x^z e^{-x} \approx \left(\frac{z}{e}\right)^z \,\, e^{-\frac{(x - z)^2}{2 z}} \label{eq:gaussian}
+\end{equation} 
+$$
+</div>
+
+Right hand side of $\eqref{eq:gaussian}$ is precisely the scaled Gaussian function with mean and variance
+both equal to $$z$$. The final step is integrating the integrand $$A_z(x)$$ to obtain an approximation for
+$$\Gamma(z + 1)$$:
 
 $$
 \begin{align}
@@ -165,7 +179,7 @@ $$
 \Gamma(z + 1) &= \int_0^\infty A_z(x) dx \\
 &= \left(\frac{z}{e}\right)^z \int_0^\infty e^{-\frac{(x - z)^2}{2 z}} dx \\
 &= \left(\frac{z}{e}\right)^z \int_{-z}^\infty e^{-\frac{h^2}{2 z}} dh \qquad\ldots\text{putting  } h = x - z \\
-&\simeq \left(\frac{z}{e}\right)^z \int_{-\infty}^{\infty} e^{-\frac{h^2}{2 z}} dh \\
+&\approx \left(\frac{z}{e}\right)^z \int_{-\infty}^{\infty} e^{-\frac{h^2}{2 z}} dh \\
 &= \sqrt{2\pi z} \left(\frac{z}{e}\right)^z
 \end{split}
 \end{align}
