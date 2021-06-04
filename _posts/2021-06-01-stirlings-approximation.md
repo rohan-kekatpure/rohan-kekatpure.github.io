@@ -34,6 +34,7 @@ material in this post is available in introductory courses on combinatorics, pro
 in this post is new, I do hope that the non-rigorous treatment here provides a bit of mathematical amusement to the
 reader.
 
+## Factorial function
 To begin, the factorial of a number $n$ is the result of multiplication of numbers from $1$ through $n$. "$n$
 factorial" is denoted by $n!$ and we write:
 
@@ -99,7 +100,7 @@ and the approximation gets better as n gets bigger. The above approximation to t
 the [Stirling's approximation](https://en.wikipedia.org/wiki/Stirling%27s_approximation). Lets see next how to
 derive this remarkable formula.
 
-## Stirling's approximation: Derivation
+## Stirling's approximation of the factorial
 
 There are a number of ways to derive this formula. The one I find most intuitive is
 [Laplace's method](https://en.wikipedia.org/wiki/Laplace%27s_method) which is what we will use. Roughly, the idea in
@@ -133,8 +134,6 @@ $\mu=z$ and having variance $\sigma^2=z$).
     <img src="{{site.url}}/assets/img/gamma_evolution.png" alt='map' style='margin: 10px;' height="300"/>
     <figcaption>Figure 1. Integrand of the Gamma function and its comparison with a scaled Gaussian.</figcaption>
 </figure>
-
-### Gamma function to Gaussian
 
 Let us now prove informally that the integrand of the gamma function resembles a scaled Gaussian function. To do that
 we first define
