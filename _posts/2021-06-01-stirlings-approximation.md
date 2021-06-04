@@ -11,10 +11,31 @@ image:
 .boxed { border: 1px solid green;}
 </style>
 
-## Factorial function
+## Solving problems by generalization
 
-Factorial of a number $$n$$ is the result of multiplication of numbers from $$1$$ through $$n$$. "$$n$$ factorial" is
- denoted by $$n!$$ and in mathematical notation we write:
+Expanding the scope of a problem can sometimes be a crucial step in its solution. In mathematics, this pattern
+translates to expanding the definition of a function or an expression from positive to negative integers, from
+integers to reals or from real to complex numbers. These generalizations often lead to deep insights and form
+"bridges" between unconnected areas. It is hard to come up with non-trivial generalizations.
+The study of previously discovered generalizations is therefore a fruitful mental exercise.
+We can refer to a couple of ingenious examples of such generalizations:
+
+ 1. [Newton's generalization](https://en.wikipedia.org/wiki/Binomial_theorem#Newton's_generalized_binomial_theorem) of
+ the binomial theorem to negative integers, rational numbers and real numbers
+
+ 2. [Riemann's generalization](https://en.wikipedia.org/wiki/Riemann_zeta_function) of the zeta function to
+ the complex plane
+
+In fact the field of [analytic number theory](https://en.wikipedia.org/wiki/Analytic_number_theory)
+deals with applying methods of analysis (i.e. calculus) to number theory.
+
+The aim of this post is to use one such generalization and tinker with the well-known factorial function. Most of the
+material in this post is available in introductory courses on combinatorics, probability and calculus. While little
+in this post is new, I do hope that the non-rigorous treatment here provides a bit of mathematical amusement to the
+reader.
+
+To begin, the factorial of a number $n$ is the result of multiplication of numbers from $1$ through $n$. "$n$
+factorial" is denoted by $n!$ and we write:
 
 $$
 \begin{equation}
@@ -22,19 +43,24 @@ n! = 1 \times 2 \times \cdots \times n
 \end{equation}
 $$
 
-The factorial function shows in discussions about arranging a set of items. The number of ways of arranging $$n$$
-distinct objects equals $$n!$$. Since arranging things is universal, it is not surprising
-that the factorial function appears in computational complexity, combinatorics (arrangements of abstract objects), and
-statistical physics (arrangements of atoms).
+The factorial function belongs to the class of functions called
+[arithmetic functions](https://en.wikipedia.org/wiki/Arithmetic_function). As written above, the factorial function is
+well defined only for positive integers. In applications, the factorial function shows shows up in algorithm
+complexity theory, combinatorics (arrangements of abstract objects), probability, and statistical physics (arrangements
+of atoms).
 
 While the mathematical definition of factorial is easy enough to understand, its numerical computation is a different
-matter. 32- and 64-bit unsigned integers will overflow for $$13!$$ and $$21!$$ respectively. Most scientific
-calculators will return floating point answers up to $$69!$$. But in real world, we need to estimate
-factorials of numbers much larger than these. In statistical physics, for example, one needs to [accurately estimate](https://en.wikipedia.org/wiki/Fermi%E2%80%93Dirac_statistics#Microcanonical_ensemble)
-factorial of $$\sim 6\times 10^{23}$$ of atoms. How do we go about estimating large factorials? The answer is a special
-function called the Gamma function.
+matter. 32- and 64-bit unsigned integers will overflow for $n=13$ and $n=21$ respectively. Most scientific
+calculators will return floating point answers up to $n=69$. But in real world, we need factorials of numbers  much
+larger than these. In statistical physics, for example, one needs to
+[accurately estimate](https://en.wikipedia.org/wiki/Fermi%E2%80%93Dirac_statistics#Microcanonical_ensemble)
+factorial of $\sim 6\times 10^{23}$ of atoms. How do we go about estimating large factorials?
 
-## Gamma function: Generalization of the factorial
+## Generalization of the factorial function
+
+Tasks such as estimating bounds turn out to be easier to perform in the realm of calculus.
+However, it is not readily apparent how calculus tools can be applied to arithmetic functions and in particular the
+factorial function defined above. The answer was provided by Daniel Bernoulli in the form of the Gamma function.
 
 [Gamma function](https://en.wikipedia.org/wiki/Gamma_function) is defined as
 
@@ -45,9 +71,7 @@ $$
 \end{equation}
 $$
 
-In the above expression, note that the answer of the above integral must be a function of $$z$$ since the $$x$$ will
-integrate out. The surprising property of the above function is that and for any positive integer $$n$$,
-$$\Gamma(n + 1)$$ equals $$n!$$.
+The property of the above function is that and for any positive integer $n$, $\Gamma(n + 1)$ equals $n!$.
 
 $$
 \begin{equation}
@@ -55,29 +79,15 @@ $$
 \end{equation}
 $$
 
-If you're familiar with integration by parts (from high school or freshman calculus),
-you can demonstrate this fact quite easily.
+If you're familiar with integration by parts (from high school or freshman calculus), you can demonstrate this fact
+quite easily.
 
-From the form of gamma function, it may seem that we have made an easy problem unnecessarily complicated. But the
+It may seem that the Gamma function has made an easy problem unnecessarily complicated. But the
 opposite is true. Once we generalize an integer-valued problem to real numbers, the latter can be attacked with the
 full power of calculus. Tools from calculus and analysis allows us to perform not only approximation analysis, but to
 discover surprising connections to other special functions or entirely different mathematical areas.
 
-In number theory this game is played quite often. Famous example are
-
- 1. [Newton's generalization](https://en.wikipedia.org/wiki/Binomial_theorem#Newton's_generalized_binomial_theorem) of
- the binomial theorem to negative integers, rational numbers and real numbers
-
- 2. [Riemann's generalization](https://en.wikipedia.org/wiki/Riemann_zeta_function) of the zeta function to
- the complex plane
-
-In fact the fascinating field of
-[analytic number theory](https://en.wikipedia.org/wiki/Analytic_number_theory)
-deals with applying methods of analysis (i.e. calculus) to number theory.
-
-Coming back to the factorial, we note that the Gamma function provides a generalization of the factorial and
-furthermore allows us to use tools from calculus to estimate it accurately. When we carry out the steps, it will turn
-out that the factorial of any positive integer $$n$$ can be accurately approximated by the following function.
+In the following we will prove that the factorial of any positive integer $n$ can be accurately approximated by
 
 $$
 \begin{equation}
@@ -86,28 +96,38 @@ n! \approx \sqrt{2\pi n}\left(\frac{n}{e}\right)^n
 $$
 
 and the approximation gets better as n gets bigger. The above approximation to the factorial is known as
-the [Stirling's approximation](https://en.wikipedia.org/wiki/Stirling%27s_approximation). It is this approximation
-that makes various derivations in statistical physics and combinatorics tractable.
+the [Stirling's approximation](https://en.wikipedia.org/wiki/Stirling%27s_approximation). Lets see next how to
+derive this remarkable formula.
 
-Lets see next how to derive this remarkable formula.
+## Stirling's approximation: Derivation
 
-## Stirling's approximation
+There are a number of ways to derive this formula. The one I find most intuitive is
+[Laplace's method](https://en.wikipedia.org/wiki/Laplace%27s_method) which is what we will use. Roughly, the idea in
+Laplace's method is this: If you have a function $g(x)$ of the form $g(x) = e^{f(x)}$, and if $f(x)$ has a local
+maximum at $x = x_0$, then, around $x_0$, $g(x)$ will resemble a Gaussian. Stated differently, if $f(x)$ has a maximum,
+then, around its maximum, it looks similar to an an inverted parabola and, in turn, $e^{f(x)}$ will look
+like a Gaussian.
 
-There are a number of ways to derive this formula, but we will use one which I find most intuitive. Consider the
-integrand in equation $$\eqref{eq:gamma}$$
+If we're presented such a $g(x)$, then our task boils down to showing that $f(x)$ has a maximum and to expand $f(x)$
+around its maximum to the quadratic term. It turns out that the above trick can be applied to the integrand of the
+Gamma function.
+
+Let us now work out the details. Consider the integrand in equation $\eqref{eq:gamma}$
 
 $$
 \begin{equation}
-A_z(x) = x^z e^{-x}
+g(x) = x^z e^{-x}
 \end{equation}
 $$
 
-$$A_z(x)$$ is a combination of two factors $$x^z$$ and $$e^{-x}$$. For $$z > 0$$, the first factor ($$x^z$$) increases
-with $$x$$ and the second factor ($$e^{-x}$$) decreases with $$x$$. Thus we should expect $$A(x)$$ to have a maximum
-at some value of $$x$$. When we plot the function $$A_z(x)$$ for various values of $$z$$ we find a maximum as
-expected. But we also find a lot more. Not  only does $$A_z(x)$$ have a maximum, but for larger and larger values of
-$$z$$, $$A_z(x)$$ increasingly resembles the Gaussian $$\mathcal{N}(z, z)$$ (i.e a Gaussian distribution centered at
-$$\mu=z$$ and having variance $$\sigma^2=z$$).
+Before doing the math, let us understand the behavior of $g(x)$ using intuition and pictures.
+
+$g(x)$ is a combination of two factors $x^z$ and $e^{-x}$. For $z > 0$, the first factor ($x^z$) increases
+with $x$ and the second factor ($e^{-x}$) decreases with $x$. Thus we should expect $g(x)$ to have a maximum
+at some value of $x$. When we plot the function $g(x)$ for various values of $z$ we find a maximum as
+expected. Not only does $A_z(x)$ have a maximum, but for larger and larger values of
+$z$, $g(x)$ resembles the Gaussian $\mathcal{N}(z, z)$ (i.e a Gaussian distribution centered at
+$\mu=z$ and having variance $\sigma^2=z$).
 
 <figure>
     <img src="{{site.url}}/assets/img/gamma_evolution.png" alt='map' style='margin: 10px;' height="300"/>
@@ -121,17 +141,17 @@ we first define
 
 $$
 \begin{equation}
-B_z(x) = \log A_z(x) = z \log x - x
+f(x) = \log g(x) = z \log x - x
 \end{equation}
 $$
 
-We will now obtain a polynomial expansion for $$B_z(x)$$ around $$x = z$$ using Taylor expansion
+We will now obtain a quadratic expansion for $f(x)$ around its maximum.
 
 $$
 \begin{align}
 \begin{split}
- B_z'(x)\bigg\rvert_{x = z} &= \frac{z}{x} - 1\bigg\rvert_{x = z} = 0 \\
-B_z''(x)\bigg\rvert_{x = z} &= \frac{-z}{x^2}\bigg\rvert_{x = z} =\frac{-1}{z}
+f'(x) &= \frac{z}{x} - 1 \quad \Rightarrow \quad f(x) \text{ has maximum at } x = z \\
+f''(x)\bigg\rvert_{x = z} &= \frac{-z}{x^2}\bigg\rvert_{x = z} =\frac{-1}{z}
 \end{split}
 \label{eq:t2}
 \end{align}
@@ -142,23 +162,23 @@ Thus our Taylor expansion is, up to the quadratic term
 $$
 \begin{align}
 \begin{split}
-B_z(x) &\approx B_z(z) + B_z'(z)(x - z) + \frac{B_z''(z)}{2}(x-z)^2 \\
+f(x) &\approx f(z) + f'(z)(x - z) + \frac{f''(z)}{2}(x-z)^2 \\
 &= z \log z - z + 0 - \frac{(x - z)^2}{2z}
 \end{split}
 \end{align}
 $$
 
-This means our integrand of the Gamma function $$A_z(x)$$ is
+This means our integrand of the Gamma function $g(x)$ is
 
 $$
 \begin{align*}
-A_z(x) &= e^{B_z(x)} \notag \\
+g(x) &= e^{f(x)} \notag \\
 &\approx e^{z\log z - z} \,\, e^{-\frac{(x - z)^2}{2 z}} \notag \\
 &= \left(\frac{z}{e}\right)^z \,\, e^{-\frac{(x - z)^2}{2 z}}
 \end{align*}
 $$
 
-To recap, we have proved that for large $$z$$'s
+To recap, we have proved that for large $z$'s
 
 <div class="boxed">
 $$
@@ -171,13 +191,13 @@ $$
 
 The equation above boxed in green is the key simplification which will lead us to the Stirling's formula. Right hand
 side of $\eqref{eq:gaussian}$ is precisely the scaled Gaussian function with mean and variance
-both equal to $$z$$. The final step is integrating the integrand $$A_z(x)$$ to obtain an approximation for
-$$\Gamma(z + 1)$$:
+both equal to $z$. The final step is integrating the integrand $g(x)$ to obtain an approximation for
+$\Gamma(z + 1)$:
 
 $$
 \begin{align}
 \begin{split}
-\Gamma(z + 1) &= \int_0^\infty A_z(x) dx \\
+\Gamma(z + 1) &= \int_0^\infty g(x) dx \\
 &= \left(\frac{z}{e}\right)^z \int_0^\infty e^{-\frac{(x - z)^2}{2 z}} dx \\
 &= \left(\frac{z}{e}\right)^z \int_{-z}^\infty e^{-\frac{h^2}{2 z}} dh \qquad\ldots\text{putting  } h = x - z \\
 &\approx \left(\frac{z}{e}\right)^z \int_{-\infty}^{\infty} e^{-\frac{h^2}{2 z}} dh \\
@@ -186,16 +206,20 @@ $$
 \end{align}
 $$
 
-This completes our informal derivation of the Stirling's approximation. We next move on to examine a couple of
-consequences of this formula.
+This completes our informal derivation of the Stirling's approximation.
+The $\sqrt{2\pi}$ factor in the approximation gives away the special relationship Stirling's approximation has to the
+Gaussian. Stirling's approximation, in combination with Laplace's method used in this article can be used to craft a
+general methods for proving special cases of the Central Limit Theorem. We will take up this fun exercise in another
+post.
 
-### Accuracy of Stirling's approximation
 
-In this optional section we examine the accuracy (or equivalently, the speed of convergence) of Stirling's
+## Accuracy of Stirling's approximation
+
+In this optional section, we examine the accuracy (or equivalently, the speed of convergence) of Stirling's
 formula. Notice that we haven't actually proved that Stirling's approximation gets better
 as $$z$$ increases.This aspect is a bit more difficult to prove. Most sources just state what is called the
 [Stirling's series](https://en.wikipedia.org/wiki/Stirling's_approximation#Speed_of_convergence_and_error_estimates)
-without proof. Stirling's series indicates that the approximation gets better as $\frac{1}{12 z}1$. That is the
+without proof. Stirling's series indicates that the approximation gets better as $\frac{1}{12 z}$. That is the
 approximation at $z = 40$ is twice as good as at $z = 20$. Mathematically
 
 $$
@@ -216,28 +240,28 @@ $$
 \end{align}
 $$
 
-Assume that the correction is of the form $$\Gamma(z+1) = \sqrt{2\pi z}(z/e)^z f(z)$$ and write
+Assume that the correction is of the form $$\Gamma(z+1) = \sqrt{2\pi z}(z/e)^z h(z)$$ and write
 
 $$
 \begin{align}
 z\Gamma(z) &= \Gamma(z+1) \notag \\
-z \sqrt{2\pi(z-1)} \frac{(z-1)^{z-1}}{e^z} f(z-1)&= \sqrt{2\pi z}\frac{z^z}{e^z}f(z) \notag \\
-e (z-1)^{z - \frac{1}{2}} f(z-1) &= z^{z-\frac{1}{2}} f(z) \notag  \\
-1 + z\log\left(1-\frac{1}{z}\right) - \frac{1}{2}\log\left(1-\frac{1}{z}\right) &= g(z) - g(z-1)
+z \sqrt{2\pi(z-1)} \frac{(z-1)^{z-1}}{e^z} h(z-1)&= \sqrt{2\pi z}\frac{z^z}{e^z}h(z) \notag \\
+e (z-1)^{z - \frac{1}{2}} h(z-1) &= z^{z-\frac{1}{2}} h(z) \notag  \\
+1 + z\log\left(1-\frac{1}{z}\right) - \frac{1}{2}\log\left(1-\frac{1}{z}\right) &= q(z) - q(z-1)
 \label{eq:corr}
 \end{align}
 $$
 
-where in the last step we have taken the $\log$ of the previous step and put $g(z) \leftarrow \log f(z)$. We expand
+where in the last step we have taken the $\log$ of the previous step and put $q(z) \leftarrow \log h(z)$. We expand
 $\log (1-\frac{1}{z}) = -\frac{1}{z} - \frac{1}{2z^2} -\frac{1}{3z^3}-\cdots$, recognize that
-$g(z) - g(z-1) \approx g'(z)$ and simplify equation $\eqref{eq:corr}$ to
+$q(z) - q(z-1) \approx q'(z)$ and simplify equation $\eqref{eq:corr}$ to
 
 $$
 \begin{align}
 \begin{split}
-g'(z) &\approx -\frac{1}{12 z}\\
-\Rightarrow g(z) &= \frac{1}{12z}\\
-\Rightarrow f(z) = e^{g(z)} &\approx 1 + \frac{1}{12z}
+q'(z) &\approx -\frac{1}{12 z}\\
+\Rightarrow q(z) &= \frac{1}{12z}\\
+\Rightarrow h(z) = e^{q(z)} &\approx 1 + \frac{1}{12z}
 \end{split}
 \end{align}
 $$
