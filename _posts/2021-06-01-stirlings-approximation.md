@@ -16,9 +16,7 @@ image:
 Expanding the scope of a problem can sometimes be a crucial step in its solution. In mathematics, this pattern
 translates to expanding the definition of a function or an expression from positive to negative integers, from
 integers to reals or from real to complex numbers. These generalizations often lead to deep insights and form
-"bridges" between unconnected areas. It is hard to come up with non-trivial generalizations.
-The study of previously discovered generalizations is therefore a fruitful mental exercise.
-We can refer to a couple of ingenious examples of such generalizations:
+"bridges" between unconnected areas. We can refer to a couple of ingenious examples of such generalizations:
 
  1. [Newton's generalization](https://en.wikipedia.org/wiki/Binomial_theorem#Newton's_generalized_binomial_theorem) of
  the binomial theorem to negative integers, rational numbers and real numbers
@@ -29,10 +27,12 @@ We can refer to a couple of ingenious examples of such generalizations:
 In fact the field of [analytic number theory](https://en.wikipedia.org/wiki/Analytic_number_theory)
 deals with applying methods of analysis (i.e. calculus) to number theory.
 
-The aim of this post is to use one such generalization and tinker with the well-known factorial function. Most of the
-material in this post is available in introductory courses on combinatorics, probability and calculus. While little
-in this post is new, I do hope that the non-rigorous treatment here provides a bit of mathematical amusement to the
-reader.
+It is hard to come up with non-trivial generalizations like the above examples. The study of previously discovered
+generalizations is therefore a fruitful mental exercise. The aim of this post is to use one such generalization and
+tinker with the well-known factorial function. Most of the material in this post is available in introductory courses
+on combinatorics, probability and calculus. While little in this post is new, I hope the content is accessible and
+amusing. The more  rigorous-minded reader can of course find more appropriate resources
+([Wikipedia](https://en.wikipedia.org/wiki/Stirling%27s_approximation) as always is a good starting point).
 
 ## Factorial function
 To begin, the factorial of a number $n$ is the result of multiplication of numbers from $1$ through $n$. "$n$
@@ -102,11 +102,12 @@ derive this remarkable formula.
 
 ## Stirling's approximation of the factorial
 
-There are a number of ways to derive this formula. The one I find most intuitive is
-[Laplace's method](https://en.wikipedia.org/wiki/Laplace%27s_method) which is what we will use. Roughly, the idea in
-Laplace's method is this: If you have a function $g(x)$ of the form $g(x) = e^{f(x)}$, and if $f(x)$ has a local
+There are a number of ways to derive this formula. Arguably the easiest is to use
+[Laplace's method](https://en.wikipedia.org/wiki/Laplace%27s_method). Interested reader may review our brief
+[post on the Laplace's method]({% post_url 2021-06-08-laplaces-method %}). Roughly, the idea in
+Laplace's method is this: If you have a function $g(x)$ of the form $g(x) = e^{f(x)}$, and if $f(x)$ has a global
 maximum at $x = x_0$, then, around $x_0$, $g(x)$ will resemble a Gaussian. Stated differently, if $f(x)$ has a maximum,
-then, around its maximum, it looks similar to an an inverted parabola and, in turn, $e^{f(x)}$ will look
+then, around its maximum, it looks similar to an an inverted parabola and, in turn, $e^{f(x)}$ looks
 like a Gaussian.
 
 If we're presented such a $g(x)$, then our task boils down to showing that $f(x)$ has a maximum and to expand $f(x)$
