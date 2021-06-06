@@ -66,8 +66,11 @@ $$
 $$
 </div>
 
-If I'd encountered this formula out of the blue, it would have seemed like magic. But now we know the straightforward
-reasoning behind its derivation. By the way, $$\sqrt{2\pi}$$ is always a hint that a Gaussian is somewhere nearby.
+If I'd encountered this formula out of the blue, it would have seemed like magic. My thinking would go like this: We
+started with  generic exponential function with a global maximum. And suddenly we got an _exact_ formula for its
+integral and that formula involves square root of $$\pi$$! How is that possible? But now we know the
+straightforward reasoning behind its derivation. By the way, $$\sqrt{2\pi}$$ is always a hint that a Gaussian is
+somewhere nearby.
 
 As a final note, we will see how Laplace's method lets us derive some pretty cool results. If you're familiar with
 the Gamma function, you probably know that it is a generalization of the factorial:
