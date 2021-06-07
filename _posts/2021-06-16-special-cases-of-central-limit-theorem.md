@@ -79,7 +79,7 @@ Now lets carry out steps 1--5 above.
     \begin{align}
     \begin{split}
     f(x) &= \log g(x) = x\log \lambda - \lambda - \log \Gamma(x + 1)\\[0.1in]
-         &\approx x\log \lambda - \lambda - (x\log x - x + \log\sqrt{2\pi x})\\
+         &= x\log \lambda - \lambda - (x\log x - x + \log\sqrt{2\pi x} + O(1/n))\\
     \end{split}
     \end{align}
     $$
@@ -136,8 +136,8 @@ $$
     \begin{align}
     \begin{split}
     f(x) &= \log g(x) = (\alpha + 1) \log \beta + \alpha\log x -\beta x - \log\Gamma(\alpha + 1) \\[0.1in]
-    &\approx (\alpha + 1) \log \beta + \alpha\log x -\beta x - \left(\alpha\log\alpha - \alpha +
-    \log\sqrt{2\pi\alpha}\right)
+    &= (\alpha + 1) \log \beta + \alpha\log x -\beta x - \left(\alpha\log\alpha - \alpha +
+    \log\sqrt{2\pi\alpha} + O(1/\alpha)\right)
     \end{split}
     \end{align}
     $$
@@ -197,8 +197,8 @@ Let us go through our prescribed steps.
     \begin{split}
     f(x) &= \log g(x) \\[0.1in]
     &= \log n! - \log x! - \log(n-x)! + x\log p + (n-x)\log (1-p) \\[0.1in]
-    &\approx -\log \sqrt{2\pi n x (n-x)} + n\log n - x\log x -(n-x)\log (n-x) \\
-    &\quad + x\log p + (n-x)\log (1-p)
+    &= -\log \sqrt{2\pi n x (n-x)} + n\log n - x\log x -(n-x)\log (n-x) \\
+    &\quad + x\log p + (n-x)\log (1-p) + O(1/n)
     \end{split}
     \end{align}
     $$
