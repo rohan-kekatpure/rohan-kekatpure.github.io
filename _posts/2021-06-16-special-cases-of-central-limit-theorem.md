@@ -12,7 +12,8 @@ tags: [documentation,sample]
 
 ## Introduction
 
-The [Central Limit Theorem]() (CLT) states that the distribution of the average value of $$n$$ random variables drawn
+The [Central Limit Theorem](https://en.wikipedia.org/wiki/Central_limit_theorem) (CLT)
+states that the distribution of the average value of $$n$$ random variables drawn
 from any distribution (with a finite mean $$\mu$$ and a variance $$\sigma^2$$) approaches a normal distribution. In
 notation, if $$x_1, x_2, \ldots, x_n$$ are drawn from a distribution, and
 
@@ -56,16 +57,40 @@ a normal distribution. The steps to do that are as follows:
  4. Evaluate the $$f(\mu)$$ and $$f''(\mu)$$
  5. Write the asymptotic equations
 
-    5a. $$f(x) \approx f(\mu) -\frac{\vert f''(\mu)\vert}{2}(x-\mu)^2$$
+    5a. $$f(x) \to f(\mu) -\frac{\vert f''(\mu)\vert}{2}(x-\mu)^2$$
 
-    5b. $$g(x) \approx e^{f(\mu)}\,e^{-\frac{1}{2}\vert f''(\mu)\vert(x-\mu)^2}$$
+    5b. $$g(x) \to e^{f(\mu)}\,e^{-\frac{1}{2}\vert f''(\mu)\vert(x-\mu)^2}$$
 
-If the given PDF $$g(x)$$ is normalized, then, in step 5 above, the factor $$e^{f(\mu)}$$ turns out to be
-$$\sqrt{\frac{\vert f''(\mu)\vert}{2\pi}}$$.
+Let us make a few general remarks before beginning the derivations.
+
+ 1. Normalized PDFs often have a factorial or a Gamma function in the denominator. We use the
+ [Stirling's approximation]({%post_url 2021-06-01-stirlings-approximation%}) to get an asymptotic and differentiable
+  form of the Gamma function. Explicitly, here are the two equivalent expressions of the Stirling's approximation.
+  (The $$O(1/n)$$ signifies that the error goes down linearly as $$n$$ increases.)
+
+  $$
+  \begin{align}
+  n! &= \Gamma(n + 1) \to \sqrt{2\pi n}\left(\frac{n}{e}\right)^n\, O\left(\frac{1}{n}\right) \\
+  \log n! &= \log\Gamma(n + 1) \to n\log n - n + \frac{1}{2}\log 2\pi + \frac{1}{2} \log n + O\left(\frac{1}{n}\right)
+  \end{align}
+  $$
+
+ 2. As a result of the Stirling's approximation, in step 5 above, the factor $$e^{f(\mu)}$$ turns out to be
+ $$\sqrt{\frac{\vert f''(\mu)\vert}{2\pi}}$$. This naturally identifies with the $$\frac{1}{\sqrt{2\pi\sigma^2}}$$
+ factor in the eventual expression for the normal distribution.
+
+ 3. In all of the derivations below, we will retain only the _leading_ terms whenever we need to solve any equations.
+ Concretely, this will amount to neglecting the derivative of $$\frac{1}{2}\log x$$ in the
+ expression of Stirling's approximation above. Since we are dealing with asymptotic convergence (i.e. for large
+ $$x$$) these approximations are justified. Consider the following numerical example. Let us solve
+ $$a - \log x - \frac{1}{x} = 0$$, approximately (neglecting the $$\frac{1}{x}$$ term) and exactly. For
+ $$a = 3$$, then the  approximate solution is $$x = e^{a} = 20.085536923187668$$ and the exact solution is
+ $$x = 20.08553688518224$$. For larger values of $$a$$ the difference is below the floating point precision. Our
+ derivations will be in this regime.
 
 ## Poisson distribution
 
-The PDF of Poisson distribution is
+The PDF of [Poisson distribution](https://en.wikipedia.org/wiki/Poisson_distribution) is
 
 $$
 g(x) = \frac{\lambda^x e^{-\lambda}}{x!}
@@ -95,7 +120,7 @@ Now lets carry out steps 1--5 above.
     \end{align}
     $$
 
- 3. Solve for $$f'(x) = 0$$, keeping only the leading terms:
+ 3. Solve for $$f'(x) = 0$$, neglecting $$1/(2x)$$:
 
     $$
     \begin{equation}
@@ -116,15 +141,15 @@ Now lets carry out steps 1--5 above.
 
     $$
     \begin{align}
-    f(x) &= - \log\sqrt{2\pi\lambda} - \frac{(x - \mu)^2}{2\lambda} \\[0.2in]
-    g(x) &= \frac{e^{-\frac{(x - \mu)^2}{2\lambda}}}{\sqrt{2\pi\lambda}}
+    f(x) &\to - \log\sqrt{2\pi\lambda} - \frac{(x - \mu)^2}{2\lambda} \\[0.2in]
+    g(x) &\to \frac{e^{-\frac{(x - \mu)^2}{2\lambda}}}{\sqrt{2\pi\lambda}}
     \sim \mathcal{N}(\lambda, \lambda) \qquad \blacksquare
     \end{align}
     $$
 
 ## Gamma distribution
 
-One of the forms for the PDF of the Gamma distribution is
+One of the forms for the PDF of the [Gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution) is
 
 $$
 g(x) = \frac{\beta^{\alpha + 1} x^\alpha e^{-\beta x}}{\Gamma(\alpha + 1)}
@@ -136,8 +161,8 @@ $$
     \begin{align}
     \begin{split}
     f(x) &= \log g(x) = (\alpha + 1) \log \beta + \alpha\log x -\beta x - \log\Gamma(\alpha + 1) \\[0.1in]
-    &= (\alpha + 1) \log \beta + \alpha\log x -\beta x - \left(\alpha\log\alpha - \alpha +
-    \log\sqrt{2\pi\alpha} + O(1/\alpha)\right)
+    &= (\alpha + 1) \log \beta + \alpha\log x -\beta x \\[0.05in]
+    &\quad - \left(\alpha\log\alpha - \alpha + \log\sqrt{2\pi\alpha} + O(1/\alpha)\right)
     \end{split}
     \end{align}
     $$
@@ -174,15 +199,15 @@ $$
 
     $$
     \begin{align}
-    f(x) &= \log\frac{1}{\sqrt{2\pi(\alpha/\beta^2)}} - \frac{(x-\alpha/\beta)^2}{2(\alpha/\beta^2)} \\[0.2in]
-    g(x) &= \frac{e^{-\frac{(x-\alpha/\beta)^2}{2(\alpha/\beta^2)}}}{\sqrt{2\pi(\alpha/\beta^2)}}
+    f(x) &\to \log\frac{1}{\sqrt{2\pi(\alpha/\beta^2)}} - \frac{(x-\alpha/\beta)^2}{2(\alpha/\beta^2)} \\[0.2in]
+    g(x) &\to \frac{e^{-\frac{(x-\alpha/\beta)^2}{2(\alpha/\beta^2)}}}{\sqrt{2\pi(\alpha/\beta^2)}}
     \sim \mathcal{N}(\frac{\alpha}{\beta}, \frac{\alpha}{\beta^2}) \qquad\blacksquare
     \end{align}
     $$
 
 ## Binomial distribution
 
-The PDF of the [binomial distribution] is:
+The PDF of the [Binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution) is:
 
 $$
 g(x) = \binom{n}{x}p^x (1-p)^{n - x}
@@ -216,10 +241,6 @@ Let us go through our prescribed steps.
 
  3. Solve for $$f'(x) = 0$$, keeping only the leading terms:
 
-    For an asymptotic solution, we can neglect the $$\frac{n}{2x(n-x)}$$ term in the solution for $$f'(x) = 0$$. In
-    the appendix we provide an exact numerical solution including this term and prove that the difference is
-    negligible. The approximate solution is:
-
     $$
     \begin{equation}
     f'(x) = 0 \qquad \Rightarrow x = \mu = np
@@ -239,8 +260,8 @@ Let us go through our prescribed steps.
 
     $$
     \begin{align}
-    f(x) &\approx \log\frac{1}{\sqrt{2\pi np(1-p)}} - \frac{(x-np)^2}{2np(1-p)} \\[0.2in]
-    g(x) &\approx \frac{e^{-\frac{(x-np)^2}{2np(1-p)}}}{\sqrt{2\pi np (1-p)}}
+    f(x) &\to \log\frac{1}{\sqrt{2\pi np(1-p)}} - \frac{(x-np)^2}{2np(1-p)} \\[0.2in]
+    g(x) &\to \frac{e^{-\frac{(x-np)^2}{2np(1-p)}}}{\sqrt{2\pi np (1-p)}}
     \sim \mathcal{N}(np, np(1-p)) \qquad \blacksquare
     \end{align}
     $$
