@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Deriving the differentiation under the integral sign"
+title: "Differentiation under the integral sign"
 author: "Rohan"
 categories: journal
 tags: [documentation,sample]
@@ -152,9 +152,81 @@ how to manipulate integrals where limits are a function of another variable. Als
 we used nothing more than definition of differentiation. At the end, we have a powerful rule and the insight for why
 it works.
 
-## Applications
+## Two quick illustrations
 
-Let us now use the rule to derive a few interesting facts.
+I have never used the DUI rule in my personal work and have viewe it more as an interesting result. Thus I do not have
+any interesting applications beyond what can be found in class notes and
+[Wikipedia](https://en.wikipedia.org/wiki/Leibniz_integral_rule#Applications). Nevertheless, we will provide two
+quick illustrations for folks just getting introduced to this technique.
 
+### 1. Mean is a variance minimizer
+
+In probability the [variance](https://en.wikipedia.org/wiki/Variance#Absolutely_continuous_random_variable)
+of a continuous random variable $$X$$ with a probability distribution function $$f(x)$$ is defined as
+
+$$
+\text{Var}(X) = V(X) = \int_{-\infty}^{\infty}f_X(x) (x-\mu)^2 dx
+$$
+
+where $$\mu$$ is the known mean. However, imagine that we had the expression for the variance in terms of an unknown
+value $$\mu$$ and our task was to choose a $$\mu$$ such that the value of the variance expression was minimized. In
+other words, we find the mean by answering the following question:
+
+> For what value of $$\mu$$ is the expected average squared deviation minimized?
+
+DUI rule can help us answer the question. We recognize the variance explicitly as a function of $$\mu$$ and minimize:
+
+$$
+\begin{align*}
+V(X, \mu) &= \int_{-\infty}^{\infty}f_X(x) (x-\mu)^2 dx \\
+\frac{\partial V}{\partial \mu} &= \int_{-\infty}^{\infty}2 (x-\mu)f_X(x) dx
+\end{align*}
+$$
+
+Now solve for $$\frac{\partial V}{\partial \mu} = 0$$, realizing that $$\int_{-\infty}^{\infty}f_X(x)dx = 1$$ to get
+
+$$
+\mu = \int_{-\infty}^{\infty} xf_X(x) dx
+$$
+
+Thus the mean is the value of the random variable that minimizes the expected squared deviation.
+
+### 2. Evaluation of integrals
+
+As mentioned in the introduction, the evaluation of improper integrals is the standard application of the DUI rule.
+I personally do not like this application anymore for two reasons.
+
+1. Closed form evaluation of integrals is rarely required outside physics. In most other applications, if an integral
+cannot be solved analytically, its behavior can be studied either numerically or using asymptotic expansions.
+
+2. Using DUI for integration requires magically discovering the proper extension of the integrand to cancel out the
+unpleasant bits. Thus there is no systematic technique to be learnt here beyond a bag of tricks (which, as per point
+1 above is of limited use anyway).
+
+However, here is the standard application of DUI for completeness. Consider evaluating the following improper integral
+
+$$
+I = \int_0^{\infty}\frac{\sin x}{x} dx
+$$
+
+This integral is resistant to standard techniques. The trick is to consider a modified integral
+
+$$
+\begin{equation}
+J(t) = \int_0^{\infty}e^{-xt}\frac{\sin x}{x}\, dx
+\end{equation}
+$$
+
+Now the differentiation of $$J(t)$$ yields a solvable integral:
+
+$$
+\begin{align*}
+\frac{dJ}{dt} &= \int_0^{\infty}e^{-tx}\sin x\, dx = \frac{-1}{1+t^2} \\[0.2in]
+\Rightarrow J(t) &= C - \tan^{-1}t
+\end{align*}
+$$
+
+To find $$C$$, note that $$\lim_{t\to \infty} J(t) = 0$$, which implies $$C = \frac{\pi}{2}$$. Thus $$I = J(0) =
+\frac{\pi}{2}$$.
 
 
