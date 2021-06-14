@@ -205,3 +205,13 @@ $$
 \int_{-\infty}^{\infty}\cos t^2 dt = \int_{-\infty}^{\infty}\sin t^2 dt  = \sqrt{\frac{\pi}{2}}
 $$
 </div>
+
+## Summary and further directions
+
+Plancherel's theorem can be used to evaluate a selected class of definite integrals. The integral must be a part of a
+Fourier transform pair. For a successful application it should be possible to simplify or explicitly evaluate the
+integral of the original function, or its Fourier Transform.
+
+Fourier Transforms have a number of interesting properties that can prove useful for evaluating definite integrals.
+For example, can we exploit the derivative identity for attacking other integrals or proving interesting identities
+involving definite integrals ?
