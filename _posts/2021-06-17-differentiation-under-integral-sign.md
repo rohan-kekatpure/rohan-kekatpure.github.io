@@ -154,7 +154,7 @@ it works.
 
 ## Two quick illustrations
 
-I have never used the DUI rule in my personal work and have viewe it more as an interesting result. Thus I do not have
+I have never used the DUI rule in my personal work and have viewed it more as an interesting result. Thus I do not have
 any interesting applications beyond what can be found in class notes and
 [Wikipedia](https://en.wikipedia.org/wiki/Leibniz_integral_rule#Applications). Nevertheless, we will provide two
 quick illustrations for folks just getting introduced to this technique.
