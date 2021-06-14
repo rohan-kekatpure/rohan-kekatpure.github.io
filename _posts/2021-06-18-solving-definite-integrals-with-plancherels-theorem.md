@@ -214,4 +214,4 @@ integral of the original function, or its Fourier Transform.
 
 Fourier Transforms have a number of interesting properties that can prove useful for evaluating definite integrals.
 For example, can we exploit the derivative identity for attacking other integrals or proving interesting identities
-involving definite integrals ?
+involving definite integrals?
