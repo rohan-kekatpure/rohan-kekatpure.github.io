@@ -133,7 +133,71 @@ $$
 The boxed equation above expresses a remarkable fact. No matter what our fit gives us, the computed coefficients
 must always satisfy equation $$\eqref{eq:cc}$$.
 
-## Gradient descent implementation
+## Computing the fitting coefficients
+
+The number of basis functions is a free parameter and we can start things with $$M=20$$. The figure below shows the
+convergence of the fitting procedure. The coefficients start with random initial values. As the gradient descent
+iterations progress, the coefficients converge to their final values. Their trajectories look cool, but have no
+identifiable pattern.
+
+In the inset we show the conservation condition. As the fit converges, the conservation condition
+$$\sum_{m=1}^M\frac{\alpha_m\sqrt{\pi}}{\sqrt{\beta_m}}$$ approaches $1.0$. Due to the nature of the approximation
+the final value is close to $0.92$ in stead of $1.0$.
+
+The right hand side shows how the quality of the final fit the Gaussian obtained using $20$ component functions $$f_m
+(x)$$. One of the things to realize is that the tails of a Gaussian decay faster than any polynomial. It is quite
+hard to approximate this fall off using rational polynomial functions like we have chosen. This fact is obvious when
+we look closely at the quality of the fit at the tails.
+
+<figure>
+    <img src="{{site.url}}/assets/img/gaussian_approx_m20.gif" alt='map' style='margin: 10px;' height="300"/>
+<!--     <figcaption>Figure 1. Integrand of the Gamma function and its comparison with a scaled Gaussian.</figcaption> -->
+</figure>
+
+## Solutions are not unique !
+
+Even for a fixed value of $$M$$, the values as well as the orbits of the fitting coefficients vary wildly. The figure
+below shows three successive runs of the fitting procedure for $$M=20$$. In all three cases the fit is decent. The
+conservation condition is also obeyed with reasonable accuracy. Yet the values and the trajectories of the coefficients
+are noticeably different in all three cases.
+
+<figure>
+    <img src="{{site.url}}/assets/img/gaussian_approx_m20_combined.gif" alt='map' style='margin: 10px;' height="300"/>
+</figure>
+
+In ML parlence, our problem has multiple minima of comparable qualities. We suffer from the multiple minima problem for
+two reasons. First, fitting Cauchy-like functions (alternatively known as Lorentzian curves) is always
+problematic. Even for a single function $$f_m(x) = \frac{\alpha_m}{\beta_m + x^2}$$, many values of $$\alpha_m$$ and
+$$\beta_m$$ can evaluate to the same function value.
+
+Second, our basis functions are degenerate. That is, for a fixed
+$$\beta$$ we can obtain a given function value as $$\frac{0.2}{\beta + x^2} + \frac{0.8}{\beta + x^2}$$ or as
+$$\frac{0.6}{\beta + x^2} + \frac{0.4}{\beta + x^2}$$. Thus we should expect a lot of degenerate solutions. The cure
+for the degeneracy is to somehow distinguish (or unique-ify) the component functions $$f_m(x)$$. This is one line of
+work we're pursuing currently.
+
+Presently, the multiple minima problem unfortunately prevents us from exploiting any structure in the coefficients.
+The procedure in this post will be practically useful only if we could determine $$\alpha_m$$ and $$\beta_m$$
+_without_ any elaborate fitting procedure. If we're able to obtain unique solution, then perhaps we can obtain
+interesting identities we originally sought.
+
+## More component functions = more accuracy
+
+Despite the issues mentioned above, one aspect is consistent with our intuition. Our fits become more accurate with
+more component functions. The plot below shows the fits for $$M = 8$$, $$20$$ and $$64$$ component functions.
+
+<figure>
+    <img src="{{site.url}}/assets/img/gaussian_approx_varm.gif" alt='map' style='margin: 10px;' height="300"/>
+</figure>
+
+Our proxy for accuracy is the quality of the conservation condition. For $8$, $20$ and $64$ component functions the
+value of the conservation sum equals $0.90$, $0.92$ and $0.95$.
+
+Another interesting fact is that as we add more component functions, the trajectories of the coefficients are shorter.
+The coefficients $$\alpha_m$$ and $$\beta_m$$ have to travel less distance to achieve an accurate fit. For smaller
+values of $$M$$, the coefficients have to travel a bit further to obrain an accurate fit.  
+
+## Optional: Gradient descent implementation
 
 This section is a bit mathematical and is optional for those unfamiliar as well as very familiar with machine
 learning (ML)! The mathematical details are presented here primarily for my own notes and secondarily as an
@@ -202,57 +266,3 @@ def compute_fit(x, num_base_functions, niters,
 
     return alphas, betas
 ```
-
-## Computing the fitting coefficients
-
-The number of basis functions is a free parameter and we can start things with $$M=20$$. The figure below shows the
-convergence of the fitting procedure. The coefficients start with random initial values. As the gradient descent
-iterations progress, the coefficients converge to their final values. Their trajectories look cool, but have no
-identifiable pattern.
-
-In the inset we show the conservation condition. As the fit converges, the conservation condition
-$$\sum_{m=1}^M\frac{\alpha_m\sqrt{\pi}}{\sqrt{\beta_m}}$$ approaches $1.0$. Due to the nature of the approximation
-the final value is close to $0.92$ in stead of $1.0$.
-
-The right hand side shows how the quality of the final fit the Gaussian obtained using $20$ component functions $$f_m
-(x)$$. One of the things to realize is that the tails of a Gaussian decay more rapidly than any polynomial. It is quite
-hard to approximate this fall off using rational polynomial functions like we have chosen. This fact is obvious when
-we look closely at the quality of the fit at the tails.
-
-<figure>
-    <img src="{{site.url}}/assets/img/gaussian_approx_m20.gif" alt='map' style='margin: 10px;' height="300"/>
-<!--     <figcaption>Figure 1. Integrand of the Gamma function and its comparison with a scaled Gaussian.</figcaption> -->
-</figure>
-
-## Solutions are not unique !
-
-Even for a fixed value of $$M$$, the values as well as the orbits of the fitting coefficients vary wildly. The figure
-below shows three successive runs of the fitting procedure for $$M=20$$. In all three cases the fit is decent. The
-conservation condition is also obeyed with reasonable accuracy. Yet the values and the trajectories of the coefficients
-are noticeably different in all three cases.
-
-<figure>
-    <img src="{{site.url}}/assets/img/gaussian_approx_m20_combined.gif" alt='map' style='margin: 10px;' height="300"/>
-</figure>
-
-In ML parlence, our problem has multiple minima of comparable qualities. We suffer from the multiple minima problem for
-two reasons. First, fitting Cauchy-like functions (alternatively known as Lorentzian curves) is always
-problematic. Even for a single function $$f_m(x) = \frac{\alpha_m}{\beta_m + x^2}$$, many values of $$\alpha_m$$ and
-$$\beta_m$$ can evaluate to the same function value.
-
-Second, our basis functions are degenerate. That is, for a fixed
-$$\beta$$ we can obtain a given function value as $$\frac{0.2}{\beta + x^2} + \frac{0.8}{\beta + x^2}$$ or as
-$$\frac{0.6}{\beta + x^2} + \frac{0.4}{\beta + x^2}$$. Thus we should expect a lot of degenerate solutions. The cure
-for the degeneracy is to somehow distinguish (or unique-ify) the component functions $$f_m(x)$$. This is one line of
-work we're pursuing currently.
-
-Presently, the multiple minima problem unfortunately prevents us from exploiting any structure in the coefficients.
-The procedure in this post will be practically useful only if we could determine $$\alpha_m$$ and $$\beta_m$$
-_without_ any elaborate fitting procedure. If we're able to obtain unique solution, then perhaps we can obtain
-interesting identities we originally sought.
-
-## More component functions = more accuracy
-
-<figure>
-    <img src="{{site.url}}/assets/img/gaussian_approx_varm.gif" alt='map' style='margin: 10px;' height="300"/>
-</figure>
