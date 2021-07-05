@@ -12,14 +12,14 @@ tags: [documentation,sample]
 
 ## Introduction
 
-I often tinker with the
+While of limited theoretical or practical value, tinkering with the
 [Gaussian function](https://en.wikipedia.org/wiki/Gaussian_function)
-searching for elementary ways
-to [evaluate its definite integral]({% post_url 2021-06-18-solving-definite-integrals-with-plancherels-theorem%}).
-Arguably, this exercise has limited practical value, but it is good entertainment.
+is good entertainment. I often mess around with the Gaussian in hopes of
+finding elementary ways to
+[evaluate its definite integral]({% post_url 2021-06-18-solving-definite-integrals-with-plancherels-theorem%}).
 
-Recently, I thought of using a well-known math trick of expressing a complicated function as a sum of more
-elementary functions:
+On one such recent excursions, I thought of trying the old math trick of expressing a function as a sum of simpler
+functions:
 
 $$
 \begin{equation}
@@ -28,7 +28,7 @@ e^{-x^2} = f_1(x) + f_2(x) + \cdots + f_M(x) = \sum_{m = 1}^Mf_m(x)
 \end{equation}
 $$
 
-The main idea being that _if_ we could express the Gaussian in the above form and _if_ the functions $$f_m(x)$$ had
+_If_ we could express the Gaussian in the above form and _if_ the functions $$f_m(x)$$ had
 closed-form anti-derivatives then we could obtain interesting approximations to the Gaussian integral:
 
 $$
@@ -37,45 +37,54 @@ $$
 \end{equation}
 $$
 
-While the main thought is straightforward, it turns out that selecting the functions $$f_m(s)$$ is tricker than
-expected.
+While the main idea is quite innocent, it turns out that selecting the parametrized functions $$f_m(x)$$ and
+evaluating the parameters is tricker than expected.
 
-## Choice of the basis functions $$f_m(x)$$
+## Choice of the component functions $$f_m(x)$$
 
 Two plausible candidates $$f_m(x)$$ for the proposed expansion in Equation $$\eqref{eq:gexp}$$
 are [Taylor polynomials](https://en.wikipedia.org/wiki/Taylor_series)
 and [generalized orthogonal basis functions](https://en.wikipedia.org/wiki/Generalized_Fourier_series).
-Both ideas fail because of the requirement on the $$f_m(x)$$ to be integrable between the limits $$\pm\infty$$.
-The polynomials in the Taylor expansion blow up at $$\pm\infty$$ and most common Fourier basis functions are oscillatory
-at $$\pm\infty$$. The second observation begs an interesting side question:
+Both of these candidates do not work.
 
->Are there examples of orthogonal basis functions integrable between $$\pm\infty$$ or must the basis functions be
-oscillatory and of finite magnitude at $$\pm\infty$$?
+Since our aim is to integrate the Gaussian between $$\pm\infty$$, each of the $$f_m(x)$$ also needs to be
+integrable between $$\pm\infty$$. The Taylor terms, being polynomials, blow up at
+$$\pm\infty$$.
 
-The answer is that there are orthonormal basis functions that decay to zero at infinity. The wave functions
-of bound states in Quantum Mechanics are, by construction, required to (a) decay to zero at $$\pm\infty$$ and (2)
-orthonormal. The eigenfunctions of the one-dimensional
-[quantum harmonic oscillator](https://bit.ly/2UYezKA)
-are an explicit example. Unfortunately, these functions do not have elementary anti-derivatives and are not useful
+As for the generalized Fourier expansion, the most common basis functions are oscillatory and
+and finite at $$\pm\infty$$. They also do not have finite integrals between $$\pm\infty$$.
+
+The observation about the Fourier basis functions nevertheless begs an interesting side question:
+
+>must the basis functions always be oscillatory and of finite magnitude at $$\pm\infty$$?
+
+The answer is no; there are many examples of orthonormal basis functions that decay to zero at infinity. In fact, the
+wave functions of Quantum Mechanical bound states are guaranteed to form an orthonormal basis and decay to
+zero at $$\pm\infty$$. The eigenfunctions of the one-dimensional
+[quantum harmonic oscillator](https://bit.ly/2UYezKA) or
+[Airy functions](https://en.wikipedia.org/wiki/Airy_function)
+are some examples.
+
+Unfortunately, these bound state wave functions do not have elementary anti-derivatives. They are not useful
 for simplifying the Gaussian integral. An interesting follow-up question then is:
 
->can we construct potential wells which, when plugged into Schrodinger's equation, yield orthonormal solution sets
-whose eigenfunctions have elementary anti-derivatives? More generally, can we construct potential wells given an
-orthonormal basis set of functions?
+>can we construct Hermitian operators whose eigenfunctions have elementary anti-derivatives? More generally, given an
+orthonormal basis function set, can we construct the corresponding potential well function for the Schrodinger equation?
 
-Unfortunately, answering this extremely interesting question is beyond my current mathematical ability.
+Answering this extremely interesting question will distract us from our modest current objective.
 
-Having exhausted the obvious solutions, we turn back to the problem of approximating the Gaussian. The above
-discussion has made it clear that our functions $$f_m(x)$$ should satisfy a few requirements:
+We turn back to the problem of approximating the Gaussian. For now, we're convinced that neither the Taylor
+expansion nor the generalized Fourier expansion would work. Even so, the discussion above has provided us with a
+few requirements that our component functions $$f_m(x)$$ must satisfy:
 
 <ol>
-<li> The functions must decay to zero away from the origin: $\lim_{x\to\pm\infty}f_m(x) \to 0 $ </li>
+<li> $f_m(x)$ must decay to zero away from the origin: $\lim_{x\to\pm\infty}f_m(x) \to 0 $ </li>
 <li> $f_m(x)$ must have antiderivatives in terms of elementary functions  </li>
-<li> Derivative of $f_m(x)$ must vanish at $x = 0$: $f_m'(0) = 0$ </li>
+<li> $f_m(x)$ must have a derivative of $0$ at $x = 0$: $f_m'(0) = 0$ </li>
 </ol>
 
-Since $$\frac{d}{dx}e^{-x^2} = 0$$ at $$x = 0$$, the third requirement makes it easier to match the
-function with $$e^{-x^2}$$ around $$x = 0$$. One of the simplest set of functions with the above requirements are
+The third requirement is not essential, but makes it easier to match the function with $$e^{-x^2}$$ around $$x = 0$$.
+ One of the simplest set of functions with the above requirements are
 
 $$
 f_m(x) = \frac{\alpha_m}{\beta_m + x^2}
@@ -91,14 +100,14 @@ e^{-x^2} = \sum_{m=1}^M\frac{\alpha_m}{\beta_m + x^2}
 $$
 
 where $$\alpha_m$$ and $$\beta_m$$ will be determined by obtaing the best fit of the right-hand
-side (RHS) expansion with the left-hand side (LHS) function. Notice that if we were lucky enough to be able to use
+side (RHS) expansion with the left-hand side (LHS) function. If we had been lucky enough to be able to use the
 generalized Fourier expansion, we could have obtained closed-form formulas for $$\alpha_m$$ and $$\beta_m$$.  But
-we're not lucky. We're forced to use a fitting procedure to determine $$\alpha_m$$ and $$\beta_m$$. Our best bet is
-to see if there is at least some exploitable structure in $$\alpha_m$$ and $$\beta_m$$.
+we're not lucky. Our choice of $$f_m(x)$$ forces us to use a fitting procedure to determine $$\alpha_m$$ and
+$$\beta_m$$. Best we can hope is for some exploitable structure in the coefficients $$\alpha_m$$ and $$\beta_m$$.
 
-## Conservation condition on $$\alpha_m$$ and $$\beta_m$$
+## An invariance condition
 
-In the next section we will write code to obtain the fitting parameters. Assume for now that we have all
+In the next section we will compute the fitting parameters. Assume for now that we have all
 $$\alpha_m$$ and $$\beta_m$$ and integrate both sides of equation $$\eqref{eq:fm}$$ to get
 
 $$
@@ -110,7 +119,7 @@ $$
 $$
 
 Since the integral of the LHS is constant (in fact it is equal to $$\sqrt{\pi}$$) the integral of the RHS must also
-be constant. This gives us the conservation condition:
+be constant. This gives us the invariance condition:
 
 $$
 \begin{equation}
@@ -133,14 +142,14 @@ $$
 The boxed equation above expresses a remarkable fact. No matter what our fit gives us, the computed coefficients
 must always satisfy equation $$\eqref{eq:cc}$$.
 
-## Computing the fitting coefficients
+## Computing the fit
 
-The number of basis functions is a free parameter and we can start things with $$M=20$$. The figure below shows the
+The number of component functions is a free parameter and we can study things with $$M=20$$. The figure below shows the
 convergence of the fitting procedure. The coefficients start with random initial values. As the gradient descent
 iterations progress, the coefficients converge to their final values. Their trajectories look cool, but have no
 identifiable pattern.
 
-In the inset we show the conservation condition. As the fit converges, the conservation condition
+In the inset we show the invariance condition. As the fit converges, the invariance condition
 $$\sum_{m=1}^M\frac{\alpha_m\sqrt{\pi}}{\sqrt{\beta_m}}$$ approaches $1.0$. Due to the nature of the approximation
 the final value is close to $0.92$ in stead of $1.0$.
 
@@ -158,7 +167,7 @@ we look closely at the quality of the fit at the tails.
 
 Even for a fixed value of $$M$$, the values as well as the orbits of the fitting coefficients vary wildly. The figure
 below shows three successive runs of the fitting procedure for $$M=20$$. In all three cases the fit is decent. The
-conservation condition is also obeyed with reasonable accuracy. Yet the values and the trajectories of the coefficients
+invariance condition is also obeyed with reasonable accuracy. Yet the values and the trajectories of the coefficients
 are noticeably different in all three cases.
 
 <figure>
@@ -170,7 +179,7 @@ two reasons. First, fitting Cauchy-like functions (alternatively known as Lorent
 problematic. Even for a single function $$f_m(x) = \frac{\alpha_m}{\beta_m + x^2}$$, many values of $$\alpha_m$$ and
 $$\beta_m$$ can evaluate to the same function value.
 
-Second, our basis functions are degenerate. That is, for a fixed
+Second, our component functions are degenerate. That is, for a fixed
 $$\beta$$ we can obtain a given function value as $$\frac{0.2}{\beta + x^2} + \frac{0.8}{\beta + x^2}$$ or as
 $$\frac{0.6}{\beta + x^2} + \frac{0.4}{\beta + x^2}$$. Thus we should expect a lot of degenerate solutions. The cure
 for the degeneracy is to somehow distinguish (or unique-ify) the component functions $$f_m(x)$$. This is one line of
@@ -190,13 +199,35 @@ more component functions. The plot below shows the fits for $$M = 8$$, $$20$$ an
     <img src="{{site.url}}/assets/img/gaussian_approx_varm.gif" alt='map' style='margin: 10px;' height="300"/>
 </figure>
 
-Our proxy for accuracy is the quality of the conservation condition. For $8$, $20$ and $64$ component functions the
-value of the conservation sum equals $0.90$, $0.92$ and $0.95$.
+Our proxy for accuracy is the quality of the invariance condition. For $8$, $20$ and $64$ component functions, the
+value of the invariance sum equals $0.90$, $0.92$ and $0.95$.
 
-Another interesting fact is that as we add more component functions, the cloud of the coefficients
-becomes 'stiffer'. The coefficients $$\alpha_m$$ and $$\beta_m$$ have to travel less distance to achieve an accurate
+Another interesting fact is that as we add more component functions, the coefficients cloud
+becomes stiffer. The coefficients $$\alpha_m$$ and $$\beta_m$$ have to travel less distance to achieve an accurate
 fit. For smaller values of $$M$$, the coefficients have to travel a bit further to obtain an accurate fit. This is an
 observational fact and I do not have intuition for why this might be.
+
+## Epilogue
+
+While our current exercise was modest, I had a couple of takeaways and further questions.
+
+To make progress on the current problem, it is important to somehow constrain the degeneracy in the component
+functions. The tweaks I tried so far all lead to degradation in the fit quality. Nonetheless, search is on for
+more nicer functions.
+
+It is also necessary to try more stable fitting procedures. Most notably, the Gauss-Newton algorithm. The stability
+of the procedure will expand the range of functions we can try.
+
+An interesting mathematical question to explore is this. Besides the Taylor and the generalized Fourier expansions,
+are there other types of basis function expansions which respect the properties that we seek in our component
+functions?
+
+The maximum number of parameters we considered was
+$$128$$ ($$64$$ $$\alpha$$s and $$\beta$$s). Yet it was difficult to identify any pattern in the coefficients.
+Imagine how difficult it must be to make sense of deep networks with
+[hundreds of billions](https://en.wikipedia.org/wiki/GPT-3)
+of parameters. Extrapolate further to biological systems and any search for a first-principles understanding may seem
+hopelessly difficult.
 
 ## Optional: Gradient descent implementation
 
