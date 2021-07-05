@@ -14,7 +14,7 @@ tags: [documentation,sample]
 
 While of limited theoretical or practical value, tinkering with the
 [Gaussian function](https://en.wikipedia.org/wiki/Gaussian_function)
-is good entertainment. I often mess around with the Gaussian in hopes of
+is good entertainment. I often play with the Gaussian in hopes of
 finding elementary ways to
 [evaluate its definite integral]({% post_url 2021-06-18-solving-definite-integrals-with-plancherels-theorem%}).
 

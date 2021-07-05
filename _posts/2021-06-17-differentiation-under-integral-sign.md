@@ -14,12 +14,12 @@ tags: [documentation,sample]
 
 _Surely you're joking, Mr Feynman!_
 [brought](https://en.wikipedia.org/wiki/Leibniz_integral_rule#In_popular_culture) differentiation under the integral
-sign (DUI) into from relative obscurity into folklore. Most of us get introduced to DUI in the context of
-[Evaluation of tricky definite integrals](https://en.wikipedia.org/wiki/Leibniz_integral_rule#Applications). But
-outside of this magical application, DUI is an important theoretical tool in the theory
+sign (DUI) from relative obscurity into folklore. Most of us get introduced to DUI in the context of
+[evaluation of tricky definite integrals](https://en.wikipedia.org/wiki/Leibniz_integral_rule#Applications). But
+outside of this magical application, DUI is an important tool in the theory
 [integral transforms](https://en.wikipedia.org/wiki/Integral_transform). Integral transforms themselves are central
 to Physics and Mathematics. Characteristic function in probability theory, the Fourier
-and Laplace transforms in signal processing, the Convolution operation, the Mellin transform in Number theory are
+and the Laplace transforms in signal processing, the Convolution operation, the Mellin transform in Number theory are
 all special cases of integral transforms. DUI can be applied to each of them to derive important results.
 
 In the present post we will derive the DUI rule for simple one-dimensional case. The DUI, also known as the Leibniz
