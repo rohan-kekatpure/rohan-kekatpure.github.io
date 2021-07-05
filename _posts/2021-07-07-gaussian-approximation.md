@@ -193,9 +193,10 @@ more component functions. The plot below shows the fits for $$M = 8$$, $$20$$ an
 Our proxy for accuracy is the quality of the conservation condition. For $8$, $20$ and $64$ component functions the
 value of the conservation sum equals $0.90$, $0.92$ and $0.95$.
 
-Another interesting fact is that as we add more component functions, the trajectories of the coefficients are shorter.
-The coefficients $$\alpha_m$$ and $$\beta_m$$ have to travel less distance to achieve an accurate fit. For smaller
-values of $$M$$, the coefficients have to travel a bit further to obrain an accurate fit.  
+Another interesting fact is that as we add more component functions, the cloud of the coefficients
+becomes 'stiffer'. The coefficients $$\alpha_m$$ and $$\beta_m$$ have to travel less distance to achieve an accurate
+fit. For smaller values of $$M$$, the coefficients have to travel a bit further to obtain an accurate fit. This is an
+observational fact and I do not have intuition for why this might be.
 
 ## Optional: Gradient descent implementation
 
