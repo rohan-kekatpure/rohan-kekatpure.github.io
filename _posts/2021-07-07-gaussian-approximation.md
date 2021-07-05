@@ -38,7 +38,7 @@ $$
 $$
 
 While the main idea is quite innocent, it turns out that selecting the parametrized functions $$f_m(x)$$ and
-evaluating the parameters is tricker than expected.
+evaluating their parameters is tricker than expected.
 
 ## Choice of the component functions $$f_m(x)$$
 
@@ -207,21 +207,25 @@ becomes stiffer. The coefficients $$\alpha_m$$ and $$\beta_m$$ have to travel le
 fit. For smaller values of $$M$$, the coefficients have to travel a bit further to obtain an accurate fit. This is an
 observational fact and I do not have intuition for why this might be.
 
-## Epilogue
+## Next steps
 
-While our current exercise was modest, I had a couple of takeaways and further questions.
+The current post is a start of a fruitful direction of investigation. There are some key questions that demand
+further exploration.
 
-To make progress on the current problem, it is important to somehow constrain the degeneracy in the component
-functions. The tweaks I tried so far all lead to degradation in the fit quality. Nonetheless, search is on for
-more nicer functions.
+It is important to somehow constrain the degeneracy in the component functions. The tweaks I tried so far all lead to
+degradation in the fit quality. Nonetheless, search is on for more nicer functions.
 
 It is also necessary to try more stable fitting procedures. Most notably, the Gauss-Newton algorithm. The stability
-of the procedure will expand the range of functions we can try.
+of the procedure will expand the range of functions that can be tried.
 
 An interesting mathematical question to explore is this. Besides the Taylor and the generalized Fourier expansions,
 are there other types of basis function expansions which respect the properties that we seek in our component
 functions?
 
+We will take up the explorations of the above questions in the follow up posts. The links will be provided here
+whenever applicable.
+
+## Epilogue
 The maximum number of parameters we considered was
 $$128$$ ($$64$$ $$\alpha$$s and $$\beta$$s). Yet it was difficult to identify any pattern in the coefficients.
 Imagine how difficult it must be to make sense of deep networks with
