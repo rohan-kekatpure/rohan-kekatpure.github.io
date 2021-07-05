@@ -107,8 +107,8 @@ $$\beta_m$$. Best we can hope is for some exploitable structure in the coefficie
 
 ## An invariance condition
 
-In the next section we will compute the fitting parameters. Assume for now that we have all
-$$\alpha_m$$ and $$\beta_m$$ and integrate both sides of equation $$\eqref{eq:fm}$$ to get
+Assume for now that we have computed the coefficients $$\alpha_m$$ and $$\beta_m$$. Now integrate both sides of
+equation $$\eqref{eq:fm}$$ to get
 
 $$
 \begin{align}
@@ -144,10 +144,34 @@ must always satisfy equation $$\eqref{eq:cc}$$.
 
 ## Computing the fit
 
-The number of component functions is a free parameter and we can study things with $$M=20$$. The figure below shows the
-convergence of the fitting procedure. The coefficients start with random initial values. As the gradient descent
-iterations progress, the coefficients converge to their final values. Their trajectories look cool, but have no
-identifiable pattern.
+The fitting procedure is implemented using a simple gradient descent approach. The section at the end of this
+post provides the mathematical formulation and its implementation from scratch in Python. Since the math is optional,
+the details are pushed to the end. But the math and the code are available for the interested reader. Presently we
+study the results of the fit.
+
+We start our study with a small value of $$M$$. Upon performing the fit we obtain the coefficients and can write
+the approximation explicitly. For $$M = 3$$ we obtain the reasonable (but uninspiring) approximation:
+
+$$
+\begin{equation}
+e^{-x^2} \approx \frac{2.0188}{1.2006 + x^2} + \frac{0.4473}{1.1776 + x^2}
+- \frac{3.0000}{2.9089 + x^2}
+\end{equation}
+$$
+
+The invariance condition is also satisfied approximately:
+
+$$
+\begin{equation}
+\frac{2.0188\sqrt{\pi}}{\sqrt{1.2006}} + \frac{0.4473\sqrt{\pi}}{\sqrt{1.1776}}
+- \frac{3.0000\sqrt{\pi}}{\sqrt{2.9089}} \approx 0.87
+\end{equation}
+$$
+
+To improve the fit we have to increase the number of component functions. We can study
+things with $$M=20$$. The figure below shows the convergence of the fitting procedure. The coefficients start with
+random initial values. As the gradient descent iterations progress, the coefficients converge to their final values.
+Their trajectories look cool, but have no identifiable pattern.
 
 In the inset we show the invariance condition. As the fit converges, the invariance condition
 $$\sum_{m=1}^M\frac{\alpha_m\sqrt{\pi}}{\sqrt{\beta_m}}$$ approaches $1.0$. Due to the nature of the approximation
