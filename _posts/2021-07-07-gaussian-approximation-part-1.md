@@ -275,22 +275,36 @@ $X$-axis. At each point $$x_i$$, we compute the squared residual between the act
 function value. In other words, the squared residual is simply the squared difference between the LHS and the RHS of
 equation $$\eqref{eq:fm}$$. Finally we sum up all $$N$$ residuals to obtain the total loss function.
 
+We will keep the presentation general by retaining $$f_m(x)$$ for the $m$th component function and use specific forms
+of $f_m(x)$ only when we need the final formulas.
+
 $$
 \begin{equation}
-L = \sum_{i=1}^{N}\left(e^{-x_i^2} - \sum_{m=1}^M \frac{\alpha_m}{\beta_m + x_i^2}\right)^2
+L = \sum_{i=1}^{N}\left(e^{-x_i^2} - \sum_{m=1}^M f_m(x)\right)^2
 \end{equation}
 $$
 
 The second step is to compute the derivative of $$L$$ with respect to the parameters:
 
+<div class="boxed">
 $$
 \begin{align}
+\frac{\partial L}{\partial\alpha_m} &= \sum_{i=1}^{N} 2 \frac{\partial f_m(x)}{\partial\alpha_m}
+\left(e^{-x_i^2} - \sum_{m=1}^M f_m(x)\right) \\[0.2in]
+\frac{\partial L}{\partial\beta_m} &= \sum_{i=1}^{N} 2 \frac{\partial f_m(x)}{\partial\beta_m}
+\left(e^{-x_i^2} - \sum_{m=1}^M f_m(x)\right)
+\end{align}
+$$
+</div>
+
+We can obtain explicit formulas for the gradients by substituting $$f_m(x) = \frac{\alpha_m}{\beta_m + x^2}$$:
+
+$$ \begin{align}
 \frac{\partial L}{\partial\alpha_m} &= \sum_{i=1}^{N} \frac{-2}{\beta_m + x_i^2}
 \left(e^{-x_i^2} - \sum_{m=1}^M \frac{\alpha_m}{\beta_m + x_i^2}\right) \\[0.2in]
 \frac{\partial L}{\partial\beta_m} &= \sum_{i=1}^{N} \frac{2\alpha_m}{\left(\beta_m + x_i^2\right)^2}
 \left(e^{-x_i^2} - \sum_{m=1}^M \frac{\alpha_m}{\beta_m + x_i^2}\right)
-\end{align}
-$$
+\end{align} $$
 
 The final step is the implementation of the gradient descent update equations:
 
@@ -301,8 +315,8 @@ $$
 \end{align}
 $$
 
-The Python implementation of the three steps is simpler than their mathematical appearence. The code snippet below
-shows the essence of the implementation. The complete code can be found in our
+where $\eta$ is the learning rate. The Python implementation of the three steps is simpler than their mathematical
+appearence. The code snippet below shows the essence of the implementation. The complete code can be found in our
 [Github](https://github.com/rohan-kekatpure/blog/blob/master/gaussian_approximation/gaussian.py).
 
 ```python
