@@ -67,7 +67,7 @@ unique expansion coefficients.
 ## Invariance condition
 
 Before we solve for the expansion coefficients $$\alpha_m$$, we can state the invarience condition they must obey.
-Recall that
+Recalling that
 $$\int_{-\infty}^{\infty}e^{-x^2} = \sqrt{\pi}$$ and $$\int_{-\infty}^{\infty}\frac{\sin(mx)}{mx} = \frac{\pi}{m}$$
 we integrate both sides of equation $$\eqref{eq:exp}$$ to get
 
@@ -196,11 +196,147 @@ The numerical comparison between gradient descent and normal equations is given 
 | $$\alpha_3$$   | $0.276756$       | $0.276752323$      |
 | $$\alpha_4$$   | $0.0895346$       | $0.089527342$      |
 | $$\alpha_5$$   | $0.0148756$        | $0.014865627$      |
+| $$\sum_{m=1}^5\frac{\alpha_m\sqrt{\pi}}{m}$$   | $0.9420$        | $0.9420$      |
 
 This is a comforting sanity check on our gradient descent implementation. But it doesn't really shed light on why our
 error is stuck at $6\%$ and why the coefficients decay rapidly down to zero for $$m > 5$$. For that we need an
-analytical understand of the problem.
+analytical understanding of the problem.
 
 ## Analytical solution
 
+Up until now, we tried to find the expansion coefficients $$\alpha_m$$ using regression methods. The advantage of the
+regression methods is that they are general. However, the fitting procedure does not explain the behavior
+of the regression coefficients; we have to accept them as is. In the present instance we do
+not know why components after the first five sinc functions do not have appreciable coefficients.
 
+One of the remarkable things about this problem is that it is possible to _analytically_ calculate the expansion
+coefficients. I stumbled on this solution accidentaly and don't know if there exists a general theory of function
+decomposition in terms of non-orthogonal, non-complete basis functions.
+
+Starting from the definition of the expansion
+
+$$
+e^{-x^2} = \sum_{m=1}^M\alpha_m\frac{\sin(mx)}{mx}
+$$
+
+we multiply both sides of the equation by $$\cos(kx)$$ and integrate between $$\pm\infty$$
+
+$$
+\begin{align}
+\begin{split}
+\int_{-\infty}^{\infty}e^{-x^2}\cos(kx)dx &= \sum_{m=1}^M\alpha_m\frac{\sin(mx)\cos(kx)}{mx}\\[0.1in]\
+\sqrt{\pi}e^{-k^2/4} &= \sum_{m=1}^M\frac{\pi\alpha_m}{2m}\left[\text{sgn}(m + k) + \text{sgn}(m - k)\right]
+\end{split}
+\label{eq:sgn}
+\end{align}
+$$
+
+We have $M$ undetermined coefficients and have one such equation for each value of $m$.
+Now the [signum](https://en.wikipedia.org/wiki/Sign_function)
+is $1$, $0$ or $-1$ depending on whether its argument is positive, zero or negative. So the term inside the square
+brackets on the right side of equation $$\eqref{eq:sgn}$$ will assume the following values
+
+$$
+\begin{equation}
+\left[\text{sgn}(m + k) + \text{sgn}(m - k)\right] =
+\begin{cases}
+2 & m > k \\[0.1in]
+1 & m = k \\[0.1in]
+0 & m < k
+\end{cases}
+\end{equation}
+$$
+
+This allows us to write out the expanded form of equation $$\eqref{eq:sgn}$$ as
+
+$$
+\begin{alignat*}{5}
+\frac{e^{-1^2/4}}{\sqrt{\pi}} &= \frac{\alpha_1}{2\cdot 1} &+ \frac{\alpha_2}{2} &+ \frac{\alpha_3}{3} &+ \cdots &+
+\frac{\alpha_M}{M} \\
+\frac{e^{-2^2/4}}{\sqrt{\pi}} &= &\frac{\alpha_2}{2\cdot 2} &+ \frac{\alpha_3}{3} &+ \cdots &+ \frac{\alpha_M}{M} \\
+\frac{e^{-3^2/4}}{\sqrt{\pi}} &= &&\frac{\alpha_3}{2\cdot 3} &+ \cdots &+ \frac{\alpha_M}{M} \\
+\vdots\\
+\frac{e^{-M^2/4}}{\sqrt{\pi}} &= &&&&\,\frac{\alpha_M}{2\cdot M}
+\end{alignat*}
+$$
+
+In the matrix form we have
+
+$$
+\begin{bmatrix}
+\frac{e^{-1^2/4}}{\sqrt{\pi}}\\
+\frac{e^{-2^2/4}}{\sqrt{\pi}}\\
+\frac{e^{-3^2/4}}{\sqrt{\pi}}\\
+\vdots \\
+\frac{e^{-M^2/4}}{\sqrt{\pi}}
+\end{bmatrix} =
+\begin{bmatrix}
+\frac{1}{2\cdot 1}& \frac{1}{2} & \frac{1}{3} &\cdots &\frac{1}{M} \\
+0 & \frac{1}{2\cdot 2} & \frac{1}{3} &\cdots &\frac{1}{M} \\
+0 & 0 &  \frac{1}{2\cdot 3} &\cdots &\frac{1}{M} \\
+\vdots \\
+0 & 0 & 0 &\cdots &\frac{1}{2\cdot M}
+\end{bmatrix}
+\begin{bmatrix}
+\alpha_1\\
+\alpha_2\\
+\alpha_3\\
+\vdots\\
+\alpha_M
+\end{bmatrix}
+$$
+
+This is a linear system of equations expressed in matrix notation as
+
+$$
+\begin{equation}
+b = U\alpha
+\label{eq:triu}
+\end{equation}
+$$
+
+Here, we should pause and take a note of one fact. If we were dealing with a regular Fourier Transform, the matrix
+$U$ would be a pure diagonal matrix, giving us explicit formula for each individual Fourier coefficient. Here,
+though, we have an _upper triangular_ matrix. So while we have Fourier-like decomposition, we dont get a nice formula
+for individual coefficients. Instead we get a system of equations whose solution yields the desired coefficients.
+
+The system of equations $$\eqref{eq:triu}$$ can be solved efficiently by using the fact that we have an upper
+triangular matrix. We basically start by solving the last equation and substitute the solution in the next-to-last
+equation and propagate upward. The Python code for the solution of the equation system is below
+
+```python
+import numpy as np
+from scipy.linalg import solve_triangular
+
+def _fit_sinc_analytical(num_base_functions):
+    M = num_base_functions
+    q = np.arange(1, M + 1, dtype=float)
+
+    # Construct b
+    b = np.exp(-q * q / 4) / np.sqrt(np.pi)
+
+    # Construct U
+    v = 1. / q
+    U = np.tile(v, (M, 1))
+    U = np.triu(U, 0)
+    E = np.ones((M, M))
+    np.fill_diagonal(E, 0.5)
+    U *= E
+
+    # Now solve the upper triangular system
+    alphas = solve_triangular(U, b, lower=False)
+    return alphas
+```
+
+Surprisingly, the analytical solution yields _different_ value of expansion coefficients than the one obtained from
+regression. The analytical coefficients also yield vastly more accurate approximation to $\sqrt{\pi}$ than the
+coefficients obtained by regression.
+
+| Coefficient      | Analytical | Normal equations     |
+| :-:        |    :-   |          :- |
+| $$\alpha_1$$      | $0.249182799$       | $0.209172559$   |
+| $$\alpha_2$$   | $0.428984565$        |  $0.409018987$      |
+| $$\alpha_3$$   | $0.245054777$       | $0.276752323$      |
+| $$\alpha_4$$   | $0.066313512$       | $0.089527342$      |
+| $$\alpha_5$$   | $0.009551615$        | $0.014865627$      |
+| $$\sum_{m=1}^5\frac{\alpha_m\sqrt{\pi}}{m}$$   | $0.9996$        | $0.9420$      |
