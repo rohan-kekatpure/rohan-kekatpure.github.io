@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Approximating the Gaussian - Part 1"
+title: "Approximating the Gaussian with simpler bell curves"
 author: "Rohan"
 categories: journal
 tags: [documentation,sample]
@@ -11,15 +11,14 @@ tags: [documentation,sample]
 </style>
 
 ## Introduction
-
-While of limited theoretical or practical value, tinkering with the
-[Gaussian function](https://en.wikipedia.org/wiki/Gaussian_function)
-is good entertainment. I often play with the Gaussian in hopes of
-finding elementary ways to
-[evaluate its definite integral]({% post_url 2021-06-18-solving-definite-integrals-with-plancherels-theorem%}).
-
-On one such recent excursions, I thought of trying the old math trick of expressing a function as a sum of simpler
-functions:
+In this post we are going to tinker a bit with the simple one dimensional
+[Gaussian function](https://en.wikipedia.org/wiki/Gaussian_function).
+Specifically, we will examine if it is possible to break down the Gaussian into a series of simpler functions. My
+original motivation for seeking a series expansion of the Gaussian was my ongoing curiosity about
+Gaussian function. I'm always
+[in pursuit]({% post_url 2021-06-18-solving-definite-integrals-with-plancherels-theorem%})
+of simple ways to evaluate its integral (which equals $$\sqrt{\pi}$$). On one such recent excursions, I thought of
+trying to break down the Gaussian into simpler functions:
 
 $$
 \begin{equation}
@@ -29,34 +28,36 @@ e^{-x^2} = f_1(x) + f_2(x) + \cdots + f_M(x) = \sum_{m = 1}^Mf_m(x)
 $$
 
 _If_ we could express the Gaussian in the above form and _if_ the functions $$f_m(x)$$ had
-closed-form anti-derivatives then we could obtain interesting approximations to the Gaussian integral:
+closed-form anti-derivatives, then we could obtain interesting series approximations to the Gaussian integral:
 
 $$
 \begin{equation}
 \int_{-\infty}^{\infty}e^{-x^2} dx = \sum_{m = 1}^M \int_{-\infty}^{\infty}f_m(x) dx
+\label{eq:ser}
 \end{equation}
 $$
 
-While the main idea is quite innocent, it turns out that selecting the parametrized functions $$f_m(x)$$ and
-evaluating their parameters is tricker than expected.
+The main idea above is quite innocent. However, it turns out that selecting the functions $$f_m(x)$$ and
+evaluating their parameters is tricker than expected. This exercise will take us through a tour of linear
+algebra, nonlinear least squares, gradient descent and Fourier series.
 
 ## Choice of the component functions $$f_m(x)$$
 
-Two plausible candidates $$f_m(x)$$ for the proposed expansion in Equation $$\eqref{eq:gexp}$$
-are [Taylor polynomials](https://en.wikipedia.org/wiki/Taylor_series)
-and [generalized orthogonal basis functions](https://en.wikipedia.org/wiki/Generalized_Fourier_series).
-Both of these candidates do not work.
+Decomposing functions into series of simpler functions is an old and a well understood concept.
+Two plausible ways to obtain the expansion in Equation $$\eqref{eq:gexp}$$
+are [Taylor expansion](https://en.wikipedia.org/wiki/Taylor_series)
+and [Fourier expansion](https://en.wikipedia.org/wiki/Generalized_Fourier_series).
 
-Since our aim is to integrate the Gaussian between $$\pm\infty$$, each of the $$f_m(x)$$ also needs to be
-integrable between $$\pm\infty$$. The Taylor terms, being polynomials, blow up at
-$$\pm\infty$$.
+However, our goal is to obtain an approximation for the _integral_ of the Gaussian from $$-\infty$$ to $$+\infty$$.
+To achieve this, the series in equation $$\eqref{eq:ser}$$ must be integrable _term by term_. That is, each
+$$f_m(x)$$ needs to be integrable between $$\pm\infty$$.
 
-As for the generalized Fourier expansion, the most common basis functions are oscillatory and
-and finite at $$\pm\infty$$. They also do not have finite integrals between $$\pm\infty$$.
+The terms of the Taylor expansion, being polynomials, blow up at $$\pm\infty$$. The terms of common Fourier
+expansions are oscillatory and finite at $$\pm\infty$$. They too are not integrable between $$\pm\infty$$.
 
-The observation about the Fourier basis functions nevertheless begs an interesting side question:
+An interesting side question is this:
 
->must the basis functions always be oscillatory and of finite magnitude at $$\pm\infty$$?
+>must the Fourier basis functions always be oscillatory and of finite magnitude at $$\pm\infty$$?
 
 The answer is no; there are many examples of orthonormal basis functions that decay to zero at infinity. In fact, the
 wave functions of Quantum Mechanical bound states are guaranteed to form an orthonormal basis and decay to
@@ -65,82 +66,133 @@ zero at $$\pm\infty$$. The eigenfunctions of the one-dimensional
 [Airy functions](https://en.wikipedia.org/wiki/Airy_function)
 are some examples.
 
-Unfortunately, these bound state wave functions do not have elementary anti-derivatives. They are not useful
-for simplifying the Gaussian integral. An interesting follow-up question then is:
+Unfortunately, these bound state wave functions do not have elementary anti-derivatives, which is one of our
+requirements. An interesting follow-up question then is:
 
 >can we construct Hermitian operators whose eigenfunctions have elementary anti-derivatives? More generally, given an
 orthonormal basis function set, can we construct the corresponding potential well function for the Schrodinger equation?
 
-Answering this extremely interesting question will distract us from our modest current objective.
+Exploring this intriguing question will distract us from our current objective.
 
-We turn back to the problem of approximating the Gaussian. For now, we're convinced that neither the Taylor
-expansion nor the generalized Fourier expansion would work. Even so, the discussion above has provided us with a
-few requirements that our component functions $$f_m(x)$$ must satisfy:
+For now, we're convinced that neither Taylor nor the Fourier expansion would work. Even so, the discussion above has
+provided us with requirements that our component functions $$f_m(x)$$ must satisfy in order to be useful for
+approximating the Gaussian integral:
 
 <ol>
-<li> $f_m(x)$ must decay to zero away from the origin: $\lim_{x\to\pm\infty}f_m(x) \to 0 $ </li>
-<li> $f_m(x)$ must have antiderivatives in terms of elementary functions  </li>
-<li> $f_m(x)$ must have a derivative of $0$ at $x = 0$: $f_m'(0) = 0$ </li>
+<li> Each $\vert f_m(x)\vert$ must decay to zero away from the origin:
+$\lim_{x\to\pm\infty}\vert f_m(x)\vert \to 0$ </li>
+<li> Each $f_m(x)$ must be flat at $x = 0$: $f_m'(0) = 0$ </li>
+<li> Each $f_m(x)$ must have a known closed-form integral between $\pm\infty$  </li>
 </ol>
 
-The third requirement is not essential, but makes it easier to match the function with $$e^{-x^2}$$ around $$x = 0$$.
- One of the simplest set of functions with the above requirements are
+Spend a moment to visualize the requirements (1) and (2). It will become clear that each $$f_m(x)$$ must
+itself be a bell-like curve. The third requirement, while not necessary, helps narrow down the choice of possible
+candidate functions. It is trying to make sure that our problem doesn't become a purely numerical exercise and that
+we get interesting series when we plug back $$\int_{-\infty}^{\infty}f_m(x)dx $$ in equation $$\eqref{eq:ser}$$.
 
-$$
-f_m(x) = \frac{\alpha_m}{\beta_m + x^2}
-$$
+Our original problem can now be viewed as decomposing the Gaussian into simpler bell curves. Before reading further,
+try and see if you can come up with functional forms for bell curves which satisfy the above requirements.
 
-With these functions, our proposed decomposition of $$e^{-x^2}$$ in terms of $$f_m(x)$$ can be written as
+In theory, functions satisfying the above conditions can be constructed in an infinite number of ways. In practice I
+found it harder than expected to come up with formulas for bell curves, but eventually stumbled on three alternatives.
+
+The three functional forms belong to rational, exponential, and trigonometric class of functions. Each class reveals
+unique and interesting convergence behavior to the Gaussian.
+
+The parametrized form of our three function families can be written as follows:
+
+<ol>
+<li> Rational function bell curves: $f_m(x) = \frac{\alpha_m}{\beta_m + x^2}$. The expansion looks like
+$$
+e^{-x^2} = \frac{\alpha_1}{\beta_1 + x^2} + \frac{\alpha_2}{\beta_2 + x^2} + \cdots
+$$
+</li>
+<br>
+<li> Exponential function bell curves: $f_m(x) = \alpha_m\,\text{sech}^2(mx)$. The expansion looks like
+$$
+e^{-x^2} = \alpha_1\text{sech}^2(x) + \alpha_2\text{sech}^2(2x) + \cdots
+$$
+</li>
+<br>
+<li> Trigonometric function bell curves: $f_m(x) = \alpha_m\, \frac{\sin(mx)}{mx}$. The expansion looks like
+$$
+e^{-x^2} = \alpha_1\frac{\sin(x)}{x} + \alpha_2\frac{\sin(2x)}{2x} + \cdots
+$$
+</li>
+</ol>
+
+It is easy to check that each of the proposed $$f_m(x)$$ satisfy conditions (1) and (2).
+
+Note that the expansions in terms of our proposed functions $$f_m(x)$$ are not guaranteed. Just because we formally
+wrote the expansion does not imply that it will hold. We have not shown the set of functions $$f_m(x)$$ to be
+[complete](https://mathworld.wolfram.com/CompleteOrthogonalSystem.html).
+Hence there are no theoretical guarantees that the above expansions will converge to Gaussian.
+
+Intuitively however, it must be possible to express the Gaussian as a combination of other bell curves. But how do we
+choose the parameters of $$f_m(x)$$ that give best possible approximation to the Gaussian function? Had
+we used the Taylor or Fourier expansions, we could have obtained closed-form formulas for the coefficients
+$$\alpha_m$$ and $$\beta_m$$. Without any theory, we will be forced to use a fitting procedure.
+
+The coefficients $$\alpha_m$$ and $$\beta_m$$ will therefore be determined using least squares fit of the right-hand
+side (RHS) expansion with the left-hand side (LHS) function.
+
+## Quality of fit
+
+The quality of a fit is typically measured using the
+[$$R^2$$ metric](https://en.wikipedia.org/wiki/Coefficient_of_determination). The $$R^2$$ metric tells us how well
+the formula approximates the given data on a point-by-point basis. The values of the parameters are not usually
+relevant and do not feature in an $$R^2$$ calculation.
+
+For our current problem though, the coefficients _do_ mean something. In fact, the coefficients are bound by a
+conservation law (or, alternatively, and invariance condition) that depends on the form of $$f_m(x)$$. To see this,
+we can carry out the integration in equation $$\eqref{eq:ser}$$ (reproduced below)
 
 $$
 \begin{equation}
-e^{-x^2} = \sum_{m=1}^M\frac{\alpha_m}{\beta_m + x^2}
-\label{eq:fm}
+\int_{-\infty}^{\infty}e^{-x^2} dx = \sum_{m = 1}^M \int_{-\infty}^{\infty}f_m(x) dx
 \end{equation}
 $$
 
-where $$\alpha_m$$ and $$\beta_m$$ will be determined by obtaing the best fit of the right-hand
-side (RHS) expansion with the left-hand side (LHS) function. If we had been lucky enough to be able to use the
-generalized Fourier expansion, we could have obtained closed-form formulas for $$\alpha_m$$ and $$\beta_m$$.  But
-we're not lucky. Our choice of $$f_m(x)$$ forces us to use a fitting procedure to determine $$\alpha_m$$ and
-$$\beta_m$$. Best we can hope is for some exploitable structure in the coefficients $$\alpha_m$$ and $$\beta_m$$.
-
-## An invariance condition
-
-Assume for now that we have computed the coefficients $$\alpha_m$$ and $$\beta_m$$. Now integrate both sides of
-equation $$\eqref{eq:fm}$$ to get
-
-$$
-\begin{align}
-\int_{-\infty}^{\infty}e^{-x^2} dx &= \sum_{m = 1}^M \int_{-\infty}^{\infty}\frac{\alpha_mdx}{\beta_m + x^2}
- \nonumber \\[0.2in]
-&= \sum_{m = 1}^M \frac{\pi\alpha_m}{\sqrt{\beta_m}}
-\end{align}
-$$
-
-Since the integral of the LHS is constant (in fact it is equal to $$\sqrt{\pi}$$) the integral of the RHS must also
-be constant. This gives us the invariance condition:
+The LHS is known to be $$\sqrt{\pi}$$ and the RHS is also known for our three candidate $$f_m(x)$$:
 
 $$
 \begin{equation}
-\sum_{m=0}^{M}\frac{\pi\alpha_m}{\sqrt{\beta_m}} = \text{ constant }
+\int_{-\infty}^{\infty}f_m(x) dx =
+\begin{cases}
+\frac{\pi\alpha_m}{\sqrt{\beta_m}} &\qquad \text{ for  } f_m(x) = \frac{\alpha_m}{\beta_m + x^2} \\[0.1in]
+\frac{2\alpha_m}{m} &\qquad \text{ for  } f_m(x) = \alpha_m\text{sech}^2(mx) \\[0.1in]
+\frac{\pi\alpha_m}{m} &\qquad \text{ for  } f_m(x) = \alpha_m\frac{\sin(mx)}{mx}
+\end{cases}
 \end{equation}
 $$
 
-Since we know that the constant is equal to $$\sqrt{\pi}$$ we can slightly simplify the condition so that it is
-easier to remember:
+This leads to the invariance conditions for the coefficients as follows
 
 <div class="boxed">
 $$
-\begin{equation}
-\sum_{m=0}^{M}\frac{\alpha_m\sqrt{\pi}}{\sqrt{\beta_m}} = 1
-\label{eq:cc}
-\end{equation}
+\begin{align}
+\label{eq:cc1}
+\sum_{m = 1}^M\frac{\alpha_m\sqrt{\pi}}{\sqrt{\beta_m}} &= 1 &\text{ for } f_m(x) = \frac{\alpha_m}{\beta_m +
+x^2}  \\[0.1in]
+\label{eq:cc2}
+\sum_{m = 1}^M\frac{2\alpha_m}{m\sqrt{\pi}} & = 1 &\text{ for } f_m(x) = \text{sech}^2(x) \\[0.1in]
+\label{eq:cc3}
+\sum_{m = 1}^M\frac{\alpha_m\sqrt{\pi}}{m} &= 1 &\text{ for } f_m(x) = \alpha_m\frac{\sin(mx)}{mx}
+\end{align}
 $$
 </div>
 
-The boxed equation above expresses a remarkable fact. No matter what our fit gives us, the computed coefficients
-must always satisfy equation $$\eqref{eq:cc}$$.
+The boxed equations above express a remarkable fact: regardless of the numerical value of individual
+coefficients, they are, in aggregate, bounded by the conservation condition. This fact is not deep.
+It is obvious from the formal series expansion in equation $$\eqref{eq:ser}$$. But it contrasts with
+experience we typically have with least-squares regression. In a typical least-squares fit, the coefficients are free
+to assume any value. Here we are trying to approximate a well-known function. So the coefficients have extra
+constraints.
+
+These constraints help us formulate a more interesting way to measure convergence. Once the fit is computed, we will
+measure its quality not by its $$R^2$$ but by how well the computed coefficients approximate $$\sqrt{\pi}$$. The LHS of
+equations $$\eqref{eq:cc1}$$, $$\eqref{eq:cc2}$$ and $$\eqref{eq:cc3}$$ express this convergence in simpler terms.
+That is, we simply have to see how close the LHS approaches $1.0$ rather than having to remember $$\sqrt{\pi}$$.
 
 ## Computing the fit
 
