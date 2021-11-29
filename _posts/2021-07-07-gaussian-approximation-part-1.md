@@ -15,23 +15,25 @@ Can a
 [Gaussian function](https://en.wikipedia.org/wiki/Gaussian_function)
 be approximated with a set of simpler functions? This is the question we're going to explore in the present article.
 What exactly is a 'simpler function' and why might we want such an approximation? Let us explore these 
-questions first before moving on to the math. 
+questions first. 
 
 To keep things simple, we will restrict ourselves to the simple one dimensional Gaussian function: 
-$$f(x) = e^{-x^2}$$. This is the bell curve that most people have good intuition about. It appears everywhere in 
+$$f(x) = e^{-x^2}$$. This is the bell curve that most people have good intuition about. It appears often in 
 Statistics and the natural sciences.  
 
-Yet, the mathematical simplicity of this function is deceptive. One area where this becomes apparent 
-is when you try to compute the total area under the Gaussian curve. For the un-normalized Gaussian function we're 
+The mathematical simplicity of the Gaussian function is deceptive. One area where this becomes apparent 
+is when one tries to compute the total area under the Gaussian curve. For the un-normalized Gaussian function we're 
 working with, the answer is $$\sqrt{\pi}$$. The Gaussian integral seems to be resistant to the standard integration 
 techniques such as $$u$$-substitution and integration by parts.    
 
-Specifically, we will examine if it is possible to break down the Gaussian into a series of simpler functions. My
-original motivation for seeking a series expansion of the Gaussian was my ongoing curiosity about
-Gaussian function. I'm always
-[in pursuit]({% post_url 2021-06-18-solving-definite-integrals-with-plancherels-theorem%})
-of simple ways to evaluate its integral (which equals $$\sqrt{\pi}$$). On one such recent excursions, I thought of
-trying to break down the Gaussian into simpler functions:
+My original motivation for seeking an expansion of the Gaussian into simpler functions was to tame its integral -- I'm 
+always [in pursuit]({% post_url 2021-06-18-solving-definite-integrals-with-plancherels-theorem%})
+of simple ways to evaluate this integral (which equals $$\sqrt{\pi}$$). Once I started on this path, however, this 
+exercise quickly evolved into the more interesting question of how accurately can other bell curves approximate the 
+Gaussian.  
+
+With this background in mind, let us provide the problem set up. The first set up is to break down the Gaussian into 
+a series of functions:
 
 $$
 \begin{equation}
@@ -51,8 +53,8 @@ $$
 $$
 
 The main idea above is quite innocent. However, it turns out that selecting the functions $$f_m(x)$$ and
-evaluating their parameters is tricker than expected. This exercise will take us through a tour of linear
-algebra, nonlinear least squares, gradient descent and Fourier series.
+evaluating their parameters is tricker than expected. Stay tuned; this exploration will take us 
+through a tour of linear algebra, nonlinear least squares, Gradient Descent and Fourier series.
 
 ## Choice of the component functions $$f_m(x)$$
 
@@ -61,31 +63,12 @@ Two plausible ways to obtain the expansion in Equation $$\eqref{eq:gexp}$$
 are [Taylor expansion](https://en.wikipedia.org/wiki/Taylor_series)
 and [Fourier expansion](https://en.wikipedia.org/wiki/Generalized_Fourier_series).
 
-However, our goal is to obtain an approximation for the _integral_ of the Gaussian from $$-\infty$$ to $$+\infty$$.
-To achieve this, the series in equation $$\eqref{eq:ser}$$ must be integrable _term by term_. That is, each
+However, our (ostensible) goal is to obtain an approximation for the _integral_ of the Gaussian from $$-\infty$$ to 
+$$+\infty$$. To achieve this, the series in equation $$\eqref{eq:ser}$$ must be integrable _term by term_. That is, each
 $$f_m(x)$$ needs to be integrable between $$\pm\infty$$.
 
 The terms of the Taylor expansion, being polynomials, blow up at $$\pm\infty$$. The terms of common Fourier
-expansions are oscillatory and finite at $$\pm\infty$$. They too are not integrable between $$\pm\infty$$.
-
-An interesting side question is this:
-
->must the Fourier basis functions always be oscillatory and of finite magnitude at $$\pm\infty$$?
-
-The answer is no; there are many examples of orthonormal basis functions that decay to zero at infinity. In fact, the
-wave functions of Quantum Mechanical bound states are guaranteed to form an orthonormal basis and decay to
-zero at $$\pm\infty$$. The eigenfunctions of the one-dimensional
-[quantum harmonic oscillator](https://bit.ly/2UYezKA) or
-[Airy functions](https://en.wikipedia.org/wiki/Airy_function)
-are some examples.
-
-Unfortunately, these bound state wave functions do not have elementary anti-derivatives, which is one of our
-requirements. An interesting follow-up question then is:
-
->can we construct Hermitian operators whose eigenfunctions have elementary anti-derivatives? More generally, given an
-orthonormal basis function set, can we construct the corresponding potential well function for the Schrodinger equation?
-
-Exploring this intriguing question will distract us from our current objective.
+expansions are oscillatory and finite at $$\pm\infty$$. They too are not integrable between $$\pm\infty$$. [^1]
 
 For now, we're convinced that neither Taylor nor the Fourier expansion would work. Even so, the discussion above has
 provided us with requirements that our component functions $$f_m(x)$$ must satisfy in order to be useful for
@@ -98,8 +81,8 @@ $\lim_{x\to\pm\infty}\vert f_m(x)\vert \to 0$ </li>
 <li> Each $f_m(x)$ must have a known closed-form integral between $\pm\infty$  </li>
 </ol>
 
-Spend a moment to visualize the requirements (1) and (2). It will become clear that each $$f_m(x)$$ must
-itself be a bell-like curve. The third requirement, while not necessary, helps narrow down the choice of possible
+Spend a moment to visualize requirements (1) and (2). It will become clear that each $$f_m(x)$$ must
+itself be a bell-like curve. Requirement (3), while not necessary, helps narrow down the choice of possible
 candidate functions. It is trying to make sure that our problem doesn't become a purely numerical exercise and that
 we get interesting series when we plug back $$\int_{-\infty}^{\infty}f_m(x)dx $$ in equation $$\eqref{eq:ser}$$.
 
@@ -144,7 +127,7 @@ $$
 </li>
 </ol>
 
-It is easy to check that each of the proposed $$f_m(x)$$ satisfy conditions (1) and (2).
+It is easy to check that each of the proposed $$f_m(x)$$ satisfy conditions (1), (2) and (3) above.
 
 Note that the expansions in terms of our proposed functions $$f_m(x)$$ are not guaranteed. Just because we formally
 wrote the expansion does not imply that it will hold. We have not shown the set of functions $$f_m(x)$$ to be
@@ -183,8 +166,8 @@ $$
 \int_{-\infty}^{\infty}f_m(x) dx =
 \begin{cases}
 \frac{\pi\alpha_m}{\sqrt{\beta_m}} &\qquad \text{ for  } f_m(x) = \frac{\alpha_m}{\beta_m + x^2} \\[0.1in]
-\frac{2\alpha_m}{m} &\qquad \text{ for  } f_m(x) = \alpha_m\text{sech}^2(mx) \\[0.1in]
-\frac{\pi\alpha_m}{m} &\qquad \text{ for  } f_m(x) = \alpha_m\frac{\sin(mx)}{mx}
+\frac{2\alpha_m}{m} &\qquad \text{ for  } f_m(x) = \alpha_m\,\text{sech}^2(mx) \\[0.1in]
+\frac{\pi\alpha_m}{m} &\qquad \text{ for  } f_m(x) = \alpha_m\,\frac{\sin(mx)}{mx}
 \end{cases}
 \end{equation}
 $$
@@ -198,7 +181,7 @@ $$
 \sum_{m = 1}^M\frac{\alpha_m\sqrt{\pi}}{\sqrt{\beta_m}} &= 1 &\text{ for } f_m(x) = \frac{\alpha_m}{\beta_m +
 x^2}  \\[0.1in]
 \label{eq:cc2}
-\sum_{m = 1}^M\frac{2\alpha_m}{m\sqrt{\pi}} & = 1 &\text{ for } f_m(x) = \text{sech}^2(x) \\[0.1in]
+\sum_{m = 1}^M\frac{2\alpha_m}{m\sqrt{\pi}} & = 1 &\text{ for } f_m(x) = \alpha_m\,\text{sech}^2(mx) \\[0.1in]
 \label{eq:cc3}
 \sum_{m = 1}^M\frac{\alpha_m\sqrt{\pi}}{m} &= 1 &\text{ for } f_m(x) = \alpha_m\frac{\sin(mx)}{mx}
 \end{align}
@@ -219,14 +202,12 @@ That is, we simply have to see how close the LHS approaches $1.0$ rather than ha
 
 ## Computing the fit
 
-The fitting procedure is implemented using a simple gradient descent approach. The section at the end of this
-post provides the mathematical formulation and its implementation from scratch in Python. Since the math is optional,
-the details are pushed to the end. But the math and the code are available for the interested reader. Presently we
-study the results of the fit.
+The fitting procedure is implemented using a simple Gradient Descent approach. The section at the end of this
+post provides the mathematical formulation and its implementation from scratch in Python. 
 
 ## Approximation using rational functions  
-We start our study with a small value of $$M$$. Upon performing the fit we obtain the coefficients and can write
-the approximation explicitly. For $$M = 3$$ the gradient descent fit gives the reasonable (but uninspiring) 
+We start our study with a small value of $$M$$. The fit gives us the coefficients which we can use to write
+the approximation explicitly. For $$M = 3$$ the Gradient Descent fit gives the reasonable (but uninspiring) 
 approximation:
 
 $$
@@ -245,10 +226,10 @@ $$
 \end{equation}
 $$
 
-To improve the fit we have to increase the number of component functions. We can study
-things with $$M=20$$. The figure below shows the convergence of the fitting procedure. The coefficients start with
-random initial values. As the gradient descent iterations progress, the coefficients converge to their final values.
-Their trajectories look cool, but have no identifiable pattern.
+To improve the fit we have to increase the number of component functions. We can bump up to $$M=20$$. 
+The figure below shows the convergence of the fitting procedure. The coefficients start with
+random initial values. As the Gradient Descent iterations progress, the coefficients converge to their final values.
+Their trajectories look cool, but have no identifiable pattern. 
 
 In the inset we show the invariance condition. As the fit converges, the invariance condition
 $$\sum_{m=1}^M\frac{\alpha_m\sqrt{\pi}}{\sqrt{\beta_m}}$$ approaches $1.0$. Due to the nature of the approximation
@@ -257,7 +238,10 @@ the final value is close to $0.92$ in stead of $1.0$.
 The right hand side shows how the quality of the final fit the Gaussian obtained using $20$ component functions $$f_m
 (x)$$. One of the things to realize is that the tails of a Gaussian decay faster than any polynomial. It is quite
 hard to approximate this fall off using rational polynomial functions like we have chosen. This fact is obvious when
-we look closely at the quality of the fit at the tails.
+we look closely at the quality of the fit at the tails. 
+
+Also, the coefficients seem to 'run away' as the fitted curve approaches the Gaussian. This is classic overfitting. 
+
 
 <figure>
     <img src="{{site.url}}/assets/img/gaussian_approx_m20.gif" alt='map' style='margin: 10px;' height="300"/>
@@ -320,19 +304,25 @@ $$
 e^{-x^2} = \sum_{m=1}^{M}\alpha_m \text{sech}^2 (mx)
 $$
 
-As before, the coefficients $$\alpha_m$$ are obtained using gradient descent. The animations below show how the 
-partial sums with $M = 8, 16, 32, \text{and }, 64$ approximate the Gaussian.
+Note that we only have a single parameter $$\alpha_m$$ to fit. So the parameter plots here will be one-dimensional.
+As before, the coefficients $$\alpha_m$$ are obtained using Gradient Descent. The animations below show how the 
+partial sums with $M = 8, 16, 32\, \text{and } 64$ approximate the Gaussian.
 
 <figure>
     <img src="{{site.url}}/assets/img/gaussian_approx_sech2_combined.gif" alt='map' style='margin: 10px;' height="300"/>
 </figure>
+
+The general observations made for rational functions apply here as well. Because the tails of $$\text{sech}^2(x)$$ 
+decay slower than the Gaussian, overfitting, as evidenced by wildly swinging coefficients, is needed to obtain a 
+good numerical accuracy. Adding more component functions provides a more flexibility; for a given accuracy, the 
+coefficients for $$M=64$$ swing a lot less than those for $$M=8$$.
 
 ## Approximation using sinc functions
 This is the familiar [sinc function](https://en.wikipedia.org/wiki/Sinc_function). In fact the sinc function looks
 like the Gaussian around $$x = 0$$. But it has wiggles and dips below zero. It will be interesting to see how well we
 can approximate the Gaussian using a 'sum of sincs'.
 
-With these new component functions, our series expansion of the Gaussian will be
+Our formal series expansion of the Gaussian in terms of sinc functions will be
 
 $$
 \begin{equation}
@@ -343,50 +333,12 @@ $$
 
 Note that our component functions are now distinguished. This means that we need precise amounts of the component
 functions to construct our Gaussian. Because $$\sin(mx)$$ and $$\sin(nx)$$ have different frequencies, deficiencies
-from $$f_{m}(x)$$ cannot be offset by $$f_n(x)$$. This was not true for our earlier component functions
-$$f_m(x) = \frac{\alpha_m}{\beta_m + x^2}$$; slight decrease in $$\alpha_m$$ here could be offset by equal increase in
+from $$f_{m}(x)$$ cannot be offset by $$f_n(x)$$. This was not true for rational functions
+$$f_m(x) = \frac{\alpha_m}{\beta_m + x^2}$$; a slight decrease in $$\alpha_m$$ here could be offset by equal increase in
 $$\alpha_n$$. This led to degeneracy (non-unique solutions) and we hope our new component functions will lead to
-unique expansion coefficients.
+unique expansion coefficients (turns out to be true).
 
-## Invariance condition
-
-Before we solve for the expansion coefficients $$\alpha_m$$, we can state the invarience condition they must obey.
-Recalling that
-$$\int_{-\infty}^{\infty}e^{-x^2} = \sqrt{\pi}$$ and $$\int_{-\infty}^{\infty}\frac{\sin(mx)}{mx} = \frac{\pi}{m}$$
-we integrate both sides of equation $$\eqref{eq:exp}$$ to get
-
-$$
-\begin{equation}
-\sqrt{\pi} = \sum_{m=1}^M\frac{\pi\alpha_m}{m}
-\end{equation}
-$$
-
-which leads to an invariance condition
-
-<div class="boxed">
-$$
-\begin{equation}
-\sum_{m=0}^{M}\frac{\alpha_m\sqrt{\pi}}{m} = 1
-\label{eq:cc}
-\end{equation}
-$$
-</div>
-
-The interpretaion of the invariance condition is simple. Regardless of how we compute the expansion coefficients
-(using gradient descent, analytical formulas, or some unexplainable magic), they must satisfy equation
-$$\eqref{eq:cc}$$. We'd derived a similar invariance condition in
-[Part 1]({% post_url 2021-07-07-gaussian-approximation-part-1%}). In the following, we will be checking the quality
-of our solution by computing the left hand side of equation $$\eqref{eq:cc}$$ and checking how closely it approaches
-$1.0$.
-
-## Computing the fit
-
-In Part 1, we implemented a NLLS fitting procedure using gradient descent in Python. The optional last section of
-Part 1 contains the details of the implementation (albeit using $$f_m(x) = \frac{\alpha_m}{\beta_m + x^2}$$). The
-entire code for fitting and plotting can be found in our
-[Github repo](https://github.com/rohan-kekatpure/blog/blob/master/gaussian_approximation/fit_gaussian_sinc.py).
-
-We first try the fit using $$8$$ component functions. In the figure below, the left panel shows how the coefficients
+We first try the fit using $$M=8$$ component functions. In the figure below, the left panel shows how the coefficients
 $$\alpha_m$$ converge to their final values. The inset to the left panel shows the value of the invariance condition.
 With $$M = 8$$ component functions, we have about $$6\%$$ error. The right panel compares the approximated function
 (in red) to the Gaussian function (in black).
@@ -414,14 +366,16 @@ coefficients $$\alpha_m$$ after $$m = 5$$ decay exponentially to $0$. The follow
 </figure>
 
 The error in the invariance condition (i.e. the fit quality) also does not dip below $6\%$ regardless of the number
-of component functions chosen. There are only two possibilities as to why the fit isnt better. It is either
-least-squares heuristic or the form of our components functions. Let us dive deeper into it.
+of component functions chosen. There are two possibilities as to why the fit isn't better. It is either
+our implementation of Gradient Descent procedure, or the form of our components functions. 
+Let us dive deeper into it.
 
 ## The problem is _linear_
 
-The component functions chosen in Part 1 gave rise to a true non-linear least squares problem. An observant reader
-might have noticed that with our new component functions the problem is ordinary linear least squares (OLS) in
-disguise. To see that, we will rewrite equation $$\eqref{eq:exp}$$. At any given point $$x_i$$ we have
+For the sinc function expansion, we can perform least-squares regression without Gradient Descent. An observant reader 
+might have noticed that with sinc component functions, the problem reduces to ordinary linear least 
+squares (OLS) in disguise. To see that, we will rewrite equation $$\eqref{eq:exp}$$ as follows. At any given point 
+$$x_i$$ we have
 
 $$
 e^{-x_i^2} = \alpha_1\frac{\sin(x_i)}{x_i} + \alpha_2\frac{\sin(2x_i)}{2x_i}
@@ -470,8 +424,8 @@ def _fit_sinc_linear_regression(x, num_base_functions):
     return alphas
 ```
 
-We get good agreement between the expansion coefficients computed using the normal equations and gradient descent.
-The numerical comparison between gradient descent and normal equations is given below.
+We get good agreement between the expansion coefficients computed using the normal equations and Gradient Descent.
+The numerical comparison between Gradient Descent and normal equations is given below.
 
 | Coefficient      | Gradient descent | Normal equations     |
 | :-:        |    :-   |          :- |
@@ -482,7 +436,7 @@ The numerical comparison between gradient descent and normal equations is given 
 | $$\alpha_5$$   | $0.0148756$        | $0.014865627$      |
 | $$\sum_{m=1}^5\frac{\alpha_m\sqrt{\pi}}{m}$$   | $0.9420$        | $0.9420$      |
 
-This is a comforting sanity check on our gradient descent implementation. But it doesn't really shed light on why our
+This is a comforting sanity check on our Gradient Descent implementation. But it doesn't really shed light on why our
 error is stuck at $6\%$ and why the coefficients decay rapidly down to zero for $$m > 5$$. For that we need an
 analytical understanding of the problem.
 
@@ -625,32 +579,6 @@ coefficients obtained by regression.
 | $$\alpha_5$$   | $0.009551615$        | $0.014865627$      |
 | $$\sum_{m=1}^5\frac{\alpha_m\sqrt{\pi}}{m}$$   | $0.9996$        | $0.9420$      |
 
-## Next steps
-
-The current post is a start of a fruitful direction of investigation. There are some key questions that demand
-further exploration.
-
-It is important to somehow constrain the degeneracy in the component functions. The tweaks I tried so far all lead to
-degradation in the fit quality. Nonetheless, search is on for more nicer functions.
-
-It is also necessary to try more stable fitting procedures. Most notably, the Gauss-Newton algorithm. The stability
-of the procedure will expand the range of functions that can be tried.
-
-An interesting mathematical question to explore is this. Besides the Taylor and the generalized Fourier expansions,
-are there other types of basis function expansions which respect the properties that we seek in our component
-functions?
-
-We will take up the explorations of the above questions in the follow up posts. The links will be provided here
-whenever applicable.
-
-## Epilogue
-The maximum number of parameters we considered was
-$$128$$ ($$64$$ $$\alpha$$s and $$\beta$$s). Yet it was difficult to identify any pattern in the coefficients.
-Imagine how difficult it must be to make sense of deep networks with
-[hundreds of billions](https://en.wikipedia.org/wiki/GPT-3)
-of parameters. Extrapolate further to biological systems and any search for a first-principles understanding may seem
-hopelessly difficult.
-
 ## Optional: Gradient descent implementation
 
 This section is a bit mathematical and is optional for those unfamiliar as well as very familiar with machine
@@ -662,9 +590,9 @@ From an ML perspective, we have a
 fitting problem (NLLS) on our hand.
 The [Gauss-Newton method](https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm)
 is perhaps the ideal choice for its solution. But we will instead go down an easier route of implementing a simple
-gradient descent fitting algorithm. I may later add a section on Gauss-Newton fitting procedure.
+Gradient Descent fitting algorithm. I may later add a section on Gauss-Newton fitting procedure.
 
-The gradient descent is implemented in the standard way. We discretize $$e^{-x^2}$$ using $$N$$ points on the
+The Gradient Descent is implemented in the standard way. We discretize $$e^{-x^2}$$ using $$N$$ points on the
 $X$-axis. At each point $$x_i$$, we compute the squared residual between the actual function value and the estimated
 function value. In other words, the squared residual is simply the squared difference between the LHS and the RHS of
 equation $$\eqref{eq:fm}$$. Finally we sum up all $$N$$ residuals to obtain the total loss function.
@@ -700,7 +628,7 @@ $$ \begin{align}
 \left(e^{-x_i^2} - \sum_{m=1}^M \frac{\alpha_m}{\beta_m + x_i^2}\right)
 \end{align} $$
 
-The final step is the implementation of the gradient descent update equations:
+The final step is the implementation of the Gradient Descent update equations:
 
 $$
 \begin{align}
@@ -734,3 +662,20 @@ def compute_fit(x, num_base_functions, niters,
 
     return alphas, betas
 ```
+
+## **Footnotes**
+
+[^1]: An interesting side question is this:
+
+    >must the Fourier basis functions always be oscillatory and of finite magnitude at $$\pm\infty$$?
+    
+    The answer is no; there are many examples of orthonormal basis functions that decay to zero at infinity. In fact, the
+    wave functions of Quantum Mechanical bound states are guaranteed to form an orthonormal basis and decay to zero at
+    $$\pm\infty$$. The eigenfunctions of the one-dimensional [quantum harmonic oscillator](https://bit.ly/2UYezKA) or [Airy
+    functions](https://en.wikipedia.org/wiki/Airy_function) are some examples.
+    
+    Unfortunately, these bound state wave functions do not have elementary anti-derivatives, which is one of our
+    requirements. An interesting follow-up question then is:
+    
+    >can we construct Hermitian operators whose eigenfunctions have elementary anti-derivatives? More generally, given an
+    orthonormal basis function set, can we construct the corresponding potential well function for the Schrodinger equation?
