@@ -590,12 +590,11 @@ From an ML perspective, we have a
 fitting problem (NLLS) on our hand.
 The [Gauss-Newton method](https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm)
 is perhaps the ideal choice for its solution. But we will instead go down an easier route of implementing a simple
-Gradient Descent fitting algorithm. I may later add a section on Gauss-Newton fitting procedure.
+Gradient Descent fitting algorithm. 
 
 The Gradient Descent is implemented in the standard way. We discretize $$e^{-x^2}$$ using $$N$$ points on the
-$X$-axis. At each point $$x_i$$, we compute the squared residual between the actual function value and the estimated
-function value. In other words, the squared residual is simply the squared difference between the LHS and the RHS of
-equation $$\eqref{eq:fm}$$. Finally we sum up all $$N$$ residuals to obtain the total loss function.
+$x$-axis. At each point $$x_i$$, we compute the squared residual between the actual function value and the estimated
+function value. Finally we sum up all $$N$$ residuals to obtain the total loss function.
 
 We will keep the presentation general by retaining $$f_m(x)$$ for the $m$th component function and use specific forms
 of $f_m(x)$ only when we need the final formulas.
@@ -619,7 +618,8 @@ $$
 $$
 </div>
 
-We can obtain explicit formulas for the gradients by substituting $$f_m(x) = \frac{\alpha_m}{\beta_m + x^2}$$:
+We can obtain explicit formulas for the gradients by substituting the exact form of $$f_m(x)$$. For example, for 
+$$f_m(x) = \frac{\alpha_m} {\beta_m + x^2}$$ we have:
 
 $$ \begin{align}
 \frac{\partial L}{\partial\alpha_m} &= \sum_{i=1}^{N} \frac{-2}{\beta_m + x_i^2}
@@ -628,7 +628,7 @@ $$ \begin{align}
 \left(e^{-x_i^2} - \sum_{m=1}^M \frac{\alpha_m}{\beta_m + x_i^2}\right)
 \end{align} $$
 
-The final step is the implementation of the Gradient Descent update equations:
+The final step is the implementation of the Gradient Descent update equations.
 
 $$
 \begin{align}
@@ -638,8 +638,10 @@ $$
 $$
 
 where $\eta$ is the learning rate. The Python implementation of the three steps is simpler than their mathematical
-appearence. The code snippet below shows the essence of the implementation. The complete code can be found in our
-[Github](https://github.com/rohan-kekatpure/blog/blob/master/gaussian_approximation/gaussian.py).
+appearence. The code snippet below shows the essence of the implementation for the case of 
+$$f_m(x) = \frac{\alpha_m} {\beta_m + x^2}$$. Analogous math and code can be written for the $$\text{sech}^2$$ 
+and sinc expansions. The complete code can be found in our
+[Github](https://github.com/rohan-kekatpure/blog/tree/master/gaussian_approximation).
 
 ```python
 def compute_fit(x, num_base_functions, niters,
