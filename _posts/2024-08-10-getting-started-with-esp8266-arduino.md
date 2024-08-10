@@ -34,8 +34,15 @@ The Arduino IDE makes it easy to develop robotics and embedded applications on t
 primarily developed for Arduino, the IDE nevertheless has been extended for use with other microcontrollers, including
 the ones from the ESP family (ESP8266 and ESP32).
 
-
-
+The steps to get started with the Arduino IDE are a breeze compared to those with MicroPython. Beyond the ease of the
+setup, however, there are more powerful advantages to using the Arduino IDE. First, there are hundreds of examples for
+each board type. These examples are invaluable in helping you test your setup or in getting you started quickly. Second,
+a lot of online help about specific projects is presented in the context of the Arduino IDE. Third, there are a lot of
+third party, hardware specific libraries (e.g. for IR remotes) on Github; they are written in C/C++ and can be loaded
+into the Arduino IDE using a single click. Fourth, the IDE makes the documentation of every function available with a
+single click. Sixth, the IDE supports auto-complete. Lastly, C/C++ is the primary language of Arduino (though it now
+supports MicroPython) which gives us a forcing function to learn this important embedded language. Of course, as
+mentioned above, use of C/C++ makes a vast body of code available for our use.     
 
 
 
