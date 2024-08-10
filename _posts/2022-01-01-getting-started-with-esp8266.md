@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "DRAFT: Getting started with ESP8266"
+title: "Getting started with ESP8266 using MicroPython"
 author: "Rohan"
 categories: journal
 tags: [documentation,sample]
@@ -14,7 +14,7 @@ tags: [documentation,sample]
 [image]
 Microcontrollers sit between the abstract world of bytes and the real world objects you can see and touch. Programming
 microcontrollers is a way to connect these two worlds. The satisfaction of getting a sensor reading flashing on a cheap
-LCD display is known only to those who have spent the hours fighting the electronics. Many low-cost (< $10)
+LCD is known only to those who have spent the hours fighting the electronics. Many low-cost (< $10)
 microcontrollers and development boards have significantly reduced the barrier to get started. One such example is
 the ESP8266 microcontroller chip and the NodeMCU development board. I recently got started with this system and the 
 present article is a compilation of step-by-step notes I made while setting up my environment. 
@@ -69,9 +69,9 @@ $ esptool.py --port /dev/tty.SLAB_USBtoUART \
            esp8266-20210902-v1.17.bin
 ```
 
-The command for loading the firmware is a bit long. We can copy paste it on the commandline as is, or editing it 
+The command for loading the firmware is a bit long. We can copy-paste it on the commandline as is, or editing it 
 into a single line by removing the backslashes. The crucial input here is the baud rate. The recommended baud rate is 
-115200. Higher the baud rate, the faster the upload/download of the data from the chip. Note that the recommended 
+115200. The Higher the baud rate, the faster the upload/download of the data from the chip. Note that the recommended 
 baud rate differs from 9600 written on the bottom of the chip. The `--verify` and `-fm dio` options can be skipped, 
 but I found that skipping them leads to corrupted loads. 
 
@@ -86,9 +86,7 @@ interactive manner without having to recompile and reload the code.
 Once the firmware has been loaded, multiple application can be used to connect to the ESP8266. On a Mac, the native 
 terminal multiplexer program [`screen`](https://ss64.com/osx/screen.html) can be used to open a console terminal on 
 the ESP8266. While many people have had success using `screen` to communicate with the chip, I could not get it to 
-work. Even after successful upload of the firmware, I could not get a Python shell to open using `screen`. 
-
-This is when I switched to Minicom
+work. This is when I switched to Minicom.
 
 ## Minicom
 
@@ -165,5 +163,9 @@ $ ampy --port /dev/cu.SLAB_USBtoUART get path/to/remotefile.py
 ## Using Minicom to break infinite loop of `main.py`
 
 ## Powering the ESP8266 via external power supply
+
+Once you've flashed the code onto ESP's ROM, it is ready to be executed in a standalone mode. We can detach the ESP from
+the computer and power it with an external supply. For that, you can apply a voltage of between 2.5V to 3.3V to pin(s)
+labeled `3v3` or a voltage of 7-10V to the pin labeled `Vin`. The negative terminal of the battery should go to `Gnd`.
 
 
