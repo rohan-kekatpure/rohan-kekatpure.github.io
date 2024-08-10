@@ -63,9 +63,17 @@ install. Once the installation finishes, you're ready to start coding !
 Other board families can be managed similarly by adding their URLs to the board manager URLs (separated by commas) and
 installing the right board from the family.
 
+### Connect to the board
 
+Connect the board to the computer using the USB cable. After a few seconds ,the board should appear in the drop-down
+list of serial devices. [image]. 
 
+### Run the LED blink code
 
+As mentioned above, Arduino IDE comes with many examples for all supported board types. Select the blink example and
+press the Play button. This will upload the code to the ESP and blink the builtin LED. 
+
+This completes the installation and the testing of ESP8266 using the Arduino IDE. You can clearly see that the setup and use is much easier compared to the steps we followed for MicroPython.  
 
 
 
