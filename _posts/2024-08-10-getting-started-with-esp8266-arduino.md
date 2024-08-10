@@ -42,7 +42,26 @@ third party, hardware specific libraries (e.g. for IR remotes) on Github; they a
 into the Arduino IDE using a single click. Fourth, the IDE makes the documentation of every function available with a
 single click. Sixth, the IDE supports auto-complete. Lastly, C/C++ is the primary language of Arduino (though it now
 supports MicroPython) which gives us a forcing function to learn this important embedded language. Of course, as
-mentioned above, use of C/C++ makes a vast body of code available for our use.     
+mentioned above, use of C/C++ makes a vast body of code available for our use -- code not available in MicroPython.     
+
+## Steps to get started
+
+### Download and install the [Arduino IDE](https://www.arduino.cc/en/software)
+
+This step is self-explanatory. Just download the software and follow the steps to installation. 
+
+### Install the ESP8266 board 
+
+Start the Arduino IDE. Go to Preferences (`⌘+,`) and under "Additional Board Manager URLs" add the URL for ESP8266. The URL is
+
+    http://arduino.esp8266.com/stable/package_esp8266com_index.json
+
+This JSON points to the various repositories (Github and otherwise) needed for driving boards in the ESP8266 family
+through the Arduino. Once the URL is added, go to `Tools -> Board -> Boards Manager`, select your board and click
+install. Once the installation finishes, you're ready to start coding !
+
+Other board families can be managed similarly by adding their URLs to the board manager URLs (separated by commas) and
+installing the right board from the family.
 
 
 
