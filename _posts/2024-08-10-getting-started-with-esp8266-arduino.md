@@ -52,7 +52,14 @@ This step is self-explanatory. Just download the software and follow the steps t
 
 ### Install the ESP8266 board 
 
-Start the Arduino IDE. Go to Preferences (`⌘+,`) and under "Additional Board Manager URLs" add the URL for ESP8266. The URL is
+Start the Arduino IDE. Go to Preferences (`⌘+,`) and under "Additional Board Manager URLs" add the URL for ESP8266. 
+
+<figure>
+    <img src="{{site.url}}/assets/img/arduino_ide_prefs.png" alt='hierarchy' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
+
+The URL is
 
     http://arduino.esp8266.com/stable/package_esp8266com_index.json
 
@@ -60,20 +67,37 @@ This JSON points to the various repositories (Github and otherwise) needed for d
 through the Arduino. Once the URL is added, go to `Tools -> Board -> Boards Manager`, select your board and click
 install. Once the installation finishes, you're ready to start coding !
 
+<figure>
+    <img src="{{site.url}}/assets/img/arduino_ide_board_manager.png" alt='hierarchy' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
+
 Other board families can be managed similarly by adding their URLs to the board manager URLs (separated by commas) and
 installing the right board from the family.
 
 ### Connect to the board
 
 Connect the board to the computer using the USB cable. After a few seconds ,the board should appear in the drop-down
-list of serial devices. [image]. 
+list of serial devices.
+
+<figure>
+    <img src="{{site.url}}/assets/img/arduino_ide_connect.png" alt='hierarchy' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
+
 
 ### Run the LED blink code
 
 As mentioned above, Arduino IDE comes with many examples for all supported board types. Select the blink example and
-press the Play button. This will upload the code to the ESP and blink the builtin LED. 
+press the Play button. This will upload the code to the ESP and blink the builtin LED.
 
-This completes the installation and the testing of ESP8266 using the Arduino IDE. You can clearly see that the setup and use is much easier compared to the steps we followed for MicroPython.  
+<figure>
+    <img src="{{site.url}}/assets/img/arduino_ide_example.png" alt='hierarchy' style='margin: 10px;'>
+    <figcaption></figcaption>
+</figure>
+
+This completes the installation and the testing of ESP8266 using the Arduino IDE. You can clearly see that the setup and
+use is much easier compared to the steps we followed for MicroPython.  
 
 
 
