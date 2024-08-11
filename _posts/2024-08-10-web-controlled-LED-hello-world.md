@@ -12,9 +12,10 @@ tags: [documentation,sample]
 
 ## Introduction
 
-In this post we will demonstrate the minimal example of interfacing ESP8266 with an external webserver. After building
-this example, we will be able to send commands to the ESP using our computer or cellphone, with the webserver as a
-mediator. This allows us to build autonomous systems as well as send messaged to ESP from any place with internet access. 
+In this post we will demonstrate a minimal example of interfacing ESP8266 with an external webserver. ESP <> Webserver
+interfacing will allow us to send commands to the ESP using our computer or cellphone, with the webserver as a
+mediator. This in turn allows us to build autonomous systems (using our computer as the main device and the ESP as the
+edge device). It also lets us send messages to the ESP from any place with internet access. 
 
 ## System structure
 
