@@ -70,6 +70,16 @@ if __name__ == '__main__':
     app.run(host='192.168.1.67', port=5000, debug=True)
 ```
 
+We have two endpoints. The home endpoint `/` serves our UI. The `/LED` endpoints responds to `POST` and `GET` requests.
+The `POST` version updates the LED state and the `GET` version returns the current state.
+
+The above code is not going to win any security or robustness awards. Its only virtue is that it is simple for our
+purposes. I'm not even sure what would happen if two people attempt to update the LED at the same time. An immediate
+improvement would be to store the LED state in a database like SQLite. 
+
+## UI Code
+
+
 
 
 
