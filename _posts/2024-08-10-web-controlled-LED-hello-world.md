@@ -12,15 +12,14 @@ tags: [documentation,sample]
 
 ## Introduction
 
-In this post we will demonstrate a minimal example of interfacing ESP8266 with an external webserver. ESP <> Webserver
-interfacing will allow us to send commands to the ESP using our computer or cellphone, with the webserver as a
-mediator. This in turn allows us to build autonomous systems (using our computer as the main device and the ESP as the
-edge device). It also lets us send messages to the ESP from any place with internet access. 
+In this post we will demonstrate a minimal example of interfacing ESP8266 with an external webserver. The
+ESP-to-Webserver interfacing will allow us to send commands to the ESP using our computer or cellphone, with the
+webserver as a mediator. This in turn allows us to build autonomous systems (using our computer as the main device and
+the ESP as the edge device). It also lets us send messages to the ESP from any place with internet access.
 
-## System structure
+## System Structure
 
-Architecture is a perhaps a big word for what we're doing so we will go with "structure". The system diagram for the
-web-controlled LED is simple. 
+The system diagram for the web-controlled LED is simple. 
 
 <figure>
     <img src="{{site.url}}/assets/img/webserver_led.png" alt='hierarchy' style='margin: 10px;'>
@@ -32,6 +31,8 @@ then create a simple responsive UI which can be accessed from desktops as well a
 cellphones. The UI will have simple a control for LED brightness. The UI will communicate with the webserver and update
 the led state. The ESP will be polling the web server every few seconds to inquire the LED brightness. The ESP will
 update the LED brightness according to the value it gets from the webserver.  
+
+## Webserver Code
 
 
 
